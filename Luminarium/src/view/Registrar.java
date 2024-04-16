@@ -16,16 +16,16 @@ import java.awt.event.ActionListener;
 
 import javax.swing.SwingConstants;
 import javax.swing.JButton;
+import java.awt.Color;
+import javax.swing.JPasswordField;
 
-public class Registrar extends JFrame implements ActionListener {
+public class Registrar extends JFrame implements ActionListener { 
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField textNombre;
-	private JTextField textContrasena;
 	private JTextField textDni;
 	private JTextField textEmail;
-	private JTextField textRcontrsena;
 	private JLabel lblNombre;
 	private JLabel lblApellido;
 	private JTextField textApellido;
@@ -35,13 +35,18 @@ public class Registrar extends JFrame implements ActionListener {
 	private JLabel lblRepiteContrasena;
 	private JLabel lblCabecera;
 	private JButton btnRegistrarse; 
+	private Controller c;
+	private JLabel lblPassError;
+	private JPasswordField password;
+	private JPasswordField passwordR;
 	
 	
-	public Registrar(Controller c) {
+	public Registrar(Controller Con) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1083, 698);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		this.c=Con;
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
@@ -78,13 +83,6 @@ public class Registrar extends JFrame implements ActionListener {
 		lblContrasena.setBounds(192, 354, 224, 56);
 		contentPane.add(lblContrasena);
 		
-		textContrasena = new JTextField();
-		textContrasena.setHorizontalAlignment(SwingConstants.CENTER);
-		textContrasena.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		textContrasena.setColumns(10);
-		textContrasena.setBounds(192, 421, 224, 56);
-		contentPane.add(textContrasena);
-		
 		lblDni = new JLabel("DNI");
 		lblDni.setHorizontalAlignment(SwingConstants.CENTER);
 		lblDni.setFont(new Font("Tahoma", Font.BOLD, 20));
@@ -111,18 +109,11 @@ public class Registrar extends JFrame implements ActionListener {
 		textEmail.setBounds(625, 287, 224, 56);
 		contentPane.add(textEmail);
 		
-		lblRepiteContrasena = new JLabel("REPITE CONTRASEÑA");
+		lblRepiteContrasena = new JLabel("REINTRODUCE LA CONTRASEÑA");
 		lblRepiteContrasena.setHorizontalAlignment(SwingConstants.CENTER);
 		lblRepiteContrasena.setFont(new Font("Tahoma", Font.BOLD, 20));
-		lblRepiteContrasena.setBounds(594, 354, 276, 56);
+		lblRepiteContrasena.setBounds(552, 354, 359, 56);
 		contentPane.add(lblRepiteContrasena);
-		
-		textRcontrsena = new JTextField();
-		textRcontrsena.setHorizontalAlignment(SwingConstants.CENTER);
-		textRcontrsena.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		textRcontrsena.setColumns(10);
-		textRcontrsena.setBounds(625, 421, 224, 56);
-		contentPane.add(textRcontrsena);
 		
 		lblCabecera = new JLabel("RESGISTRARSE");
 		lblCabecera.setHorizontalAlignment(SwingConstants.CENTER);
@@ -135,14 +126,36 @@ public class Registrar extends JFrame implements ActionListener {
 		btnRegistrarse.setBounds(387, 510, 264, 56);
 		contentPane.add(btnRegistrarse);
 		
+		lblPassError = new JLabel("");
+		lblPassError.setFont(new Font("Tahoma", Font.BOLD, 17));
+		lblPassError.setForeground(new Color(255, 0, 0));
+		lblPassError.setBounds(223, 593, 587, 55);
+		contentPane.add(lblPassError);
+		
+		password = new JPasswordField();
+		password.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		password.setBounds(192, 407, 224, 56);
+		contentPane.add(password);
+		
+		passwordR = new JPasswordField();
+		passwordR.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		passwordR.setBounds(625, 407, 224, 56);
+		contentPane.add(passwordR);
+		
 		btnRegistrarse.addActionListener(this);
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		Object o= e.getSource();
-		
+		String pass,passR;
 		if(o==btnRegistrarse) {
+			if(new String password.getPassword()) {
+				
+			}
+			else {
+				lblPassError.setText("Las contraseñas no coinciden");
+			}
 			
 		}
 	}

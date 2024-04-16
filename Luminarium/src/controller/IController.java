@@ -10,5 +10,7 @@ public interface IController {
 			String passwd2, String email);
 
 	public Usuario registrarUsuario(String dni, String nombre, String apellido, String passwd1, String passwd2, String email);
+	
+	
 
 }
