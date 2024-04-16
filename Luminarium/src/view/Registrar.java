@@ -5,6 +5,9 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import controller.Controller;
+
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import java.awt.Font;
@@ -32,27 +35,9 @@ public class Registrar extends JFrame implements ActionListener {
 	private JLabel lblRepiteContrasena;
 	private JLabel lblCabecera;
 	private JButton btnRegistrarse; 
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Registrar frame = new Registrar();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
-	public Registrar() {
+	
+	
+	public Registrar(Controller c) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1083, 698);
 		contentPane = new JPanel();
