@@ -58,6 +58,7 @@ public class LogIn extends JFrame implements ActionListener {
 		contentPane.add(lblContrasea);
 		
 		passwordField = new JPasswordField();
+		passwordField.setFont(new Font("Tahoma", Font.PLAIN, 45));
 		passwordField.setBounds(545, 277, 301, 59);
 		contentPane.add(passwordField);
 		

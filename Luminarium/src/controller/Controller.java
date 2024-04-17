@@ -16,7 +16,8 @@ public class Controller implements IController{
 
 	// Sentencias SQL
 	final String OBTENERusuario = "SELECT * FROM usuarios WHERE dni=? AND contraseña=?";
-	final String MODIFICARusuario = "UPDATE USUARIOS SET nombre=?, apellido=? email=? contraseña=? adminCheck=false WHERE dni=?";
+	final String MODIFICARusuario = "UPDATE USUARIOS SET nombre=?, apellido=? email=? contraseña=? dni=? adminCheck=false WHERE dni=?";
+	final String MODIFICARusuarioPago = "UPDATE USUARIOS SET nombre=?, apellido=? email=? contraseña=? dni=? metodoPago=? fechaCaducidadTarjeta=? adminCheck=false WHERE dni=?";
 	final String INSERTARusuario = "INSERT INTO USUARIOS VALUES (?,?,?,?,?,NULL,NULL,false)";
 
 	
@@ -73,7 +74,7 @@ public class Controller implements IController{
 	
 
 	@Override
-	public Usuario modificarDatosUsuario(Usuario us, String dni,String nombre, String apellido, String passwd1, String passwd2, String email) {
+	public Usuario modificarDatosUsuario(Usuario us, String dni, String dniInput,String nombre, String apellido, String passwd1, String email) {
 		// Abrimos la conexión
 		this.openConnection();
 		
@@ -83,16 +84,56 @@ public class Controller implements IController{
 			stmt.setString(1,nombre);
 			stmt.setString(2,apellido);
 			stmt.setString(3,email);
-			if (passwd1.equals(passwd2)) {
-				stmt.setString(4, passwd1);
-			}
-			stmt.setString(5, dni);
+			stmt.setString(4, passwd1);
+			stmt.setString(5, dniInput);
+			stmt.setString(6, dni);
 
 			if (stmt.executeUpdate()==1) {
 				us.setNombre(nombre);
 				us.setApellido(apellido);
 				us.setEmail(email);
 				us.setContraseña(passwd1);
+			}
+			
+		} catch (SQLException e) {
+			System.out.println("Error de SQL");
+			e.printStackTrace();
+		} finally {
+			
+			try {
+				this.closeConnection();
+			} catch (SQLException e) {
+				System.out.println("Error en el cierre de la BD");
+				e.printStackTrace();
+			}
+		}
+
+		return us;
+	}
+	
+	@Override
+	public Usuario modificarDatosUsuarioPago(Usuario us, String dni, String dniInput, String nombre, String apellido, String passwd1, String email, String tarjeta, YearMonth fechaCaducidad) {
+		// Abrimos la conexión
+		this.openConnection();
+		
+		try {
+			stmt = con.prepareStatement(MODIFICARusuarioPago);
+
+			stmt.setString(1,nombre);
+			stmt.setString(2,apellido);
+			stmt.setString(3,email);
+			stmt.setString(4, passwd1);
+			stmt.setString(5, dni);
+			stmt.setString(6, tarjeta);
+			stmt.setString(7, String.format("%d-%02d", us.getFechaCaducidadTarjeta().getYear(), us.getFechaCaducidadTarjeta().getMonthValue()));
+
+			if (stmt.executeUpdate()==1) {
+				us.setNombre(nombre);
+				us.setApellido(apellido);
+				us.setEmail(email);
+				us.setContraseña(passwd1);
+				us.setMetodoPago(tarjeta);
+				us.setFechaCaducidadTarjeta(fechaCaducidad);
 			}
 			
 		} catch (SQLException e) {

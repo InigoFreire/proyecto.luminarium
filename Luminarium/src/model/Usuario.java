@@ -1,6 +1,5 @@
 package model;
 
-import java.time.LocalDate;
 import java.time.YearMonth;
 
 public class Usuario {
@@ -19,7 +18,6 @@ public class Usuario {
     	this.nombre="";
     	this.apellido="";
     	this.email="";
-    	this.metodoPago="";
     	this.adminCheck=false;
     }
     
