@@ -15,9 +15,9 @@ public class Controller implements IController{
 	private PreparedStatement stmt;
 
 	// Sentencias SQL
-	final String OBTENERusuario = "SELECT * FROM usuario WHERE dni=? AND contraseña=?";
-	final String MODIFICARusuario = "UPDATE USUARIO SET nombre=?, apellido=? email=? contraseña=? adminCheck=false WHERE dni=?";
-	final String INSERTARusuario = "INSERT INTO USUARIO VALUES (?,?,?,?,?,NULL,NULL,false)";
+	final String OBTENERusuario = "SELECT * FROM usuarios WHERE dni=? AND contraseña=?";
+	final String MODIFICARusuario = "UPDATE USUARIOS SET nombre=?, apellido=? email=? contraseña=? adminCheck=false WHERE dni=?";
+	final String INSERTARusuario = "INSERT INTO USUARIOS VALUES (?,?,?,?,?,NULL,NULL,false)";
 
 	
 	@Override
@@ -42,8 +42,10 @@ public class Controller implements IController{
 				us.setNombre(rs.getString("nombre"));
 				us.setApellido(rs.getString("apellido"));
 				us.setEmail(rs.getString("email"));
-				us.setMetodoPago(rs.getInt("metodoPago"));
-				us.setFechaCaducidadTarjeta(YearMonth.parse(rs.getString("fechaCaducidadTarjeta")));
+				if(rs.getString("metodoPago")!=null) {
+					us.setMetodoPago(rs.getString("metodoPago"));
+					us.setFechaCaducidadTarjeta(YearMonth.parse(rs.getString("fechaCaducidadTarjeta")));
+				}
 				us.setAdminCheck(rs.getBoolean("adminCheck"));
 			} else
 				us = null;
@@ -110,8 +112,7 @@ public class Controller implements IController{
 	}
 	
 	@Override
-	public Usuario registrarUsuario(String dni,String nombre, String apellido, String passwd1, String email) {
-		Usuario us = new Usuario();
+	public void registrarUsuario(String dni,String nombre, String apellido, String passwd1, String email) {
 		
 		// Abrimos la conexión
 		this.openConnection();
@@ -124,14 +125,8 @@ public class Controller implements IController{
 			stmt.setString(5,email);
 			stmt.setString(2, passwd1);
 			stmt.setString(1, dni);
-
-			if (stmt.executeUpdate()==1) {
-				us.setNombre(nombre);
-				us.setApellido(apellido);
-				us.setEmail(email);
-				us.setContraseña(passwd1);
-				us.setDni(dni);
-			}
+			
+			stmt.executeUpdate();
 			
 		} catch (SQLException e) {
 			System.out.println("Error de SQL");
@@ -146,13 +141,12 @@ public class Controller implements IController{
 			}
 		}
 
-		return us;
 	}
 
 	private void openConnection() {
 		 try {
 		  String url ="jdbc:mysql://localhost:3306/cines_G2?serverTimezone=Europe/Madrid&useSSL=false";
-		  con =  DriverManager.getConnection(url,"dami_g2","abcd*1234");
+		  con =  DriverManager.getConnection(url,"root","abcd*1234");
 
 		} catch (SQLException e) {
 			System.out.println("Error al intentar abrir la BD");

@@ -9,7 +9,7 @@ public interface IController {
 	public Usuario modificarDatosUsuario(Usuario us, String dni, String nombre, String apellido, String passwd1,
 			String passwd2, String email);//NO sera necesario passwd2
 
-	public Usuario registrarUsuario(String dni, String nombre, String apellido, String passwd1, String email);
+	public void registrarUsuario(String dni, String nombre, String apellido, String passwd1, String email);
 	
 	
 

@@ -29,6 +29,7 @@ public class LogIn extends JFrame implements ActionListener {
 	private JLabel lblDni;
 	private JLabel lblError;
 	private Controller c;
+	private JButton btnRegistrar;
 
 	public LogIn(Controller cont) {
 		this.c=cont;
@@ -76,8 +77,14 @@ public class LogIn extends JFrame implements ActionListener {
 		lblError.setBounds(182, 529, 664, 75);
 		contentPane.add(lblError);
 		
+		btnRegistrar = new JButton("Registrarse");
+		btnRegistrar.setFont(new Font("Tahoma", Font.BOLD, 18));
+		btnRegistrar.setBounds(903, 26, 154, 40);
+		contentPane.add(btnRegistrar);
+		
 		btnEntrar.addActionListener(this);
 		btnInvitado.addActionListener(this);
+		btnRegistrar.addActionListener(this);
 		
 	}
 
@@ -96,6 +103,10 @@ public class LogIn extends JFrame implements ActionListener {
 		} else if (e.getSource()==btnInvitado) {
 			Usuario user = null;
 			VPeli frame = new VPeli(user, c);
+			frame.setVisible(true);
+			this.dispose();
+		} else if (e.getSource()==btnRegistrar) {
+			Registrar frame = new Registrar(c);
 			frame.setVisible(true);
 			this.dispose();
 		}

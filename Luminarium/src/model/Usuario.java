@@ -9,7 +9,7 @@ public class Usuario {
 	private String nombre;
 	private String apellido;
 	private String email;
-	private int metodoPago;
+	private String metodoPago;
 	private YearMonth fechaCaducidadTarjeta;
     private boolean adminCheck;
     
@@ -19,11 +19,11 @@ public class Usuario {
     	this.nombre="";
     	this.apellido="";
     	this.email="";
-    	this.metodoPago=0;
+    	this.metodoPago="";
     	this.adminCheck=false;
     }
     
-    public Usuario(String dni, String contraseña, String nombre, String apellido, String email, int metodoPago, YearMonth fechaCaducidadTarjeta, boolean adminCheck) {
+    public Usuario(String dni, String contraseña, String nombre, String apellido, String email, String metodoPago, YearMonth fechaCaducidadTarjeta, boolean adminCheck) {
     	//constructor de usuario desde admin
     	this.dni=dni;
     	this.contraseña=contraseña;
@@ -41,7 +41,7 @@ public class Usuario {
     	this.nombre=nombre;
     	this.apellido=apellido;
     	this.email=email;
-    	this.metodoPago=0;
+    	this.metodoPago="";
     	this.fechaCaducidadTarjeta=null;
     	this.adminCheck=false;
     }
@@ -86,11 +86,11 @@ public class Usuario {
 		this.email = email;
 	}
 
-	public int getMetodoPago() {
+	public String getMetodoPago() {
 		return metodoPago;
 	}
 
-	public void setMetodoPago(int metodoPago) {
+	public void setMetodoPago(String metodoPago) {
 		this.metodoPago = metodoPago;
 	}
 

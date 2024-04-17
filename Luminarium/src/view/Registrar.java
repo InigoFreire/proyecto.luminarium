@@ -152,9 +152,9 @@ public class Registrar extends JFrame implements ActionListener {
 		if(o==btnRegistrarse) {
 			String passwd = new String (password.getPassword());
 			if(passwd.equals(new String (passwordR.getPassword()))) {
-				c.registrarUsuario(textDni.getText(), textNombre.getName(), textApellido.getText(), passwd, textEmail.getText());
+				c.registrarUsuario(textDni.getText(), textNombre.getText(), textApellido.getText(), passwd, textEmail.getText());
 				lblPassError.setText("Usuario registrado correctamente");
-				LogIn login = new LogIn(c);
+				LogIn login = new LogIn(c); 
 			}
 			else {
 				lblPassError.setText("Las contraseñas no coinciden");
