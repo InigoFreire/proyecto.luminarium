@@ -19,7 +19,43 @@ public class Controller implements IController{
 	final String MODIFICARusuario = "UPDATE USUARIOS SET nombre=?, apellido=? email=? contraseña=? dni=? adminCheck=false WHERE dni=?";
 	final String MODIFICARusuarioPago = "UPDATE USUARIOS SET nombre=?, apellido=? email=? contraseña=? dni=? metodoPago=? fechaCaducidadTarjeta=? adminCheck=false WHERE dni=?";
 	final String INSERTARusuario = "INSERT INTO USUARIOS VALUES (?,?,?,?,?,NULL,NULL,false)";
-
+	final String GETuser = "SELECT * from usuarios";
+	
+	
+	@Override
+	public String[][] getUsers() {
+		int rowNum=0,i=0;
+		ResultSet rs = null;
+		String[][] usuarios=null;
+		
+				
+		this.openConnection();
+		try {
+			stmt = con.prepareStatement(GETuser);
+			
+			rs = stmt.executeQuery();
+			while(rs.next()) 
+				rowNum+=1;
+			
+			rs.beforeFirst();
+			usuarios= new String[rowNum][4];
+			while(rs.next()) {
+				usuarios[i][0]=	rs.getString("user");
+				usuarios[i][1]= rs.getString("password");
+				usuarios[i][2]= rs.getString("dni");
+				usuarios[i][3]= Integer.toString(rs.getInt("edad"));
+				i++;
+			}
+		}catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			
+			this.closeConnection();
+			
+			
+		}
+		return usuarios;
+	}
 	
 	@Override
 	public Usuario logIn(String dni, String password) {

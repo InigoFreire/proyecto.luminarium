@@ -13,5 +13,7 @@ public interface IController {
 	public Usuario modificarDatosUsuarioPago(Usuario us, String dni, String dniInput, String nombre, String apellido, String passwd1, String email, String tarjeta, YearMonth fechaCaducidad);
 	
 	public void registrarUsuario(String dni, String nombre, String apellido, String passwd1, String email);
+	
+	public String[][] getUsers(); 
 
 }
