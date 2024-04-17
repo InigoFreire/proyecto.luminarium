@@ -146,12 +146,15 @@ public class Registrar extends JFrame implements ActionListener {
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
+		
 		Object o= e.getSource();
-		String pass,passR;
+		
 		if(o==btnRegistrarse) {
-			if(new String password.getPassword()) {
-				
+			String passwd = new String (password.getPassword());
+			if(passwd.equals(new String (passwordR.getPassword()))) {
+				c.registrarUsuario(textDni.getText(), textNombre.getName(), textApellido.getText(), passwd, textEmail.getText());
+				lblPassError.setText("Usuario registrado correctamente");
+				LogIn login = new LogIn(c);
 			}
 			else {
 				lblPassError.setText("Las contraseñas no coinciden");

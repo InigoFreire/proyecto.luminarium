@@ -110,7 +110,7 @@ public class Controller implements IController{
 	}
 	
 	@Override
-	public Usuario registrarUsuario(String dni,String nombre, String apellido, String passwd1, String passwd2, String email) {
+	public Usuario registrarUsuario(String dni,String nombre, String apellido, String passwd1, String email) {
 		Usuario us = new Usuario();
 		
 		// Abrimos la conexión
@@ -122,9 +122,7 @@ public class Controller implements IController{
 			stmt.setString(3,nombre);
 			stmt.setString(4,apellido);
 			stmt.setString(5,email);
-			if (passwd1.equals(passwd2)) {
-				stmt.setString(2, passwd1);
-			}
+			stmt.setString(2, passwd1);
 			stmt.setString(1, dni);
 
 			if (stmt.executeUpdate()==1) {
