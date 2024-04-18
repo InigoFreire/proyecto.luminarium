@@ -1,7 +1,5 @@
 package view;
 
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -14,13 +12,14 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.JPopupMenu;
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.JMenuBar;
 
 public class VPeli extends JFrame implements ActionListener{
 
@@ -29,10 +28,11 @@ public class VPeli extends JFrame implements ActionListener{
 	private JLabel lblNewLabel;
 	private Controller cont;
 	private Usuario us;
-	private JButton btnModificar;
-	private JMenu mnNewMenu;
-	private JButton btnExit;
+	private JMenu mnUsuario;
 	private JScrollPane scrollPane;
+	private JMenuItem mntmModificar;
+	private JMenuItem mntmExit;
+	private JMenuBar menuBar;
 
 	public VPeli(Usuario user, Controller c) {
 		this.cont=c;
@@ -53,49 +53,42 @@ public class VPeli extends JFrame implements ActionListener{
 		contentPane.add(lblNewLabel);
 		
 		scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 54, 1081, 597);
+		scrollPane.setBounds(10, 56, 1049, 595);
 		contentPane.add(scrollPane);
 		
-		mnNewMenu = new JMenu("Usuario");
-		mnNewMenu.setFont(new Font("Segoe UI", Font.PLAIN, 15));
-		mnNewMenu.setBounds(935, 7, 124, 39);
-		contentPane.add(mnNewMenu);
+		menuBar = new JMenuBar();
+		menuBar.setBounds(882, 10, 177, 36);
+		contentPane.add(menuBar);
 		
-		btnModificar = new JButton("Modificar");
-		btnModificar.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		mnNewMenu.add(btnModificar);
+		mnUsuario = new JMenu("Usuario");
+		menuBar.add(mnUsuario);
+		mnUsuario.setFont(new Font("Segoe UI", Font.PLAIN, 15));
 		
-		btnExit = new JButton("Cerrar sesión");
-		btnExit.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		mnNewMenu.add(btnExit);
+		mntmModificar = new JMenuItem("Modificar");
+		mnUsuario.add(mntmModificar);
 		
-		btnModificar.addActionListener(this);
+		mntmExit = new JMenuItem("Cerrar Sesión");
+		mnUsuario.add(mntmExit);
+		
+		mntmModificar.addActionListener(this);
+		mntmExit.addActionListener(this);
+		mnUsuario.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                mnUsuario.doClick();
+            }
+        });
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource()==btnModificar) {
-			EUsuario frame = new EUsuario(us, cont);
-			frame.setVisible(true);
-			this.dispose();
-		}
-		
-	}
-	private static void addPopup(Component component, final JPopupMenu popup) {
-		component.addMouseListener(new MouseAdapter() {
-			public void mousePressed(MouseEvent e) {
-				if (e.isPopupTrigger()) {
-					showMenu(e);
-				}
+			if (e.getSource()==mntmModificar) {
+				EUsuario frame = new EUsuario(us, cont);
+				frame.setVisible(true);
+				this.dispose();
+			} else if (e.getSource()==mntmExit) {
+				LogIn logIn = new LogIn(cont);
+				logIn.setVisible(true);
+				dispose();
 			}
-			public void mouseReleased(MouseEvent e) {
-				if (e.isPopupTrigger()) {
-					showMenu(e);
-				}
-			}
-			private void showMenu(MouseEvent e) {
-				popup.show(e.getComponent(), e.getX(), e.getY());
-			}
-		});
 	}
 }
