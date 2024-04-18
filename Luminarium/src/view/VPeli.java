@@ -33,10 +33,12 @@ public class VPeli extends JFrame implements ActionListener{
 	private JMenu mnNewMenu;
 	private JButton btnExit;
 	private JScrollPane scrollPane;
+	
 
-	public VPeli(Usuario user, Controller c) {
+	public VPeli(Usuario user, Controller c, String[][] peliculas) {
 		this.cont=c;
 		this.us=user;
+		String [] columna = {"ID","TITULO","PEGI"};
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1083, 698);

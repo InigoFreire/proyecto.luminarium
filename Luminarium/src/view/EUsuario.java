@@ -42,6 +42,7 @@ public class EUsuario extends JFrame implements ActionListener {
 	private JLabel lblFechaCaducidadyyyymm;
 	private JTextField textNTarjeta;
 	private JTextField textFechaCaducidad;
+	private String[][] peliculas;
 	
 	
 	public EUsuario(Usuario user, Controller Con) {
@@ -196,7 +197,8 @@ public class EUsuario extends JFrame implements ActionListener {
 			String passwd = new String (password.getPassword());
 			if(passwd.equals(new String (passwordR.getPassword()))) {
 				c.modificarDatosUsuario(us, us.getDni(), textDni.getText(), textNombre.getText(), textApellido.getText(), passwd, textEmail.getText());
-				VPeli frame = new VPeli(us, c);
+				peliculas = c.getPelis();
+				VPeli frame = new VPeli(us, c,peliculas);
 				frame.setVisible(true);
 				this.dispose();
 			} else {

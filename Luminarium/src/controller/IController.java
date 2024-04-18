@@ -14,6 +14,6 @@ public interface IController {
 	
 	public void registrarUsuario(String dni, String nombre, String apellido, String passwd1, String email);
 	
-	public String[][] getUsers(); 
+	public String[][] getPelis(); 
 
 }

@@ -19,42 +19,45 @@ public class Controller implements IController{
 	final String MODIFICARusuario = "UPDATE USUARIOS SET nombre=?, apellido=? email=? contraseña=? dni=? adminCheck=false WHERE dni=?";
 	final String MODIFICARusuarioPago = "UPDATE USUARIOS SET nombre=?, apellido=? email=? contraseña=? dni=? metodoPago=? fechaCaducidadTarjeta=? adminCheck=false WHERE dni=?";
 	final String INSERTARusuario = "INSERT INTO USUARIOS VALUES (?,?,?,?,?,NULL,NULL,false)";
-	final String GETuser = "SELECT * from usuarios";
+	final String GETPeliCorto = "SELECT id,titulo,PEGI from peliculas";
 	
 	
 	@Override
-	public String[][] getUsers() {
+	public String[][] getPelis() {
 		int rowNum=0,i=0;
 		ResultSet rs = null;
-		String[][] usuarios=null;
+		String[][] peliculas=null;
 		
 				
 		this.openConnection();
 		try {
-			stmt = con.prepareStatement(GETuser);
+			stmt = con.prepareStatement(GETPeliCorto);
 			
 			rs = stmt.executeQuery();
 			while(rs.next()) 
 				rowNum+=1;
 			
 			rs.beforeFirst();
-			usuarios= new String[rowNum][4];
+			peliculas= new String[rowNum][3];
 			while(rs.next()) {
-				usuarios[i][0]=	rs.getString("user");
-				usuarios[i][1]= rs.getString("password");
-				usuarios[i][2]= rs.getString("dni");
-				usuarios[i][3]= Integer.toString(rs.getInt("edad"));
+				peliculas[i][0]= rs.getString("id");
+				peliculas[i][1]= rs.getString("titulo");
+				peliculas[i][2]= Integer.toString(rs.getInt("PEGI"));
 				i++;
 			}
 		}catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
+			try {
+				this.closeConnection();
+			}catch (SQLException e) {
+				e.printStackTrace();
+			}
 			
-			this.closeConnection();
 			
 			
 		}
-		return usuarios;
+		return peliculas;
 	}
 	
 	@Override
@@ -157,7 +160,7 @@ public class Controller implements IController{
 
 			stmt.setString(1,nombre);
 			stmt.setString(2,apellido);
-			stmt.setString(3,email);
+			stmt.setString(3, email);
 			stmt.setString(4, passwd1);
 			stmt.setString(5, dni);
 			stmt.setString(6, tarjeta);
