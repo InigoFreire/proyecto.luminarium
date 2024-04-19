@@ -19,10 +19,12 @@ import javax.swing.JButton;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Stack;
 
 public class InfoPeli extends JFrame implements ActionListener{
 
 	private static final long serialVersionUID = 1L;
+	private static Stack<VPeli> stack = new Stack<>();
 	private JPanel contentPane;
 	private JLabel lblFoto, lblTitulo, lblGenero, lblPegi;
 	private JLabel lblDuracion;
@@ -81,8 +83,7 @@ public class InfoPeli extends JFrame implements ActionListener{
 		btnNewButton = new JButton("Comprar entradas");
 		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		btnNewButton.setBounds(823, 614, 236, 37);
-		contentPane.add(btnNewButton);
-		
+		contentPane.add(btnNewButton);        
 		
 		menuBar = new JMenuBar();
 		menuBar.setBounds(882, 10, 177, 36);
@@ -98,6 +99,12 @@ public class InfoPeli extends JFrame implements ActionListener{
 		mntmExit = new JMenuItem("Cerrar Sesión");
 		mnUsuario.add(mntmExit);
 		
+		JButton btnAtras = new JButton("Pag. anterior");
+		btnAtras.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btnAtras.setBounds(10, 626, 177, 23);
+		contentPane.add(btnAtras);
+		
+		btnNewButton.addActionListener(this);
 		mntmModificar.addActionListener(this);
 		mntmExit.addActionListener(this);
 		mnUsuario.addActionListener(new ActionListener() {
@@ -105,6 +112,14 @@ public class InfoPeli extends JFrame implements ActionListener{
                 mnUsuario.doClick();
             }
         });
+		btnAtras.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            if (!stack.isEmpty()) {
+                VPeli anterior = stack.pop();
+                anterior.setVisible(true);
+                dispose();
+            }
+        }});
 	}
 
 	@Override

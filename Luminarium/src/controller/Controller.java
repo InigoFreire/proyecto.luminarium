@@ -57,6 +57,12 @@ public class Controller implements IController{
 		return usuarios;
 	}
 	
+	/**
+	 * Método de entrar a la app con usuario y contraseña.
+	 * @param dni es el dni que reconoce como usuario.
+	 * @param password es la contraseña que reconoce como contraseña del usuario.
+	 * @return El usuario que ha logeado.
+	 */
 	@Override
 	public Usuario logIn(String dni, String password) {
 		ResultSet rs = null;
