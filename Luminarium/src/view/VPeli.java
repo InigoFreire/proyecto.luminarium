@@ -5,6 +5,7 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 
 import controller.Controller;
 import model.Usuario;
@@ -16,6 +17,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JPopupMenu;
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
@@ -33,12 +35,14 @@ public class VPeli extends JFrame implements ActionListener{
 	private JMenu mnNewMenu;
 	private JButton btnExit;
 	private JScrollPane scrollPane;
+	private JTable tablaPeliculas;
 	
 
 	public VPeli(Usuario user, Controller c, String[][] peliculas) {
 		this.cont=c;
 		this.us=user;
 		String [] columna = {"ID","TITULO","PEGI"};
+		DefaultTableModel model = new DefaultTableModel(peliculas,columna);
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1083, 698);
@@ -47,6 +51,7 @@ public class VPeli extends JFrame implements ActionListener{
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		tablaPeliculas = new JTable(model);
 		
 		lblNewLabel = new JLabel("Películas");
 		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 17));
@@ -54,7 +59,7 @@ public class VPeli extends JFrame implements ActionListener{
 		lblNewLabel.setBounds(456, 7, 124, 39);
 		contentPane.add(lblNewLabel);
 		
-		scrollPane = new JScrollPane();
+		scrollPane = new JScrollPane(tablaPeliculas);
 		scrollPane.setBounds(10, 54, 1081, 597);
 		contentPane.add(scrollPane);
 		
