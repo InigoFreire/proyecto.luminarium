@@ -5,8 +5,10 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.YearMonth; 
+import java.time.YearMonth;
 
+import model.Genero;
+import model.Pelicula;
 import model.Usuario;
 
 public class Controller implements IController{
@@ -19,8 +21,37 @@ public class Controller implements IController{
 	final String MODIFICARusuario = "UPDATE USUARIOS SET nombre=?, apellido=? email=? contraseña=? dni=? adminCheck=false WHERE dni=?";
 	final String MODIFICARusuarioPago = "UPDATE USUARIOS SET nombre=?, apellido=? email=? contraseña=? dni=? metodoPago=? fechaCaducidadTarjeta=? adminCheck=false WHERE dni=?";
 	final String INSERTARusuario = "INSERT INTO USUARIOS VALUES (?,?,?,?,?,NULL,NULL,false)";
-	final String GETPeliCorto = "SELECT id,titulo,PEGI from peliculas";
+	final String GETPeliCorto = "SELECT titulo,PEGI from peliculas";
+	final String GetPeliInfo = "select * from peliculas where titulo = ?";
 	
+	
+	@Override
+	public Pelicula getPeliInfo(String id) {
+		Pelicula pelicula = new Pelicula();
+		ResultSet rs = null;
+		
+		this.openConnection();
+		try {
+			stmt = con.prepareStatement(GetPeliInfo);
+			stmt.setString(1, id);
+			rs = stmt.executeQuery();
+			
+			if (rs.next()) {
+				pelicula.setId(rs.getString("id"));
+				pelicula.setGenero(Genero.valueOf(rs.getString("genero").toUpperCase()));
+				pelicula.setTitulo(rs.getString("titulo"));
+				pelicula.setPegi(rs.getInt("PEGI"));
+				pelicula.setDuracion(rs.getInt("duracion"));
+				pelicula.setSinopsis(rs.getString("sinopsis"));
+			}
+			
+			this.closeConnection();
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return pelicula;
+	}
 	
 	@Override
 	public String[][] getPelis() {
@@ -38,11 +69,10 @@ public class Controller implements IController{
 				rowNum+=1;
 			
 			rs.beforeFirst();
-			peliculas= new String[rowNum][3];
+			peliculas= new String[rowNum][2];
 			while(rs.next()) {
-				peliculas[i][0]= rs.getString("id");
-				peliculas[i][1]= rs.getString("titulo");
-				peliculas[i][2]= Integer.toString(rs.getInt("PEGI"));
+				peliculas[i][0]= rs.getString("titulo");
+				peliculas[i][1]= Integer.toString(rs.getInt("PEGI"));
 				i++;
 			}
 		}catch (SQLException e) {

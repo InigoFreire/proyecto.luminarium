@@ -2,6 +2,7 @@ package controller;
 
 import java.time.YearMonth;
 
+import model.Pelicula;
 import model.Usuario;
 
 public interface IController {
@@ -14,6 +15,8 @@ public interface IController {
 	
 	public void registrarUsuario(String dni, String nombre, String apellido, String passwd1, String email);
 	
-	public String[][] getPelis(); 
+	public String[][] getPelis();
+
+	public Pelicula getPeliInfo(String id);  
 
 }

@@ -5,9 +5,9 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableModel;
-
 import controller.Controller;
+import model.Pelicula;
+import model.TablaPelis;
 import model.Usuario;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
@@ -41,8 +41,8 @@ public class VPeli extends JFrame implements ActionListener{
 	public VPeli(Usuario user, Controller c, String[][] peliculas) {
 		this.cont=c;
 		this.us=user;
-		String [] columna = {"ID","TITULO","PEGI"};
-		DefaultTableModel model = new DefaultTableModel(peliculas,columna);
+		String [] columna = {"TITULO","PEGI"};
+		TablaPelis model = new TablaPelis(peliculas,columna);
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1083, 698);
@@ -60,7 +60,7 @@ public class VPeli extends JFrame implements ActionListener{
 		contentPane.add(lblNewLabel);
 		
 		scrollPane = new JScrollPane(tablaPeliculas);
-		scrollPane.setBounds(10, 54, 1081, 597);
+		scrollPane.setBounds(10, 54, 900, 100);
 		contentPane.add(scrollPane);
 		
 		mnNewMenu = new JMenu("Usuario");
@@ -77,6 +77,21 @@ public class VPeli extends JFrame implements ActionListener{
 		mnNewMenu.add(btnExit);
 		
 		btnModificar.addActionListener(this);
+		tablaPeliculas.addMouseListener(new MouseAdapter() {
+			Pelicula pelicula;
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int linea = tablaPeliculas.rowAtPoint(e.getPoint());
+				int columna = tablaPeliculas.columnAtPoint(e.getPoint());
+				if(linea >= 0 && columna ==0) {
+					String valor = (String) tablaPeliculas.getValueAt(linea, columna);
+					pelicula=c.getPeliInfo(valor);
+					InfoPeli infoPeli= new InfoPeli(us,cont,pelicula);
+					infoPeli.setVisible(true);
+					dispose();
+				}
+			}
+		});
 	}
 
 	@Override
@@ -86,6 +101,8 @@ public class VPeli extends JFrame implements ActionListener{
 			frame.setVisible(true);
 			this.dispose();
 		}
+		
+		
 		
 	}
 	private static void addPopup(Component component, final JPopupMenu popup) {
@@ -105,4 +122,5 @@ public class VPeli extends JFrame implements ActionListener{
 			}
 		});
 	}
+	
 }

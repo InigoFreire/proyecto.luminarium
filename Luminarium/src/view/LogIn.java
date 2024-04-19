@@ -96,10 +96,17 @@ public class LogIn extends JFrame implements ActionListener {
 		if (e.getSource()==btnEntrar) {
 			Usuario user = c.logIn(textField.getText(), new String(passwordField.getPassword()));
 			if (user != null) {
+				if(user.isAdminCheck()) {
+					MenuAdmin menuAdmin= new MenuAdmin(c, user);
+					menuAdmin.setVisible(true);
+					this.dispose();
+				}
+				else {
 				peliculas = c.getPelis();
 				VPeli frame = new VPeli(user, c, peliculas);
 				frame.setVisible(true);
 				this.dispose();
+				}
 			} else {
 				lblError.setText("Usuario no encontrado.");
 			}
