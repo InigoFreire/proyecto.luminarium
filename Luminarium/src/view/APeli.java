@@ -12,6 +12,7 @@ import controller.Controller;
 import model.Usuario;
 
 import javax.swing.JLabel;
+import javax.swing.JTextField;
 
 public class APeli extends JFrame implements ActionListener{
 
@@ -19,6 +20,7 @@ public class APeli extends JFrame implements ActionListener{
 	private JPanel contentPane;
 	private Controller controlador;
 	private Usuario user;
+	private JTextField textFieldTitulo;
 
 	public APeli(Controller c, Usuario u) {
 		this.controlador=c;
@@ -31,9 +33,18 @@ public class APeli extends JFrame implements ActionListener{
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel lblNewLabel = new JLabel("APeli");
-		lblNewLabel.setBounds(91, 100, 45, 13);
-		contentPane.add(lblNewLabel);
+		JLabel lblNuevaPelicula = new JLabel("Nueva Película");
+		lblNuevaPelicula.setBounds(91, 34, 153, 13);
+		contentPane.add(lblNuevaPelicula);
+		
+		JLabel lblTitulo = new JLabel("Título");
+		lblTitulo.setBounds(49, 57, 45, 13);
+		contentPane.add(lblTitulo);
+		
+		textFieldTitulo = new JTextField();
+		textFieldTitulo.setBounds(43, 80, 96, 19);
+		contentPane.add(textFieldTitulo);
+		textFieldTitulo.setColumns(10);
 		
 	}
 
