@@ -13,6 +13,8 @@ import javax.swing.JTextField;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.SwingConstants;
 import javax.swing.JButton;
@@ -39,6 +41,10 @@ public class Registrar extends JFrame implements ActionListener {
 	private JLabel lblPassError;
 	private JPasswordField password;
 	private JPasswordField passwordR;
+	private JLabel lblDniIncorrecto;
+	private JLabel lblEmailError;
+	private JLabel lblNombreError;
+	private JLabel lblApellidoError;
 	
 	
 	public Registrar(Controller Con) {
@@ -52,95 +58,120 @@ public class Registrar extends JFrame implements ActionListener {
 		contentPane.setLayout(null);
 		
 		lblNombre = new JLabel("NOMBRE");
-		lblNombre.setBounds(192, 86, 224, 56);
+		lblNombre.setBounds(192, 64, 224, 56);
 		lblNombre.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNombre.setFont(new Font("Tahoma", Font.BOLD, 20));
 		contentPane.add(lblNombre);
 		
 		textNombre = new JTextField();
+		textNombre.setBounds(192, 120, 224, 56);
 		textNombre.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		textNombre.setHorizontalAlignment(SwingConstants.CENTER);
-		textNombre.setBounds(192, 153, 224, 56);
 		contentPane.add(textNombre);
 		textNombre.setColumns(10);
 		
 		lblApellido = new JLabel("APELLIDO");
+		lblApellido.setBounds(192, 191, 224, 56);
 		lblApellido.setHorizontalAlignment(SwingConstants.CENTER);
 		lblApellido.setFont(new Font("Tahoma", Font.BOLD, 20));
-		lblApellido.setBounds(192, 220, 224, 56);
 		contentPane.add(lblApellido);
 		
 		textApellido = new JTextField();
+		textApellido.setBounds(192, 247, 224, 56);
 		textApellido.setHorizontalAlignment(SwingConstants.CENTER);
 		textApellido.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		textApellido.setColumns(10);
-		textApellido.setBounds(192, 287, 224, 56);
 		contentPane.add(textApellido);
 		
 		lblContrasena = new JLabel("CONTRASEÑA");
+		lblContrasena.setBounds(192, 340, 224, 56);
 		lblContrasena.setHorizontalAlignment(SwingConstants.CENTER);
 		lblContrasena.setFont(new Font("Tahoma", Font.BOLD, 20));
-		lblContrasena.setBounds(192, 354, 224, 56);
 		contentPane.add(lblContrasena);
 		
 		lblDni = new JLabel("DNI");
+		lblDni.setBounds(625, 64, 224, 56);
 		lblDni.setHorizontalAlignment(SwingConstants.CENTER);
 		lblDni.setFont(new Font("Tahoma", Font.BOLD, 20));
-		lblDni.setBounds(625, 86, 224, 56);
 		contentPane.add(lblDni);
 		
 		textDni = new JTextField();
+		textDni.setBounds(625, 120, 224, 56);
 		textDni.setHorizontalAlignment(SwingConstants.CENTER);
 		textDni.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		textDni.setColumns(10);
-		textDni.setBounds(625, 153, 224, 56);
 		contentPane.add(textDni);
 		
 		lblEmail = new JLabel("EMAIL");
+		lblEmail.setBounds(625, 191, 224, 56);
 		lblEmail.setHorizontalAlignment(SwingConstants.CENTER);
 		lblEmail.setFont(new Font("Tahoma", Font.BOLD, 20));
-		lblEmail.setBounds(625, 220, 224, 56);
 		contentPane.add(lblEmail);
 		
 		textEmail = new JTextField();
+		textEmail.setBounds(625, 247, 224, 56);
 		textEmail.setHorizontalAlignment(SwingConstants.CENTER);
 		textEmail.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		textEmail.setColumns(10);
-		textEmail.setBounds(625, 287, 224, 56);
 		contentPane.add(textEmail);
 		
 		lblRepiteContrasena = new JLabel("REINTRODUCE LA CONTRASEÑA");
+		lblRepiteContrasena.setBounds(552, 354, 359, 56);
 		lblRepiteContrasena.setHorizontalAlignment(SwingConstants.CENTER);
 		lblRepiteContrasena.setFont(new Font("Tahoma", Font.BOLD, 20));
-		lblRepiteContrasena.setBounds(552, 354, 359, 56);
 		contentPane.add(lblRepiteContrasena);
 		
 		lblCabecera = new JLabel("RESGISTRARSE");
+		lblCabecera.setBounds(229, 11, 611, 56);
 		lblCabecera.setHorizontalAlignment(SwingConstants.CENTER);
 		lblCabecera.setFont(new Font("Tahoma", Font.BOLD, 18));
-		lblCabecera.setBounds(229, 11, 611, 56);
 		contentPane.add(lblCabecera);
 		
 		btnRegistrarse = new JButton("REGISTRARSE");
-		btnRegistrarse.setFont(new Font("Tahoma", Font.BOLD, 19));
 		btnRegistrarse.setBounds(387, 510, 264, 56);
+		btnRegistrarse.setFont(new Font("Tahoma", Font.BOLD, 19));
 		contentPane.add(btnRegistrarse);
 		
 		lblPassError = new JLabel("");
+		lblPassError.setBounds(223, 593, 587, 55);
 		lblPassError.setFont(new Font("Tahoma", Font.BOLD, 17));
 		lblPassError.setForeground(new Color(255, 0, 0));
-		lblPassError.setBounds(223, 593, 587, 55);
 		contentPane.add(lblPassError);
 		
 		password = new JPasswordField();
-		password.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		password.setBounds(192, 407, 224, 56);
+		password.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		contentPane.add(password);
 		
 		passwordR = new JPasswordField();
-		passwordR.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		passwordR.setBounds(625, 407, 224, 56);
+		passwordR.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		contentPane.add(passwordR);
+		
+		lblDniIncorrecto = new JLabel("");
+		lblDniIncorrecto.setFont(new Font("Tahoma", Font.BOLD, 15));
+		lblDniIncorrecto.setBounds(859, 120, 235, 56);
+		lblDniIncorrecto.setForeground(new Color(255, 0, 0));
+		contentPane.add(lblDniIncorrecto);
+		
+		lblEmailError = new JLabel("");
+		lblEmailError.setBounds(859, 247, 170, 56);
+		lblEmailError.setForeground(new Color(255, 0, 0));
+		lblEmailError.setFont(new Font("Tahoma", Font.BOLD, 15));
+		lblEmailError.setBackground(new Color(255, 255, 255));
+		contentPane.add(lblEmailError);
+		
+		lblNombreError = new JLabel("");
+		lblNombreError.setFont(new Font("Tahoma", Font.BOLD, 15));
+		lblNombreError.setForeground(new Color(255, 0, 0));
+		lblNombreError.setBounds(426, 124, 189, 52);
+		contentPane.add(lblNombreError);
+		
+		lblApellidoError = new JLabel("");
+		lblApellidoError.setFont(new Font("Tahoma", Font.BOLD, 15));
+		lblApellidoError.setForeground(new Color(255, 0, 0));
+		lblApellidoError.setBounds(426, 247, 189, 56);
+		contentPane.add(lblApellidoError);
 		
 		btnRegistrarse.addActionListener(this);
 	}
@@ -148,17 +179,55 @@ public class Registrar extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		
 		Object o= e.getSource();
+		boolean correcto=true;
+		String passwd = new String (password.getPassword());
+		String passwdR = new String (passwordR.getPassword());
 		
 		if(o==btnRegistrarse) {
-			String passwd = new String (password.getPassword());
-			if(passwd.equals(new String (passwordR.getPassword()))) {
+			lblDniIncorrecto.setText("");
+			lblEmailError.setText("");
+			lblPassError.setText("");
+			lblNombreError.setText("");
+			lblApellidoError.setText("");
+			if(!passwd.equals(passwdR)) {
+				lblPassError.setText("Las contraseñas no coinciden");
+				correcto=false;
+			}
+			if(passwd.equals("")&&passwdR.equals("")) {
+				lblPassError.setText("Introduce las constraseñas");
+			}
+			//Comprobar que nombre no esta vacio
+			if(textNombre.getText().equals("")) {
+				lblNombreError.setText("Introduce el nombre");
+				correcto=false;
+			}
+			//Comprobar que apellido no esta vacio
+			if(textApellido.getText().equals("")) {
+				lblApellidoError.setText("Introduce el apellido");
+				correcto=false;
+			}
+			//comprobar longitud DNI
+			if(textDni.getText().length()!=9) {
+				lblDniIncorrecto.setText("El DNI tiene que estar formado por 9 numeros");
+				correcto=false;
+			}
+			
+			//Comprobar veracidad email
+			String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+	        Pattern pattern = Pattern.compile(emailRegex);
+	        Matcher matcher = pattern.matcher(textEmail.getText());
+	        if(!matcher.matches()) {
+	        	lblEmailError.setText("No es un mail valido");
+	        	correcto=false;
+	        }
+			
+	        if(correcto) {
 				c.registrarUsuario(textDni.getText(), textNombre.getText(), textApellido.getText(), passwd, textEmail.getText());
 				lblPassError.setText("Usuario registrado correctamente");
-				LogIn login = new LogIn(c); 
-			}
-			else {
-				lblPassError.setText("Las contraseñas no coinciden");
-			}
+				LogIn login = new LogIn(c);
+				login.setVisible(true);
+				this.dispose();
+	        }
 			
 		}
 	}

@@ -30,6 +30,7 @@ public class LogIn extends JFrame implements ActionListener {
 	private JLabel lblError;
 	private Controller c;
 	private JButton btnRegistrar;
+	private String[][] peliculas;
 
 	public LogIn(Controller cont) {
 		this.c=cont;
@@ -58,6 +59,7 @@ public class LogIn extends JFrame implements ActionListener {
 		contentPane.add(lblContrasea);
 		
 		passwordField = new JPasswordField();
+		passwordField.setFont(new Font("Tahoma", Font.PLAIN, 45));
 		passwordField.setBounds(545, 277, 301, 59);
 		contentPane.add(passwordField);
 		
@@ -94,15 +96,24 @@ public class LogIn extends JFrame implements ActionListener {
 		if (e.getSource()==btnEntrar) {
 			Usuario user = c.logIn(textField.getText(), new String(passwordField.getPassword()));
 			if (user != null) {
-				VPeli frame = new VPeli(user, c);
+				if(user.isAdminCheck()) {
+					MenuAdmin menuAdmin= new MenuAdmin(c, user);
+					menuAdmin.setVisible(true);
+					this.dispose();
+				}
+				else {
+				peliculas = c.getPelis();
+				VPeli frame = new VPeli(c, user, peliculas);
 				frame.setVisible(true);
 				this.dispose();
+				}
 			} else {
 				lblError.setText("Usuario no encontrado.");
 			}
 		} else if (e.getSource()==btnInvitado) {
 			Usuario user = null;
-			VPeli frame = new VPeli(user, c);
+			peliculas = c.getPelis();
+			VPeli frame = new VPeli(c, user, peliculas);
 			frame.setVisible(true);
 			this.dispose();
 		} else if (e.getSource()==btnRegistrar) {
