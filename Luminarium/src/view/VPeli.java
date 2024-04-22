@@ -37,10 +37,12 @@ public class VPeli extends JFrame implements ActionListener {
 	private JTable tablaPeliculas;
 	private JMenuItem mntmModificar, mntmExit;
 	private JMenuBar menuBar;
+	private String[][] peliculas;
 
-	public VPeli(Controller c, Usuario u, String[][] peliculas) {
+	public VPeli(Controller c, Usuario u) {
 		this.controlador = c;
 		this.user = u;
+		peliculas = c.getPelis();
 		String[] columna = { "TITULO", "PEGI" };
 		TablaPelis model = new TablaPelis(peliculas, columna);
 
