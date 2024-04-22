@@ -75,6 +75,7 @@ public class VPeli extends JFrame implements ActionListener {
 		mntmModificar = new JMenuItem("Modificar");
 		mnUsuario.add(mntmModificar);
 
+		btnModificar=new JButton("Modificar");
 		btnModificar.addActionListener(this);
 		tablaPeliculas.addMouseListener(new MouseAdapter() {
 			Pelicula pelicula;
@@ -115,7 +116,7 @@ public class VPeli extends JFrame implements ActionListener {
 		}
 	}
 
-	private static void addPopup(Component component, final JPopupMenu popup) {
+	/*private static void addPopup(Component component, final JPopupMenu popup) {
 		component.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
 				if (e.isPopupTrigger()) {
@@ -132,5 +133,5 @@ public class VPeli extends JFrame implements ActionListener {
 				}
 			}
 		});
-	}
+	}*/
 }

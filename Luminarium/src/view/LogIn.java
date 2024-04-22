@@ -111,7 +111,7 @@ public class LogIn extends JFrame implements ActionListener {
 				lblError.setText("Usuario no encontrado.");
 			}
 		} else if (e.getSource()==btnInvitado) {
-			Usuario user = null;
+			Usuario user = new Usuario();
 			peliculas = c.getPelis();
 			VPeli frame = new VPeli(c, user, peliculas);
 			frame.setVisible(true);

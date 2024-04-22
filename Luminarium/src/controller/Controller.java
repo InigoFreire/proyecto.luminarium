@@ -261,8 +261,8 @@ public class Controller implements IController{
 
 	private void openConnection() {
 		 try {
-		  String url ="jdbc:mysql://localhost:3306/cines_G2?serverTimezone=Europe/Madrid&useSSL=false";
-		  con =  DriverManager.getConnection(url,"root","abcd*1234");
+		  String url ="jdbc:mysql://localhost:3306/cines_g2?serverTimezone=Europe/Madrid&useSSL=false";
+		  con =  DriverManager.getConnection(url,"dami_g2","abcd*1234");
 
 		} catch (SQLException e) {
 			System.out.println("Error al intentar abrir la BD");
