@@ -189,6 +189,7 @@ public class Registrar extends JFrame implements ActionListener {
 			lblPassError.setText("");
 			lblNombreError.setText("");
 			lblApellidoError.setText("");
+			
 			if(!passwd.equals(passwdR)) {
 				lblPassError.setText("Las contraseñas no coinciden");
 				correcto=false;

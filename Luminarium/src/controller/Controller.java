@@ -18,8 +18,8 @@ public class Controller implements IController{
 
 	// Sentencias SQL
 	final String OBTENERusuario = "SELECT * FROM usuarios WHERE dni=? AND contraseña=?";
-	final String MODIFICARusuario = "UPDATE USUARIOS SET nombre=?, apellido=? email=? contraseña=? dni=? adminCheck=false WHERE dni=?";
-	final String MODIFICARusuarioPago = "UPDATE USUARIOS SET nombre=?, apellido=? email=? contraseña=? dni=? metodoPago=? fechaCaducidadTarjeta=? adminCheck=false WHERE dni=?";
+	final String MODIFICARusuario = "UPDATE USUARIOS SET nombre=?, apellido=?, email=?, contraseña=?, dni=?, adminCheck=false WHERE dni=?";
+	final String MODIFICARusuarioPago = "UPDATE USUARIOS SET nombre=?, apellido=?, email=?, contraseña=?, dni=?, metodoPago=?, fechaCaducidadTarjeta=?, adminCheck=false WHERE dni=?";
 	final String INSERTARusuario = "INSERT INTO USUARIOS VALUES (?,?,?,?,?,NULL,NULL,false)";
 	final String GETPeliCorto = "SELECT titulo,PEGI from peliculas";
 	final String GetPeliInfo = "select * from peliculas where titulo = ?";
@@ -168,6 +168,7 @@ public class Controller implements IController{
 				us.setApellido(apellido);
 				us.setEmail(email);
 				us.setContraseña(passwd1);
+				us.setDni(dniInput);
 			}
 			
 		} catch (SQLException e) {
@@ -201,6 +202,7 @@ public class Controller implements IController{
 			stmt.setString(5, dni);
 			stmt.setString(6, tarjeta);
 			stmt.setString(7, String.format("%d-%02d", us.getFechaCaducidadTarjeta().getYear(), us.getFechaCaducidadTarjeta().getMonthValue()));
+			stmt.setString(8, dni);
 
 			if (stmt.executeUpdate()==1) {
 				us.setNombre(nombre);
@@ -209,6 +211,7 @@ public class Controller implements IController{
 				us.setContraseña(passwd1);
 				us.setMetodoPago(tarjeta);
 				us.setFechaCaducidadTarjeta(fechaCaducidad);
+				us.setDni(dniInput);
 			}
 			
 		} catch (SQLException e) {

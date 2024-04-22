@@ -1,25 +1,15 @@
 package view;
 
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-
-<<<<<<< HEAD
-import controlador.Controlador;
-=======
-
->>>>>>> aitor
 import controller.Controller;
 import model.Usuario;
-
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.lang.reflect.InvocationTargetException;
 import java.awt.event.ActionEvent;
-import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
@@ -78,7 +68,9 @@ public class MenuAdmin extends JFrame implements ActionListener{
 		contentPane.add(lblBienvenida);
 		
 	}
-
+/**
+ * 
+ */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
