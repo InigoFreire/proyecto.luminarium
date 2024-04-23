@@ -21,9 +21,38 @@ public class Controller implements IController{
 	final String MODIFICARusuario = "UPDATE USUARIOS SET nombre=?, apellido=?, email=?, contraseña=?, dni=?, adminCheck=false WHERE dni=?";
 	final String MODIFICARusuarioPago = "UPDATE USUARIOS SET nombre=?, apellido=?, email=?, contraseña=?, dni=?, metodoPago=?, fechaCaducidadTarjeta=?, adminCheck=false WHERE dni=?";
 	final String INSERTARusuario = "INSERT INTO USUARIOS VALUES (?,?,?,?,?,NULL,NULL,false)";
+	final String INSERTARSala = "INSERT INTO salas VALUES (?,?)";
 	final String GETPeliCorto = "SELECT titulo,PEGI from peliculas";
-	final String GetPeliInfo = "select * from peliculas where titulo = ?";
+	final String GetPeliInfo = "select * from peliculas where titulo = ?";	
 	
+	@Override
+	public void registrarSala(String id, int aforo) {
+		
+		// Abrimos la conexión
+		this.openConnection();
+		
+		try {
+			stmt = con.prepareStatement(INSERTARSala);
+
+			stmt.setInt(2, aforo);
+			stmt.setString(1, id);
+			
+			stmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			System.out.println("Error de SQL");
+			e.printStackTrace();
+		} finally {
+			
+			try {
+				this.closeConnection();
+			} catch (SQLException e) {
+				System.out.println("Error en el cierre de la BD");
+				e.printStackTrace();
+			}
+		}
+
+	}
 	
 	@Override
 	public Pelicula getPeliInfo(String id) {

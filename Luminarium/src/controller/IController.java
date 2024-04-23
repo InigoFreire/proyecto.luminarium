@@ -17,6 +17,8 @@ public interface IController {
 	
 	public String[][] getPelis();
 
-	public Pelicula getPeliInfo(String id);  
+	public Pelicula getPeliInfo(String id);
+
+	public void registrarSala(String id, int aforo);  
 
 }
