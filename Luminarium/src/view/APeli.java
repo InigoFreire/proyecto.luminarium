@@ -4,6 +4,7 @@ import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -21,6 +22,7 @@ public class APeli extends JFrame implements ActionListener{
 	private Controller controlador;
 	private Usuario user;
 	private JTextField textFieldTitulo;
+	private JButton btnVolver;
 
 	public APeli(Controller c, Usuario u) {
 		this.controlador=c;
@@ -46,11 +48,21 @@ public class APeli extends JFrame implements ActionListener{
 		contentPane.add(textFieldTitulo);
 		textFieldTitulo.setColumns(10);
 		
+		btnVolver = new JButton("Volver");
+		btnVolver.setBounds(10, 221, 85, 21);
+		contentPane.add(btnVolver);
+		btnVolver.addActionListener(this);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
+		Object o=e.getSource();	
 		
+		if (o==btnVolver) {
+			MenuAdmin menuA = new MenuAdmin(controlador, user);
+			menuA.setVisible(true);
+			dispose();
+		}
 	}
 }
