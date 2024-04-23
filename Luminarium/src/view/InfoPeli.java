@@ -20,6 +20,7 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Stack;
+import javax.swing.JComboBox;
 
 public class InfoPeli extends JFrame implements ActionListener {
 

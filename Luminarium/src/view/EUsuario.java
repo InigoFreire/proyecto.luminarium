@@ -21,6 +21,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import controller.Controller;
+import excepciones.IllegalEntryData;
 import model.Usuario;
 
 
@@ -250,86 +251,101 @@ public class EUsuario extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource()==btnRegistrarse) {
-			
-			boolean correcto=true;
-			String passwd = new String (password.getPassword());
-			String passwdR = new String (passwordR.getPassword());
-			String Regex;
-	        Pattern pattern;
-	        Matcher matcher;
-			
-			lblDniError.setText("");
-			lblEmailError.setText("");
-			lblPassError.setText("");
-			lblNombreError.setText("");
-			lblApellidoError.setText("");
-			lblCaducidadError.setText("");
-			lblTarjetaError.setText("");
-			
-			if(!passwd.equals(passwdR)) {
-				lblpasswrodError1.setText("Las contraseñas no coinciden");
-				correcto=false;
+			try {
+				verificarDatos();
+			}catch (IllegalEntryData error) {
+				 System.out.println("ERROR: "+error.getMessage());
 			}
-			if(passwd.equals("")&&passwdR.equals("")) {
-				lblpasswrodError1.setText("Introduce las constraseñas");
-				correcto=false;
-			}
-			//Comprobar que nombre no esta vacio
-			if(textNombre.getText().equals("")) {
-				lblNombreError.setText("Introduce el nombre");
-				correcto=false;
-			}
-			//Comprobar que apellido no esta vacio
-			if(textApellido.getText().equals("")) {
-				lblApellidoError.setText("Introduce el apellido");
-				correcto=false;
-			}
-			//comprobar longitud DNI
-			if(textDni.getText().length()!=9) {
-				lblDniError.setText("El DNI tiene que estar formado por 9 numeros");
-				correcto=false;
-			}
-			//Comrprobar que mete un numero de tarjeta correcto
-			Regex = "\\d{16}";
-	        pattern = Pattern.compile(Regex);
-	        matcher = pattern.matcher(textNTarjeta.getText());
-	        if(!matcher.matches()) {
-	        	lblTarjetaError.setText("Tienen que ser 16 numeros");
-	        	correcto=false;
-	        }
-			//Comprobar que el formato de caducidad es correcto
-	        Regex = "\\d{4}-(0[1-9]|1[0-2])";
-	        pattern = Pattern.compile(Regex);
-	        matcher = pattern.matcher(textFechaCaducidad.getText());
-	        if(!matcher.matches()) {
-	        	lblCaducidadError.setText("Introduce una fecha de cucidad correcta Formato:\"yyyy-mm\"");
-	        	correcto=false;
-	        }
-			
-			//Comprobar veracidad email
-			Regex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
-	        pattern = Pattern.compile(Regex);
-	        matcher = pattern.matcher(textEmail.getText());
-	        if(!matcher.matches()) {
-	        	lblEmailError.setText("No es un mail valido");
-	        	correcto=false;
-	        }
-			
-			
-			
-			
-			
-			
-			if(correcto) {
-				controlador.modificarDatosUsuarioPago(user, user.getDni(), textDni.getText(), textNombre.getText(), textApellido.getText(), passwd, textEmail.getText(), textNTarjeta.getText(), YearMonth.parse(textFechaCaducidad.getText()));
-				peliculas = controlador.getPelis();
-				VPeli frame = new VPeli(controlador, user,peliculas);
-				frame.setVisible(true);
-				this.dispose();
-			} else {
-				lblPassError.setText("Las contraseñas no coinciden");
-			}
-			
 		}
+	}
+	public void verificarDatos() throws IllegalEntryData {
+		
+		boolean correcto=true;
+		String passwd = new String (password.getPassword());
+		String passwdR = new String (passwordR.getPassword());
+		String Regex;
+        Pattern pattern;
+        Matcher matcher;
+		
+		lblDniError.setText("");
+		lblEmailError.setText("");
+		lblPassError.setText("");
+		lblNombreError.setText("");
+		lblApellidoError.setText("");
+		lblCaducidadError.setText("");
+		lblTarjetaError.setText("");
+		
+		if(!passwd.equals(passwdR)) {
+			lblpasswrodError1.setText("Las contraseñas no coinciden");
+			correcto=false;
+		}
+		if(passwd.equals("")&&passwdR.equals("")) {
+			lblpasswrodError1.setText("Introduce las constraseñas");
+			correcto=false;
+		}
+		//Comprobar que nombre no esta vacio
+		if(textNombre.getText().equals("")) {
+			lblNombreError.setText("Introduce el nombre");
+			correcto=false;
+		}
+		//Comprobar que apellido no esta vacio
+		if(textApellido.getText().equals("")) {
+			lblApellidoError.setText("Introduce el apellido");
+			correcto=false;
+		}
+		//comprobar longitud DNI
+		Regex = "\\d{8}[a-zA-Z]";
+        pattern = Pattern.compile(Regex);
+        matcher = pattern.matcher(textDni.getText());
+		if(!matcher.matches()) {
+			lblDniError.setText("El DNI tiene que estar formado por 8 numeros y una letra");
+			correcto=false;
+		}
+		//Comrprobar que mete un numero de tarjeta correcto
+		Regex = "\\d{16}";
+        pattern = Pattern.compile(Regex);
+        matcher = pattern.matcher(textNTarjeta.getText());
+        if(!matcher.matches()) {
+        	lblTarjetaError.setText("Tienen que ser 16 numeros");
+        	correcto=false;
+        }
+		//Comprobar que el formato de caducidad es correcto
+        Regex = "\\d{4}-(0[1-9]|1[0-2])";
+        pattern = Pattern.compile(Regex);
+        matcher = pattern.matcher(textFechaCaducidad.getText());
+        if(!matcher.matches()) {
+        	lblCaducidadError.setText("Introduce una fecha de cucidad correcta Formato:\"yyyy-mm\"");
+        	correcto=false;
+        }
+		
+		//Comprobar veracidad email
+		Regex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+        pattern = Pattern.compile(Regex);
+        matcher = pattern.matcher(textEmail.getText());
+        if(!matcher.matches()) {
+        	lblEmailError.setText("No es un mail valido");
+        	correcto=false;
+        }
+        
+        //Comprobar si DNI ya existe en la base de datos
+        user = controlador.logIn(textDni.getText(), passwd);
+        if(user!=null) {
+        	lblDniError.setText("Ya existe un usuario con ese DNI");
+        	correcto=false;
+        }
+		
+		if(correcto) {
+			controlador.modificarDatosUsuarioPago(user, user.getDni(), textDni.getText(), textNombre.getText(), textApellido.getText(), passwd, textEmail.getText(), textNTarjeta.getText(), YearMonth.parse(textFechaCaducidad.getText()));
+			peliculas = controlador.getPelis();
+			VPeli frame = new VPeli(controlador, user);
+			frame.setVisible(true);
+			this.dispose();
+		} else {
+			lblPassError.setText("Las contraseñas no coinciden");
+		}
+		if(!correcto){
+            throw new IllegalEntryData ("Datos introducidos incorrectos");
+        }
+		
 	}
 }

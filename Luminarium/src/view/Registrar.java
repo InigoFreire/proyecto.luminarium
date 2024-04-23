@@ -7,7 +7,8 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import controller.Controller;
-
+import excepciones.IllegalEntryData;
+import model.Usuario;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import java.awt.Font;
@@ -179,57 +180,85 @@ public class Registrar extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		
 		Object o= e.getSource();
+		
+		if(o==btnRegistrarse) {
+			try {
+				verificarDatos();
+			}catch (IllegalEntryData error) {
+				 System.out.println("ERROR: "+error.getMessage());
+			}
+			
+		}
+	}
+	public void verificarDatos() throws IllegalEntryData {
+		
+		lblDniIncorrecto.setText("");
+		lblEmailError.setText("");
+		lblPassError.setText("");
+		lblNombreError.setText("");
+		lblApellidoError.setText("");
+		
+		Usuario user;
 		boolean correcto=true;
 		String passwd = new String (password.getPassword());
 		String passwdR = new String (passwordR.getPassword());
 		
-		if(o==btnRegistrarse) {
-			lblDniIncorrecto.setText("");
-			lblEmailError.setText("");
-			lblPassError.setText("");
-			lblNombreError.setText("");
-			lblApellidoError.setText("");
-			
-			if(!passwd.equals(passwdR)) {
-				lblPassError.setText("Las contraseñas no coinciden");
-				correcto=false;
-			}
-			if(passwd.equals("")&&passwdR.equals("")) {
-				lblPassError.setText("Introduce las constraseñas");
-			}
-			//Comprobar que nombre no esta vacio
-			if(textNombre.getText().equals("")) {
-				lblNombreError.setText("Introduce el nombre");
-				correcto=false;
-			}
-			//Comprobar que apellido no esta vacio
-			if(textApellido.getText().equals("")) {
-				lblApellidoError.setText("Introduce el apellido");
-				correcto=false;
-			}
-			//comprobar longitud DNI
-			if(textDni.getText().length()!=9) {
-				lblDniIncorrecto.setText("El DNI tiene que estar formado por 9 numeros");
-				correcto=false;
-			}
-			
-			//Comprobar veracidad email
-			String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
-	        Pattern pattern = Pattern.compile(emailRegex);
-	        Matcher matcher = pattern.matcher(textEmail.getText());
-	        if(!matcher.matches()) {
-	        	lblEmailError.setText("No es un mail valido");
-	        	correcto=false;
-	        }
-			
-	        if(correcto) {
-				c.registrarUsuario(textDni.getText(), textNombre.getText(), textApellido.getText(), passwd, textEmail.getText());
-				lblPassError.setText("Usuario registrado correctamente");
-				LogIn login = new LogIn(c);
-				login.setVisible(true);
-				this.dispose();
-	        }
-			
+		String   Regex; 
+        Pattern pattern; 
+        Matcher matcher; 
+		
+		if(!passwd.equals(passwdR)) {
+			lblPassError.setText("Las contraseñas no coinciden");
+			correcto=false;
 		}
+		if(passwd.equals("")&&passwdR.equals("")) {
+			lblPassError.setText("Introduce las constraseñas");
+		}
+		//Comprobar que nombre no esta vacio
+		if(textNombre.getText().equals("")) {
+			lblNombreError.setText("Introduce el nombre");
+			correcto=false;
+		}
+		//Comprobar que apellido no esta vacio
+		if(textApellido.getText().equals("")) {
+			lblApellidoError.setText("Introduce el apellido");
+			correcto=false;
+		}
+		//comprobar longitud DNI
+	    Regex = "\\d{8}[a-zA-Z]";
+        pattern = Pattern.compile(Regex);
+        matcher = pattern.matcher(textDni.getText());
+		if(!matcher.matches()) {
+			lblDniIncorrecto.setText("El DNI tiene que estar formado por 8 numeros y una letra");
+			correcto=false;
+		}
+		
+		//Comprobar veracidad email
+	     Regex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+        pattern = Pattern.compile(Regex);
+        matcher = pattern.matcher(textEmail.getText());
+        if(!matcher.matches()) {
+        	lblEmailError.setText("No es un mail valido");
+        	correcto=false;
+        }
+        //Comprobar si DNI ya existe en la base de datos
+        user = c.logIn(textDni.getText(), passwd);
+        if(user!=null) {
+        	lblDniIncorrecto.setText("Ya existe un usuario con ese DNI");
+        	correcto=false;
+        }
+		
+        if(correcto) {
+        	       	
+			c.registrarUsuario(textDni.getText(), textNombre.getText(), textApellido.getText(), passwd, textEmail.getText());
+			lblPassError.setText("Usuario registrado correctamente");
+			LogIn login = new LogIn(c);
+			login.setVisible(true);
+			this.dispose();
+        }
+        if(!correcto){
+            throw new IllegalEntryData ("Datos introducidos incorrectos");
+        }
+		
 	}
 }
