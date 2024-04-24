@@ -20,6 +20,8 @@ import javax.swing.filechooser.FileSystemView;
 
 import controller.Controller;
 import model.Usuario;
+import model.Pelicula;
+import model.Sesion;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import java.awt.Color;
@@ -35,11 +37,15 @@ public class Compra extends JFrame implements ActionListener{
     private JFileChooser fileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
 	private Usuario user;
 	private Controller controlador;
+	private Pelicula pelicula;
+	//private Sesion sesion;
 	private int numEntradas;
 	
-	public Compra(Controller c, Usuario u) { //Hay que añadir los datos de sesión y pelicula desde la ventana anterior
-		this.user=u;
-		this.controlador=c;
+	public Compra(Controller controllerInput, Usuario usuarioInput, Pelicula peliInput){//, Sesion sesionInput) {
+		this.user=usuarioInput;
+		this.controlador=controllerInput;
+		this.pelicula=peliInput;
+		//this.sesion=sesionInput;
 		numEntradas=0;
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -50,38 +56,13 @@ public class Compra extends JFrame implements ActionListener{
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-        // Configurar el filtro para archivos de texto
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivos de texto (.txt)", "txt");
-        fileChooser.setFileFilter(filter);
-        // Diálogo de guardar archivo
-        int returnValue = fileChooser.showSaveDialog(null);
-        // Selección del usuario
-        if (returnValue == JFileChooser.APPROVE_OPTION) {
-            File selectedFile = fileChooser.getSelectedFile();
-            // Asegurarse de que la extensión sea .txt
-            String filePath = selectedFile.getAbsolutePath();
-            if (!filePath.endsWith(".txt")) {
-                selectedFile = new File(filePath + ".txt");
-            }
-            // Escribir
-            try {
-                FileWriter writer = new FileWriter(selectedFile);
-                writer.write("controlador.getDatosCompra()");//TODO quitar comillas y dejar el método
-                writer.close();
-                System.out.println("Archivo guardado en: " + selectedFile.getAbsolutePath());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            System.out.println("El usuario canceló la operación.");
-        }
-		
 		btnAtras = new JButton("Pag. anterior");
 		btnAtras.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btnAtras.setBounds(10, 626, 177, 23);
 		contentPane.add(btnAtras);
 		
-		lblTitulo= new JLabel("TituloPelicula");
+		lblTitulo= new JLabel("");
+		lblTitulo.setText(pelicula.getTitulo());
 		lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTitulo.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		lblTitulo.setBounds(616, 153, 108, 46);
@@ -114,7 +95,7 @@ public class Compra extends JFrame implements ActionListener{
 		btnCompra = new JButton("Comprar entradas");
 		btnCompra.setBackground(new Color(255, 255, 255));
 		btnCompra.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnCompra.setBounds(585, 614, 177, 46);
+		btnCompra.setBounds(600, 614, 177, 46);
 		contentPane.add(btnCompra);
 		
 		btnSumarEntrada.addActionListener(this);
@@ -143,8 +124,36 @@ public class Compra extends JFrame implements ActionListener{
 				lblCantidadEntradas.setText(Integer.toString(aux));
 			}
 		} else if (e.getSource() == btnCompra) {
-		// Codigo para imprimir ticket en archivo
-		// ¿Redirigir a otra página para confirmar datos de tarjeta?
+		// Pop-up para confirmar datos de tarjeta?
+			
+			// Actualizar entradas disponibles
+			
+
+			// Configurar el filtro para archivos de texto
+	        FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivos de texto (.txt)", "txt");
+	        fileChooser.setFileFilter(filter);
+	        // Diálogo de guardar archivo
+	        int returnValue = fileChooser.showSaveDialog(null);
+	        // Selección del usuario
+	        if (returnValue == JFileChooser.APPROVE_OPTION) {
+	            File selectedFile = fileChooser.getSelectedFile();
+	            // Asegurarse de que la extensión sea .txt
+	            String filePath = selectedFile.getAbsolutePath();
+	            if (!filePath.endsWith(".txt")) {
+	                selectedFile = new File(filePath + ".txt");
+	            }
+	            // Escribir
+	            try {
+	                FileWriter writer = new FileWriter(selectedFile);
+	                writer.write("DNI del cliente: "+user.getDni()+"\nPelícula: "+pelicula.getTitulo()+" (ID: "+pelicula.getId()+")"+"\nEntradas compradas: "+lblCantidadEntradas.getText());//+"\n Sesión (dd/MM/AA): "+sesion.getFecha());
+	                writer.close();
+	                System.out.println("Archivo guardado en: " + selectedFile.getAbsolutePath());
+	            } catch (IOException e1) {
+	                e1.printStackTrace();
+	            }
+	        } else {
+	            System.out.println("El usuario canceló la operación.");
+	        }
 		} else if (e.getSource() == mntmExit) {
 			LogIn logIn = new LogIn(controlador);
 			logIn.setVisible(true);

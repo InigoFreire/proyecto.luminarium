@@ -27,7 +27,7 @@ public class InfoPeli extends JFrame implements ActionListener {
 	private static Stack<VPeli> stack = new Stack<>();
 	private JPanel contentPane;
 	private JLabel lblFoto, lblTitulo, lblGenero, lblPegi, lblDuracion, lblSinopsis;
-	private JButton btnNewButton;
+	private JButton btnComprar;
 	private JMenuBar menuBar;
 	private JMenu mnUsuario;
 	private JMenuItem mntmModificar, mntmExit;
@@ -77,11 +77,11 @@ public class InfoPeli extends JFrame implements ActionListener {
 		contentPane.add(lblSinopsis);
 		lblSinopsis.setText(p.getSinopsis());
 
-		btnNewButton = new JButton("Comprar entradas");
-		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 25));
-		btnNewButton.setBounds(823, 614, 236, 37);
+		btnComprar = new JButton("Comprar entradas");
+		btnComprar.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		btnComprar.setBounds(823, 614, 236, 37);
 
-		contentPane.add(btnNewButton);
+		contentPane.add(btnComprar);
 
 		menuBar = new JMenuBar();
 		menuBar.setBounds(882, 10, 177, 36);
@@ -102,7 +102,7 @@ public class InfoPeli extends JFrame implements ActionListener {
 		btnAtras.setBounds(10, 626, 177, 23);
 		contentPane.add(btnAtras);
 
-		btnNewButton.addActionListener(this);
+		btnComprar.addActionListener(this);
 
 		mntmModificar.addActionListener(this);
 		mntmExit.addActionListener(this);
@@ -126,15 +126,17 @@ public class InfoPeli extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == mntmModificar) {
-
 			EUsuario frame = new EUsuario(controlador, user);
-
 			frame.setVisible(true);
 			this.dispose();
 		} else if (e.getSource() == mntmExit) {
 			LogIn logIn = new LogIn(controlador);
 			logIn.setVisible(true);
 			dispose();
+		} else if (e.getSource() == btnComprar) {
+			Compra compra = new Compra(controlador,user,peli);
+			compra.setVisible(true);
+			this.dispose();
 		}
 	}
 }
