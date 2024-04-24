@@ -35,9 +35,8 @@ public class EUsuario extends JFrame implements ActionListener {
 	private Usuario user;
 	private JTextField textNombre, textEmail, textApellido, textNTarjeta, textFechaCaducidad;
 	private JLabel lblNombre, lblApellido, lblContrasena, lblEmail, lblRepiteContrasena, lblCabecera, lblPassError, lblNTarjeta, lblFechaCaducidadyyyymm;
-	private JButton btnRegistrarse; 
+	private JButton btnModificar; 
 	private JPasswordField password, passwordR;
-	private String[][] peliculas;
 	private JLabel lblNombreError;
 	private JLabel lblApellidoError;
 	private JLabel lblpasswrodError1;
@@ -48,6 +47,7 @@ public class EUsuario extends JFrame implements ActionListener {
 	private JLabel lblCaducidadError; 
 	private JTextField textDni;
 	private JLabel lblDni;
+	private JButton btnVolver ;
 		
 	public EUsuario(Controller c, Usuario u) {
 			this.controlador=c;
@@ -119,10 +119,10 @@ public class EUsuario extends JFrame implements ActionListener {
 		lblCabecera.setFont(new Font("Tahoma", Font.BOLD, 18));
 		contentPane.add(lblCabecera);
 		
-		btnRegistrarse = new JButton("Modificar");
-		btnRegistrarse.setBounds(795, 592, 264, 56);
-		btnRegistrarse.setFont(new Font("Tahoma", Font.BOLD, 19));
-		contentPane.add(btnRegistrarse);
+		btnModificar = new JButton("Modificar");
+		btnModificar.setBounds(795, 592, 264, 56);
+		btnModificar.setFont(new Font("Tahoma", Font.BOLD, 19));
+		contentPane.add(btnModificar);
 		
 		lblPassError = new JLabel("");
 		lblPassError.setBounds(10, 592, 590, 55);
@@ -154,7 +154,7 @@ public class EUsuario extends JFrame implements ActionListener {
 		lblFechaCaducidadyyyymm.setVisible(true);
 		contentPane.add(lblFechaCaducidadyyyymm);
 		
-		btnRegistrarse.addActionListener(this);
+		btnModificar.addActionListener(this);
 		textNombre.setText(u.getNombre());
 		textApellido.setText(u.getApellido());
 		textEmail.setText(u.getEmail());
@@ -173,80 +173,85 @@ public class EUsuario extends JFrame implements ActionListener {
 		contentPane.add(textFechaCaducidad);
 		
 		lblNombreError = new JLabel("");
+		lblNombreError.setBounds(438, 129, 136, 43);
 		lblNombreError.setForeground(new Color(255, 0, 0));
 		lblNombreError.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		lblNombreError.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNombreError.setBounds(438, 129, 136, 43);
 		contentPane.add(lblNombreError);
 		
 		lblApellidoError = new JLabel("");
+		lblApellidoError.setBounds(438, 267, 136, 43);
 		lblApellidoError.setHorizontalAlignment(SwingConstants.CENTER);
 		lblApellidoError.setForeground(Color.RED);
 		lblApellidoError.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		lblApellidoError.setBounds(438, 267, 136, 43);
 		contentPane.add(lblApellidoError);
 		
 		lblpasswrodError1 = new JLabel("");
+		lblpasswrodError1.setBounds(438, 388, 136, 43);
 		lblpasswrodError1.setHorizontalAlignment(SwingConstants.CENTER);
 		lblpasswrodError1.setForeground(Color.RED);
 		lblpasswrodError1.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		lblpasswrodError1.setBounds(438, 388, 136, 43);
 		contentPane.add(lblpasswrodError1);
 		
 		lblTarjetaError = new JLabel("");
+		lblTarjetaError.setBounds(438, 516, 136, 43);
 		lblTarjetaError.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTarjetaError.setForeground(Color.RED);
 		lblTarjetaError.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		lblTarjetaError.setBounds(438, 516, 136, 43);
 		contentPane.add(lblTarjetaError);
 		
 		lblDniError = new JLabel("");
+		lblDniError.setBounds(871, 129, 136, 43);
 		lblDniError.setHorizontalAlignment(SwingConstants.CENTER);
 		lblDniError.setForeground(Color.RED);
 		lblDniError.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		lblDniError.setBounds(871, 129, 136, 43);
 		contentPane.add(lblDniError);
 		
 		lblEmailError = new JLabel("");
+		lblEmailError.setBounds(871, 267, 136, 43);
 		lblEmailError.setHorizontalAlignment(SwingConstants.CENTER);
 		lblEmailError.setForeground(Color.RED);
 		lblEmailError.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		lblEmailError.setBounds(871, 267, 136, 43);
 		contentPane.add(lblEmailError);
 		
 		lblpasswordErrorR = new JLabel("");
+		lblpasswordErrorR.setBounds(871, 387, 136, 43);
 		lblpasswordErrorR.setHorizontalAlignment(SwingConstants.CENTER);
 		lblpasswordErrorR.setForeground(Color.RED);
 		lblpasswordErrorR.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		lblpasswordErrorR.setBounds(871, 387, 136, 43);
 		contentPane.add(lblpasswordErrorR);
 		
 		lblCaducidadError = new JLabel("");
+		lblCaducidadError.setBounds(871, 516, 136, 43);
 		lblCaducidadError.setHorizontalAlignment(SwingConstants.CENTER);
 		lblCaducidadError.setForeground(Color.RED);
 		lblCaducidadError.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		lblCaducidadError.setBounds(871, 516, 136, 43);
 		contentPane.add(lblCaducidadError);
 		
 		lblDni = new JLabel("DNI");
+		lblDni.setBounds(624, 53, 224, 56);
 		lblDni.setHorizontalAlignment(SwingConstants.CENTER);
 		lblDni.setFont(new Font("Tahoma", Font.BOLD, 20));
-		lblDni.setBounds(624, 53, 224, 56);
 		contentPane.add(lblDni);
 		
 		textDni = new JTextField();
+		textDni.setBounds(624, 120, 224, 56);
 		textDni.setText((String) null);
 		textDni.setHorizontalAlignment(SwingConstants.CENTER);
 		textDni.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		textDni.setColumns(10);
-		textDni.setBounds(624, 120, 224, 56);
 		contentPane.add(textDni);
 		textDni.setText(u.getDni());
+		
+		btnVolver = new JButton("Volver");
+		btnVolver.setFont(new Font("Tahoma", Font.BOLD, 19));
+		btnVolver.setBounds(523, 592, 264, 56);
+		contentPane.add(btnVolver);
 		if(!user.isAdminCheck()) {
 			textDni.setVisible(false);
 			lblDni.setVisible(false);
 		}
-			
+		btnVolver.addActionListener(this);	
 		
 		lblFechaCaducidadyyyymm.setVisible(true);
 		textFechaCaducidad.setVisible(true);
@@ -261,13 +266,29 @@ public class EUsuario extends JFrame implements ActionListener {
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource()==btnRegistrarse) {
+		Object o= e.getSource();
+		
+		if(o==btnModificar) {
 			try {
 				verificarDatos();
 			}catch (IllegalEntryData error) {
 				 System.out.println("ERROR: "+error.getMessage());
 			}
 		}
+		if (o==btnVolver) {
+			if(user.isAdminCheck()) {
+				MenuAdmin menuA = new MenuAdmin(controlador, user);
+				menuA.setVisible(true);
+				dispose();
+			}
+			else {
+				VPeli frame = new VPeli(controlador, user);
+				frame.setVisible(true);
+				this.dispose();
+			}
+			
+		}
+		
 	}
 	public void verificarDatos() throws IllegalEntryData {
 		
@@ -370,12 +391,9 @@ public class EUsuario extends JFrame implements ActionListener {
 			}else {
 				controlador.modificarDatosUsuarioPago(user, user.getDni(), textDni.getText(),textNombre.getText(), textApellido.getText(), passwd, textEmail.getText(), textNTarjeta.getText(), YearMonth.parse(textFechaCaducidad.getText()));
 			}
-			
-			peliculas = controlador.getPelis();
-			VPeli frame = new VPeli(controlador, user);
+		
 			JOptionPane.showMessageDialog(this,(String)"Usuario modificado correctamente","",JOptionPane.INFORMATION_MESSAGE,null);
-			frame.setVisible(true);
-			this.dispose();
+			
 		} 
 		
 		if(!correcto){
