@@ -10,10 +10,12 @@ import controller.Controller;
 import excepciones.IllegalEntryData;
 import model.Usuario;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -241,17 +243,20 @@ public class Registrar extends JFrame implements ActionListener {
         	lblEmailError.setText("No es un mail valido");
         	correcto=false;
         }
-        //Comprobar si DNI ya existe en la base de datos
-        user = c.logIn(textDni.getText(), passwd);
-        if(user!=null) {
-        	lblDniIncorrecto.setText("Ya existe un usuario con ese DNI");
-        	correcto=false;
-        }
+        
+        //Comprobar si DNI ya existe en la base de datos 
+		ArrayList<String> dnis=c.getDni();
+		for(String dni:dnis) {
+			if(dni.equalsIgnoreCase(textDni.getText())) {
+				correcto=false;
+				lblDniIncorrecto.setText("Ese DNI ya existe en la base de datos");
+			}
+		}
 		
         if(correcto) {
         	       	
 			c.registrarUsuario(textDni.getText(), textNombre.getText(), textApellido.getText(), passwd, textEmail.getText());
-			lblPassError.setText("Usuario registrado correctamente");
+			JOptionPane.showMessageDialog(this,(String)"Usuario registrado correctamente","",JOptionPane.INFORMATION_MESSAGE,null);
 			LogIn login = new LogIn(c);
 			login.setVisible(true);
 			this.dispose();

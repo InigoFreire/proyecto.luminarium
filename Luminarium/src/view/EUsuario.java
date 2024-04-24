@@ -8,12 +8,14 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.YearMonth;
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
@@ -44,6 +46,8 @@ public class EUsuario extends JFrame implements ActionListener {
 	private JLabel lblEmailError;
 	private JLabel lblpasswordErrorR;
 	private JLabel lblCaducidadError; 
+	private JTextField textDni;
+	private JLabel lblDni;
 		
 	public EUsuario(Controller c, Usuario u) {
 			this.controlador=c;
@@ -155,6 +159,7 @@ public class EUsuario extends JFrame implements ActionListener {
 		textApellido.setText(u.getApellido());
 		textEmail.setText(u.getEmail());
 		
+		
 		textNTarjeta = new JTextField();
 		textNTarjeta.setBounds(191, 503, 224, 56);
 		contentPane.add(textNTarjeta);
@@ -223,6 +228,24 @@ public class EUsuario extends JFrame implements ActionListener {
 		lblCaducidadError.setBounds(871, 516, 136, 43);
 		contentPane.add(lblCaducidadError);
 		
+		lblDni = new JLabel("DNI");
+		lblDni.setHorizontalAlignment(SwingConstants.CENTER);
+		lblDni.setFont(new Font("Tahoma", Font.BOLD, 20));
+		lblDni.setBounds(624, 53, 224, 56);
+		contentPane.add(lblDni);
+		
+		textDni = new JTextField();
+		textDni.setText((String) null);
+		textDni.setHorizontalAlignment(SwingConstants.CENTER);
+		textDni.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		textDni.setColumns(10);
+		textDni.setBounds(624, 120, 224, 56);
+		contentPane.add(textDni);
+		textDni.setText(u.getDni());
+		if(!user.isAdminCheck()) {
+			textDni.setVisible(false);
+			lblDni.setVisible(false);
+		}
 			
 		
 		lblFechaCaducidadyyyymm.setVisible(true);
@@ -262,6 +285,7 @@ public class EUsuario extends JFrame implements ActionListener {
 		lblApellidoError.setText("");
 		lblCaducidadError.setText("");
 		lblTarjetaError.setText("");
+		lblpasswrodError1.setText("");
 		
 		if(!passwd.equals(passwdR)) {
 			lblpasswrodError1.setText("Las contraseñas no coinciden");
@@ -282,6 +306,14 @@ public class EUsuario extends JFrame implements ActionListener {
 			lblApellidoError.setText("Introduce el apellido");
 			correcto=false;
 		}
+		//comprobar DNI
+	    Regex = "\\d{8}[a-zA-Z]";
+        pattern = Pattern.compile(Regex);
+        matcher = pattern.matcher(textDni.getText());
+		if(!matcher.matches()) {
+			lblDniError.setText("El DNI tiene que estar formado por 8 numeros y una letra");
+			correcto=false;
+		}
 		
 		//Comrprobar que mete un numero de tarjeta correcto
 		if(!textNTarjeta.getText().equals("")) {
@@ -292,6 +324,14 @@ public class EUsuario extends JFrame implements ActionListener {
 	        	lblTarjetaError.setText("Tienen que ser 16 numeros");
 	        	correcto=false;
 	        }
+		}
+		 //Comprobar si DNI ya existe en la base de datos y no es el del usuario activo
+		ArrayList<String> dnis=controlador.getDni();
+		for(String dni:dnis) {
+			if(dni.equalsIgnoreCase(textDni.getText())&&!dni.equalsIgnoreCase(user.getDni())) {
+				correcto=false;
+				lblDniError.setText("Ese DNI ya existe en la base de datos");
+			}
 		}
 		
 		//Comprobar que el formato de caducidad es correcto
@@ -326,13 +366,14 @@ public class EUsuario extends JFrame implements ActionListener {
 		
 		if(correcto) {
 			if(textNTarjeta.getText().equals("")) {
-				controlador.modificarDatosUsuario(user, user.getDni(), textNombre.getText(), textApellido.getText(), passwd, textEmail.getText());
+				controlador.modificarDatosUsuario(user, user.getDni(), textDni.getText(),textNombre.getText(), textApellido.getText(), passwd, textEmail.getText());
 			}else {
-				controlador.modificarDatosUsuarioPago(user, user.getDni(), textNombre.getText(), textApellido.getText(), passwd, textEmail.getText(), textNTarjeta.getText(), YearMonth.parse(textFechaCaducidad.getText()));
+				controlador.modificarDatosUsuarioPago(user, user.getDni(), textDni.getText(),textNombre.getText(), textApellido.getText(), passwd, textEmail.getText(), textNTarjeta.getText(), YearMonth.parse(textFechaCaducidad.getText()));
 			}
 			
 			peliculas = controlador.getPelis();
 			VPeli frame = new VPeli(controlador, user);
+			JOptionPane.showMessageDialog(this,(String)"Usuario modificado correctamente","",JOptionPane.INFORMATION_MESSAGE,null);
 			frame.setVisible(true);
 			this.dispose();
 		} 
