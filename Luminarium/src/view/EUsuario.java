@@ -1,10 +1,10 @@
 package view;
 
 import java.awt.EventQueue;
-=======
+
 import java.awt.Color;
 import java.awt.Font;
->>>>>>> aitor
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -29,7 +29,7 @@ public class EUsuario extends JFrame implements ActionListener {
 	private Usuario user;
 	private JTextField textNombre, textDni, textEmail, textApellido, textNTarjeta, textFechaCaducidad;
 	private JLabel lblNombre, lblApellido, lblContrasena, lblDni, lblEmail, lblRepiteContrasena, lblCabecera, lblPassError, lblNTarjeta, lblFechaCaducidadyyyymm;
-	private JButton btnRegistrarse; 
+	private JButton btnRegistrarse, btnVolver; 
 	private JPasswordField password, passwordR;
 	private String[][] peliculas;
 		
@@ -153,10 +153,10 @@ public class EUsuario extends JFrame implements ActionListener {
 		
 		btnRegistrarse.addActionListener(this);
 		
-		textDni.setText(us.getDni());
-		textNombre.setText(us.getNombre());
-		textApellido.setText(us.getApellido());
-		textEmail.setText(us.getEmail());
+		textDni.setText(user.getDni());
+		textNombre.setText(user.getNombre());
+		textApellido.setText(user.getApellido());
+		textEmail.setText(user.getEmail());
 		
 		textNTarjeta = new JTextField();
 		textNTarjeta.setBounds(191, 503, 224, 56);
@@ -179,6 +179,11 @@ public class EUsuario extends JFrame implements ActionListener {
 			textFechaCaducidad.setText(String.format("%d-%02d", user.getFechaCaducidadTarjeta().getYear(), user.getFechaCaducidadTarjeta().getMonthValue()));
 		}
 		
+		
+		btnVolver = new JButton("Volver");
+		btnVolver.setBounds(10, 221, 85, 21);
+		contentPane.add(btnVolver);
+		btnVolver.addActionListener(this);
 	}
 	
 	@Override
@@ -188,13 +193,17 @@ public class EUsuario extends JFrame implements ActionListener {
 			if(passwd.equals(new String (passwordR.getPassword()))) {
 				controlador.modificarDatosUsuario(user, user.getDni(), textDni.getText(), textNombre.getText(), textApellido.getText(), passwd, textEmail.getText());
 				peliculas = controlador.getPelis();
-				VPeli frame = new VPeli(user, controlador,peliculas);
+				VPeli frame = new VPeli (controlador, user);
 				frame.setVisible(true);
 				this.dispose();
 			} else {
 				lblPassError.setText("Las contraseñas no coinciden");
 			}
-			
+		}
+		else if (e.getSource()==btnVolver) {
+			MenuAdmin menuA = new MenuAdmin(controlador, user);
+			menuA.setVisible(true);
+			dispose();
 		}
 	}
 }

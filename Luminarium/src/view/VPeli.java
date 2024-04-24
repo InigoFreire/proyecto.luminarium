@@ -12,11 +12,8 @@ import javax.swing.SwingConstants;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JPopupMenu;
-import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JMenu;
@@ -30,17 +27,17 @@ public class VPeli extends JFrame implements ActionListener {
 	private JLabel lblNewLabel;
 	private Controller controlador;
 	private Usuario user;
-	private JButton btnModificar;
-	private JMenu mnNewMenu, mnUsuario;
-	private JButton btnExit;
+	private JMenu mnUsuario;
 	private JScrollPane scrollPane;
 	private JTable tablaPeliculas;
 	private JMenuItem mntmModificar, mntmExit;
 	private JMenuBar menuBar;
+	private String[][] peliculas;
 
-	public VPeli(Controller c, Usuario u, String[][] peliculas) {
+	public VPeli(Controller c, Usuario u) {
 		this.controlador = c;
 		this.user = u;
+		peliculas = c.getPelis();
 		String[] columna = { "TITULO", "PEGI" };
 		TablaPelis model = new TablaPelis(peliculas, columna);
 
@@ -74,9 +71,10 @@ public class VPeli extends JFrame implements ActionListener {
 
 		mntmModificar = new JMenuItem("Modificar");
 		mnUsuario.add(mntmModificar);
-
-		btnModificar=new JButton("Modificar");
-		btnModificar.addActionListener(this);
+		
+		mntmExit = new JMenuItem("Cerrar Sesión");
+		mnUsuario.add(mntmExit);
+		
 		tablaPeliculas.addMouseListener(new MouseAdapter() {
 			Pelicula pelicula;
 
@@ -93,10 +91,6 @@ public class VPeli extends JFrame implements ActionListener {
 				}
 			}
 		});
-
-		mntmExit = new JMenuItem("Cerrar Sesión");
-		mnUsuario.add(mntmExit);
-
 		mntmModificar.addActionListener(this);
 		mntmExit.addActionListener(this);
 		mnUsuario.addActionListener(new ActionListener() {
@@ -109,29 +103,15 @@ public class VPeli extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
-		if (e.getSource() == btnModificar) {
+		if (e.getSource()==mntmModificar) {
 			EUsuario frame = new EUsuario(controlador, user);
 			frame.setVisible(true);
 			this.dispose();
+		} else if (e.getSource()==mntmExit) {
+			LogIn logIn = new LogIn(controlador);
+			logIn.setVisible(true);
+			dispose();
 		}
 	}
-
-	/*private static void addPopup(Component component, final JPopupMenu popup) {
-		component.addMouseListener(new MouseAdapter() {
-			public void mousePressed(MouseEvent e) {
-				if (e.isPopupTrigger()) {
-					showMenu(e);
-				}
-				if (e.getSource()==mntmModificar) {
-					EUsuario frame = new EUsuario(controlador, user);
-					frame.setVisible(true);
-					this.dispose();
-				} else if (e.getSource()==mntmExit) {
-					LogIn logIn = new LogIn(controlador);
-					logIn.setVisible(true);
-					dispose();
-				}
-			}
-		});
-	}*/
+	
 }

@@ -93,9 +93,8 @@ public class MenuAdmin extends JFrame implements ActionListener{
 	            Class<?> ClaseVentana;
 				try {
 					ClaseVentana = Class.forName(nombreVentana);
-					ventana = (JFrame) ClaseVentana.getDeclaredConstructor().newInstance(controlador, user);
-					ventana.setVisible(true);
-					
+                    ventana = (JFrame) ClaseVentana.getDeclaredConstructor(Controller.class, Usuario.class).newInstance(controlador, user);
+                    ventana.setVisible(true);					
 				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();

@@ -30,7 +30,6 @@ public class LogIn extends JFrame implements ActionListener {
 	private JLabel lblError;
 	private Controller c;
 	private JButton btnRegistrar;
-	private String[][] peliculas;
 
 	public LogIn(Controller cont) {
 		this.c=cont;
@@ -102,8 +101,7 @@ public class LogIn extends JFrame implements ActionListener {
 					this.dispose();
 				}
 				else {
-				peliculas = c.getPelis();
-				VPeli frame = new VPeli(c, user, peliculas);
+				VPeli frame = new VPeli(c, user);
 				frame.setVisible(true);
 				this.dispose();
 				}
@@ -112,8 +110,7 @@ public class LogIn extends JFrame implements ActionListener {
 			}
 		} else if (e.getSource()==btnInvitado) {
 			Usuario user = new Usuario();
-			peliculas = c.getPelis();
-			VPeli frame = new VPeli(c, user, peliculas);
+			VPeli frame = new VPeli(c, user);
 			frame.setVisible(true);
 			this.dispose();
 		} else if (e.getSource()==btnRegistrar) {
