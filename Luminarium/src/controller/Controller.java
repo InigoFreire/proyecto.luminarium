@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 import model.Genero;
 import model.Pelicula;
+import model.Sala;
 import model.Usuario;
 
 public class Controller implements IController{
@@ -25,9 +26,134 @@ public class Controller implements IController{
 	final String GETPeliCorto = "SELECT titulo,PEGI from peliculas";
 	final String GetPeliInfo = "select * from peliculas where titulo = ?";
 	final String GetDni = "select dni from usuarios";
+	final String GetSalaId = "select id from salas";
+	final String ModificarSala = "update salas set id = ?, aforo=? where id =?";
+	final String GetPeliIds = "select id from peliculas";
+	final String ModificarPeli = "update peliculas set id=?, genero=?, titulo=?, PEGI=?, duracion=?, sinopsis=? where id=?";
 	
 	
 	
+	@Override
+	public ArrayList<String> getPelisId() {
+		ArrayList<String> ids = new ArrayList<String>();
+		openConnection();
+		ResultSet rs = null;
+		try {
+			stmt = con.prepareStatement(GetPeliIds);
+								
+			rs = stmt.executeQuery();
+			while(rs.next()) {
+				ids.add(rs.getString("id"));
+			}
+			
+		}catch (SQLException e) {
+			System.out.println("Error en el cierre de la BD");
+			e.printStackTrace();
+		}
+		
+		return ids;
+		
+	}
+
+	@Override
+	public Pelicula modificarPeli(Pelicula peli, String newId, Genero genero, String titulo, int pegi, int duracion, String sinopsis, String id) {
+		this.openConnection();
+		
+		try {
+			stmt = con.prepareStatement(ModificarPeli);
+
+			stmt.setString(1,newId);
+			stmt.setString(2,genero.toString());
+			stmt.setString(3,titulo);
+			stmt.setInt(4, pegi);
+			stmt.setInt(5, duracion);
+			stmt.setString(6, sinopsis);
+			stmt.setString(7,id);
+
+			if (stmt.executeUpdate()==1) {
+				peli.setId(newId);
+				peli.setGenero(genero);
+				peli.setTitulo(titulo);
+				peli.setPegi(pegi);
+				peli.setDuracion(duracion);
+				peli.setSinopsis(sinopsis);
+			}
+			
+		} catch (SQLException e) {
+			System.out.println("Error de SQL");
+			e.printStackTrace();
+		} finally {
+			
+			try {
+				this.closeConnection();
+			} catch (SQLException e) {
+				System.out.println("Error en el cierre de la BD");
+				e.printStackTrace();
+			}
+		}
+
+		return peli;
+	}
+
+	
+	
+	@Override
+	public ArrayList<String> getSalasId() {
+		ArrayList<String> ids = new ArrayList<String>();
+		openConnection();
+		ResultSet rs = null;
+		try {
+			stmt = con.prepareStatement(GetSalaId);
+								
+			rs = stmt.executeQuery();
+			while(rs.next()) {
+				ids.add(rs.getString("id"));
+			}
+			
+		}catch (SQLException e) {
+			System.out.println("Error en el cierre de la BD");
+			e.printStackTrace();
+		}
+		
+		return ids;
+		
+	}
+
+	@Override
+	public Sala modificarSala(Sala sala,String newid, int aforo, String id) {
+		
+		this.openConnection();
+		
+		try {
+			stmt = con.prepareStatement(ModificarSala);
+
+			stmt.setString(1,newid);
+			stmt.setInt(2,aforo);
+			stmt.setString(3,id);
+			
+
+			if (stmt.executeUpdate()==1) {
+				sala.setAforo(aforo);
+				sala.setId(newid);
+				
+			}
+			
+		} catch (SQLException e) {
+			System.out.println("Error de SQL");
+			e.printStackTrace();
+		} finally {
+			
+			try {
+				this.closeConnection();
+			} catch (SQLException e) {
+				System.out.println("Error en el cierre de la BD");
+				e.printStackTrace();
+			}
+		}
+
+		return sala;
+		
+	}
 	
 	
 	@Override
@@ -308,5 +434,8 @@ public class Controller implements IController{
 		
 		return dnis;
 	}
+
+	
+	
 	
 }

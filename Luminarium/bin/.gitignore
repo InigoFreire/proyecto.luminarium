@@ -1,5 +1,3 @@
-/principal/
-/resources/
-/view/
 /controller/
-/excepciones/
+/model/
+/view/
