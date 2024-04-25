@@ -5,6 +5,10 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import controller.Controller;
+import model.Genero;
+import model.Pelicula;
+import model.Sala;
+import model.Sesion;
 import model.Usuario;
 
 import javax.swing.JTextField;
@@ -12,6 +16,8 @@ import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import javax.swing.JPasswordField;
 import javax.swing.JButton;
@@ -76,7 +82,7 @@ public class LogIn extends JFrame implements ActionListener {
 		lblError = new JLabel("");
 		lblError.setForeground(new Color(255, 0, 0));
 		lblError.setFont(new Font("Tahoma", Font.PLAIN, 25));
-		lblError.setBounds(182, 529, 664, 75);
+		lblError.setBounds(182, 534, 664, 75);
 		contentPane.add(lblError);
 		
 		btnRegistrar = new JButton("Registrarse");
@@ -88,12 +94,17 @@ public class LogIn extends JFrame implements ActionListener {
 		btnInvitado.addActionListener(this);
 		btnRegistrar.addActionListener(this);
 		
+		
+		
+		
+		
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		if (e.getSource()==btnEntrar) {
+		Object o=e.getSource();	
+		
+		if (o==btnEntrar) {
 			Usuario user = c.logIn(textField.getText(), new String(passwordField.getPassword()));
 			if (user != null) {
 				if(user.isAdminCheck()) {
@@ -110,16 +121,18 @@ public class LogIn extends JFrame implements ActionListener {
 			} else {
 				lblError.setText("Usuario no encontrado.");
 			}
-		} else if (e.getSource()==btnInvitado) {
+		} else if (o==btnInvitado) {
 			Usuario user = null;
 			peliculas = c.getPelis();
 			VPeli frame = new VPeli(c, user);
 			frame.setVisible(true);
 			this.dispose();
-		} else if (e.getSource()==btnRegistrar) {
+		} else if (o==btnRegistrar) {
 			Registrar frame = new Registrar(c);
 			frame.setVisible(true);
 			this.dispose();
 		}
+		
 	}
+	
 }

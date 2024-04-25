@@ -1,11 +1,12 @@
 package model;
 
-import java.time.LocalDate;
+
+import java.time.LocalDateTime;
 
 public class Sesion {
 	private String id;
 	private double precio;
-	private LocalDate fecha;
+	private LocalDateTime fecha;
 	
 	public Sesion() {
 		
@@ -24,10 +25,10 @@ public class Sesion {
 	public void setPrecio(double precio) {
 		this.precio = precio;
 	}
-	public LocalDate getFecha() {
+	public LocalDateTime getFecha() {
 		return fecha;
 	}
-	public void setFecha(LocalDate fecha) {
+	public void setFecha(LocalDateTime fecha) {
 		this.fecha = fecha;
 	}
 	

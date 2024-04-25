@@ -1,6 +1,7 @@
 package controller;
 
-import java.time.LocalDate;
+
+import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.ArrayList;
 
@@ -36,6 +37,6 @@ public interface IController {
 	
 	public ArrayList<String> getSesionId();
 	
-	public Sesion modificarSesion(Sesion sesion,String newId, double precio, LocalDate fecha, String id);
+	public Sesion modificarSesion(Sesion sesion,String newId, double precio, LocalDateTime fecha, String id);
 
 }

@@ -120,6 +120,8 @@ public class ESala extends JFrame implements ActionListener{
 			dispose();
 		}
 		if(o==btnModificar) {
+			lblAforoError.setText("");
+			
 			boolean correcto=true;
 			ArrayList<String> ids = controlador.getSalasId();
 			for(String id:ids) {

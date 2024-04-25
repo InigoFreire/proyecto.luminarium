@@ -5,6 +5,9 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -135,7 +138,7 @@ public class ESesion extends JFrame implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
+		
 		Object o=e.getSource();	
 		
 		if (o==btnVolver) {
@@ -145,6 +148,9 @@ public class ESesion extends JFrame implements ActionListener{
 		}
 		if(o==btnModificar) {
 			
+			lblPrecioError.setText("");
+			lblFechaError.setText("");
+			
 			boolean correcto=true;
 			ArrayList<String> ids = controlador.getSesionId();
 			for(String id:ids) {
@@ -153,8 +159,22 @@ public class ESesion extends JFrame implements ActionListener{
 					correcto=false;
 				}
 			}
+			//Controlar que precio no sea negativo
+			if(Double.parseDouble(textPrecio.getText())<0) {
+				lblPrecioError.setText("El precio no puede ser negativo");
+				correcto=false;
+			}
+			//Comprobar LocalDateTime tiene formato correcto
+			try {
+			    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+			    LocalDateTime dateTime = LocalDateTime.parse(textFecha.getText(), formatter);
+			}catch (DateTimeParseException error) {
+				lblFechaError.setText("formato \"yyyy-MM-dd'T'HH:mm:ss\" incorrecto o fecha incorrecta");
+				correcto=false;
+			}
+			
 			if(correcto){
-				controlador.modificarSesion(sesion, textSesionId.getText(), Double.parseDouble(textPrecio.getText()), LocalDate.parse(textFecha.getText()), sesion.getId());
+				controlador.modificarSesion(sesion, textSesionId.getText(), Double.parseDouble(textPrecio.getText()), LocalDateTime.parse(textFecha.getText()), sesion.getId());
 				JOptionPane.showMessageDialog(this,(String)"Sesion modificada correctamente","",JOptionPane.INFORMATION_MESSAGE,null);	
 			}
 		}

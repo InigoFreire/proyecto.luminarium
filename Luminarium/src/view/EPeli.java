@@ -44,7 +44,7 @@ public class EPeli extends JFrame implements ActionListener{
 	private JLabel lblPegiError;
 	private JLabel lblDuracion;
 	private JTextField textDuracion;
-	private JLabel lbDuracionError;
+	private JLabel lblDuracionError;
 	private JLabel lblSinopsis;
 	private JTextField textSinopsis;
 	private JLabel lblSinopsisError;
@@ -166,11 +166,11 @@ public class EPeli extends JFrame implements ActionListener{
 		textDuracion.setBounds(318, 401, 274, 59);
 		contentPane.add(textDuracion);
 		
-		lbDuracionError = new JLabel("");
-		lbDuracionError.setForeground(Color.RED);
-		lbDuracionError.setFont(new Font("Tahoma", Font.BOLD, 20));
-		lbDuracionError.setBounds(593, 401, 241, 56);
-		contentPane.add(lbDuracionError);
+		lblDuracionError = new JLabel("");
+		lblDuracionError.setForeground(Color.RED);
+		lblDuracionError.setFont(new Font("Tahoma", Font.BOLD, 20));
+		lblDuracionError.setBounds(593, 401, 241, 56);
+		contentPane.add(lblDuracionError);
 		
 		lblSinopsis = new JLabel("SINOPSIS");
 		lblSinopsis.setHorizontalAlignment(SwingConstants.CENTER);
@@ -193,7 +193,7 @@ public class EPeli extends JFrame implements ActionListener{
 		textId.setText(peli.getId());
 		textGenero.setText(peli.getGenero().toString());
 		textTitulo.setText(peli.getTitulo());
-		textPegi.setText(String.valueOf(textPegi.getText()));
+		textPegi.setText(String.valueOf(peli.getPegi()));
 		textDuracion.setText(String.valueOf(peli.getDuracion()));
 		textSinopsis.setText(peli.getSinopsis());
 		
@@ -213,6 +213,12 @@ public class EPeli extends JFrame implements ActionListener{
 		}
 		if (o==btnModificar) {
 			
+			lblGeneroError.setText("");
+			lblTituloError.setText("");
+			lblPegiError.setText("");
+			lblDuracionError.setText("");
+			lblSinopsisError.setText("");
+			
 			boolean correcto=true;
 			ArrayList<String> ids = controlador.getPelisId();
 			for(String id:ids) {
@@ -221,9 +227,37 @@ public class EPeli extends JFrame implements ActionListener{
 					correcto=false;
 				}
 			}
-			
+			//Controlar Enum genero 
+			try {
+				Genero.valueOf(textGenero.getText().toUpperCase());
+			}catch (IllegalArgumentException error) {
+				lblGeneroError.setText("El genero introducido no existe en la base de datos");
+				correcto=false;
+			}
+			//Controlar longitud del titulo
+			if(textTitulo.getText().length()>60) {
+				lblTituloError.setText("El titulo tiene que contener menor de 60 caracteres");
+				correcto=false;
+			}
+			//Controlar Edad Pegi
+			int pegi = Integer.parseInt(textPegi.getText());
+			if(pegi<0 || pegi>18) {
+				lblPegiError.setText("PEGI tiene que ser una edad entre \"0\" y \"18\"");
+				correcto=false;
+			}
+			//Controlar duracion de la peli
+			if(textDuracion.getText().length()>3) {
+				lblDuracionError.setText("El numero introducido no puede tener mas de 3 cifras");
+				correcto=false;
+			}
+			//Controlar longitud del String de sinopsis
+			if(textSinopsis.getText().length()>150) {
+				lblSinopsisError.setText("La longitud de la sinopsis no puede ser mas de 150 caracteres");
+				correcto=false;
+			}
+					
 			if(correcto){
-				controlador.modificarPeli(peli, textId.getText(),Genero.valueOf(textGenero.getText()), textTitulo.getText(), Integer.parseInt(textPegi.getText()), Integer.parseInt(textDuracion.getText()), textSinopsis.getText(), peli.getId());
+				controlador.modificarPeli(peli, textId.getText(),Genero.valueOf(textGenero.getText().toUpperCase()), textTitulo.getText(), Integer.parseInt(textPegi.getText()), Integer.parseInt(textDuracion.getText()), textSinopsis.getText(), peli.getId());
 				JOptionPane.showMessageDialog(this,(String)"Sala modificada correctamente","",JOptionPane.INFORMATION_MESSAGE,null);	
 			}
 		}

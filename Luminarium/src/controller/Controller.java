@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -60,14 +61,14 @@ public class Controller implements IController{
 	}
 
 	@Override
-	public Sesion modificarSesion(Sesion sesion, String newId, double precio, LocalDate fecha, String id) {
+	public Sesion modificarSesion(Sesion sesion, String newId, double precio, LocalDateTime fecha, String id) {
 		this.openConnection();
-		DateTimeFormatter formateador = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        String wfecha;
+		DateTimeFormatter formateador = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String wfecha = fecha.format(formateador);
 
-        wfecha = fecha.format(formateador);
+       
 		try {
-			stmt = con.prepareStatement(ModificarPeli);
+			stmt = con.prepareStatement(ModificarSesion);
 
 			stmt.setString(1,newId);
 			stmt.setDouble(2,precio);
