@@ -88,6 +88,7 @@ public class EPeli extends JFrame implements ActionListener{
 		contentPane.add(lblId);
 		
 		textId = new JTextField();
+		textId.setEditable(false);
 		textId.setFont(new Font("Tahoma", Font.BOLD, 20));
 		textId.setBounds(318, 124, 274, 59);
 		contentPane.add(textId);

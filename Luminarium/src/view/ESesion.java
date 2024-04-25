@@ -77,6 +77,7 @@ public class ESesion extends JFrame implements ActionListener{
 		contentPane.add(lblSesionId);
 		
 		textSesionId = new JTextField();
+		textSesionId.setEditable(false);
 		textSesionId.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		textSesionId.setBounds(346, 161, 299, 56);
 		contentPane.add(textSesionId);

@@ -394,7 +394,7 @@ public class EUsuario extends JFrame implements ActionListener {
 		
 			JOptionPane.showMessageDialog(this,(String)"Usuario modificado correctamente","",JOptionPane.INFORMATION_MESSAGE,null);
 			
-		} 
+		}    
 		
 		if(!correcto){
             throw new IllegalEntryData ("Datos introducidos incorrectos");

@@ -72,6 +72,7 @@ public class ESala extends JFrame implements ActionListener{
 		contentPane.add(lblSalaId);
 		
 		textSalaId = new JTextField();
+		textSalaId.setEditable(false);
 		textSalaId.setFont(new Font("Tahoma", Font.PLAIN, 19));
 		textSalaId.setBounds(442, 128, 345, 56);
 		contentPane.add(textSalaId);
