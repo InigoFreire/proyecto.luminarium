@@ -1,11 +1,13 @@
 package controller;
 
+import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.ArrayList;
 
 import model.Genero;
 import model.Pelicula;
 import model.Sala;
+import model.Sesion;
 import model.Usuario;
 
 public interface IController {
@@ -26,10 +28,14 @@ public interface IController {
 	
 	public ArrayList<String> getSalasId();
 	
-	public Sala modificarSala(Sala sala,String Newid, int aforo, String id);
+	public Sala modificarSala(Sala sala,String newid, int aforo, String id);
 	
 	public ArrayList<String> getPelisId();
 	
 	public Pelicula modificarPeli(Pelicula peli,String newId,Genero genero,String titulo, int pegi,int duracion,String sinopsis, String id);
+	
+	public ArrayList<String> getSesionId();
+	
+	public Sesion modificarSesion(Sesion sesion,String newId, double precio, LocalDate fecha, String id);
 
 }

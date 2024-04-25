@@ -5,12 +5,15 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import model.Genero;
 import model.Pelicula;
 import model.Sala;
+import model.Sesion;
 import model.Usuario;
 
 public class Controller implements IController{
@@ -30,8 +33,70 @@ public class Controller implements IController{
 	final String ModificarSala = "update salas set id = ?, aforo=? where id =?";
 	final String GetPeliIds = "select id from peliculas";
 	final String ModificarPeli = "update peliculas set id=?, genero=?, titulo=?, PEGI=?, duracion=?, sinopsis=? where id=?";
+	final String GetSesionIds = "select id from sesiones";
+	final String ModificarSesion = "update sesiones set id=?, precio=?, fecha=? where id=?";
 	
 	
+	
+	@Override
+	public ArrayList<String> getSesionId() {
+		ArrayList<String> ids = new ArrayList<String>();
+		openConnection();
+		ResultSet rs = null;
+		try {
+			stmt = con.prepareStatement(GetSesionIds);
+								
+			rs = stmt.executeQuery();
+			while(rs.next()) {
+				ids.add(rs.getString("id"));
+			}
+			
+		}catch (SQLException e) {
+			System.out.println("Error en el cierre de la BD");
+			e.printStackTrace();
+		}
+		
+		return ids;
+	}
+
+	@Override
+	public Sesion modificarSesion(Sesion sesion, String newId, double precio, LocalDate fecha, String id) {
+		this.openConnection();
+		DateTimeFormatter formateador = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String wfecha;
+
+        wfecha = fecha.format(formateador);
+		try {
+			stmt = con.prepareStatement(ModificarPeli);
+
+			stmt.setString(1,newId);
+			stmt.setDouble(2,precio);
+			stmt.setString(3,wfecha);
+			stmt.setString(4, id);
+			
+
+			if (stmt.executeUpdate()==1) {
+				sesion.setId(newId);
+				sesion.setFecha(fecha);
+				sesion.setPrecio(precio);
+								
+			}
+			
+		} catch (SQLException e) {
+			System.out.println("Error de SQL");
+			e.printStackTrace();
+		} finally {
+			
+			try {
+				this.closeConnection();
+			} catch (SQLException e) {
+				System.out.println("Error en el cierre de la BD");
+				e.printStackTrace();
+			}
+		}
+
+		return sesion;
+	}
 	
 	@Override
 	public ArrayList<String> getPelisId() {
@@ -434,6 +499,8 @@ public class Controller implements IController{
 		
 		return dnis;
 	}
+
+	
 
 	
 	

@@ -30,7 +30,7 @@ public class EPeli extends JFrame implements ActionListener{
 	private JButton btnVolver;
 	private Pelicula peli;
 	private JButton btnModificar; 
-	private JLabel lblNewLabel;
+	private JLabel lblCabecera;
 	private JLabel lblId;
 	private JTextField textId;
 	private JLabel lblGenero;
@@ -75,9 +75,11 @@ public class EPeli extends JFrame implements ActionListener{
 		btnModificar.setFont(new Font("Tahoma", Font.BOLD, 19));
 		contentPane.add(btnModificar);
 		
-		lblNewLabel = new JLabel("New label");
-		lblNewLabel.setBounds(278, 30, 468, 35);
-		contentPane.add(lblNewLabel);
+		lblCabecera = new JLabel("MODIFICAR PELICULAS");
+		lblCabecera.setFont(new Font("Tahoma", Font.BOLD, 19));
+		lblCabecera.setHorizontalAlignment(SwingConstants.CENTER);
+		lblCabecera.setBounds(278, 30, 468, 35);
+		contentPane.add(lblCabecera);
 		
 		lblId = new JLabel("ID");
 		lblId.setFont(new Font("Tahoma", Font.BOLD, 20));
@@ -186,6 +188,16 @@ public class EPeli extends JFrame implements ActionListener{
 		lblSinopsisError.setFont(new Font("Tahoma", Font.BOLD, 20));
 		lblSinopsisError.setBounds(593, 471, 241, 56);
 		contentPane.add(lblSinopsisError);
+		
+		textId.setText(peli.getId());
+		textGenero.setText(peli.getGenero().toString());
+		textTitulo.setText(peli.getTitulo());
+		textPegi.setText(String.valueOf(textPegi.getText()));
+		textDuracion.setText(String.valueOf(peli.getDuracion()));
+		textSinopsis.setText(peli.getSinopsis());
+		
+		btnVolver.addActionListener(this);
+		btnModificar.addActionListener(this);
 	}
 
 	@Override
