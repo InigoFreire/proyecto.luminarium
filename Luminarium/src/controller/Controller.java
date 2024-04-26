@@ -5,10 +5,17 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import java.time.LocalDateTime;
 import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import model.Genero;
 import model.Pelicula;
+import model.Sala;
+import model.Sesion;
 import model.Usuario;
 
 public class Controller implements IController{
@@ -24,6 +31,344 @@ public class Controller implements IController{
 	final String INSERTARSala = "INSERT INTO salas VALUES (?,?)";
 	final String GETPeliCorto = "SELECT titulo,PEGI from peliculas";
 	final String GetPeliInfo = "select * from peliculas where titulo = ?";	
+	final String GetDni = "select dni from usuarios";
+	final String GetSalaId = "select id from salas";
+	final String ModificarSala = "update salas set id = ?, aforo=? where id =?";
+	final String GetPeliIds = "select id from peliculas";
+	final String ModificarPeli = "update peliculas set id=?, genero=?, titulo=?, PEGI=?, duracion=?, sinopsis=? where id=?";
+	final String GetSesionIds = "select id from sesiones";
+	final String ModificarSesion = "update sesiones set id=?, precio=?, fecha=? where id=?";
+	final String GetUltimoIdSala = "call IncrementarIDSalas(@new_id)";
+	final String GetUltimoIdSesion = "call IncrementarIDSesion(@new_id)";
+	final String GetUltimoIdPeli = "call IncrementarIDPeli(@new_id)";
+	final String INSERTARsesion = "INSERT INTO sesiones VALUES (?,?,?,?,?)";
+	final String INSERTARpeli = "INSERT INTO peliculas VALUES (?,?,?,?,?,?)";
+	final String GetPelisIdTitulo = "SELECT id, titulo FROM peliculas";
+	
+	@Override
+	public void registrarPeli(String id, Genero genero, String titulo, int pegi, int duracion, String sinopsis) {
+		
+		// Abrimos la conexión
+		this.openConnection();
+		
+		try {
+			stmt = con.prepareStatement(INSERTARsesion);
+			
+			stmt.setString(6, sinopsis);
+			stmt.setInt(5, duracion);
+			stmt.setInt(4, pegi);
+			stmt.setString(3, titulo);
+			stmt.setString(2, String.valueOf(genero));
+			stmt.setString(1, id);
+			
+			stmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			System.out.println("Error de SQL");
+			e.printStackTrace();
+		} finally {
+			
+			try {
+				this.closeConnection();
+			} catch (SQLException e) {
+				System.out.println("Error en el cierre de la BD");
+				e.printStackTrace();
+			}
+		}
+
+	}
+	
+	@Override
+	public int getUltimoIdPeli() {
+		this.openConnection();
+		ResultSet rs = null;
+		int id = 0;
+		try {
+			stmt = con.prepareStatement(GetUltimoIdPeli);
+								
+			rs = stmt.executeQuery();
+			id = rs.getInt("id");
+			
+		}catch (SQLException e) {
+			System.out.println("Error en la consulta de la BD");
+			e.printStackTrace();
+		}
+		
+		return id;
+	}
+	
+	@Override
+	public HashMap<String, Integer> getTituloIdPelis() {
+		HashMap<String, Integer> pelis = new HashMap<String, Integer>();
+		this.openConnection();
+		ResultSet rs = null;
+		try {
+			stmt = con.prepareStatement(GetPelisIdTitulo);
+								
+			rs = stmt.executeQuery();
+			while(rs.next()) {
+				pelis.put(rs.getString("titulo"), rs.getInt("id"));
+			}
+			
+		}catch (SQLException e) {
+			System.out.println("Error en el cierre de la BD");
+			e.printStackTrace();
+		}
+		
+		return pelis;
+	}
+	
+	@Override
+	public void registrarSesion(String id, int precio, LocalDateTime fecha, String idSala, int idPeli) {
+		
+		// Abrimos la conexión
+		this.openConnection();
+		
+		try {
+			stmt = con.prepareStatement(INSERTARsesion);
+			
+			stmt.setInt(5, idPeli);
+			stmt.setString(4, idSala);
+			stmt.setString(3, fecha.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+			stmt.setInt(2, precio);
+			stmt.setString(1, id);
+			
+			stmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			System.out.println("Error de SQL");
+			e.printStackTrace();
+		} finally {
+			
+			try {
+				this.closeConnection();
+			} catch (SQLException e) {
+				System.out.println("Error en el cierre de la BD");
+				e.printStackTrace();
+			}
+		}
+
+	}
+	
+	@Override
+	public String getUltimoIdSesion() {
+		this.openConnection();
+		ResultSet rs = null;
+		String id = null;
+		try {
+			stmt = con.prepareStatement(GetUltimoIdSesion);
+								
+			rs = stmt.executeQuery();
+			id = rs.getString("id");
+			
+		}catch (SQLException e) {
+			System.out.println("Error en la consulta de la BD");
+			e.printStackTrace();
+		}
+		
+		return id;
+	}
+	
+	@Override
+	public String getUltimoIdSala() {
+		this.openConnection();
+		ResultSet rs = null;
+		String id = null;
+		try {
+			stmt = con.prepareStatement(GetUltimoIdSala);
+								
+			rs = stmt.executeQuery();
+			id = rs.getString("id");
+			
+		}catch (SQLException e) {
+			System.out.println("Error en la consulta de la BD");
+			e.printStackTrace();
+		}
+		
+		return id;
+	}
+	
+	@Override
+	public ArrayList<String> getSesionId() {
+		ArrayList<String> ids = new ArrayList<String>();
+		this.openConnection();
+		ResultSet rs = null;
+		try {
+			stmt = con.prepareStatement(GetSesionIds);
+								
+			rs = stmt.executeQuery();
+			while(rs.next()) {
+				ids.add(rs.getString("id"));
+			}
+			
+		}catch (SQLException e) {
+			System.out.println("Error en el cierre de la BD");
+			e.printStackTrace();
+		}
+		
+		return ids;
+	}
+
+	@Override
+	public Sesion modificarSesion(Sesion sesion, String newId, double precio, LocalDateTime fecha, String id) {
+		this.openConnection();
+		DateTimeFormatter formateador = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String wfecha;
+
+        wfecha = fecha.format(formateador);
+		try {
+			stmt = con.prepareStatement(ModificarPeli);
+
+			stmt.setString(1,newId);
+			stmt.setDouble(2,precio);
+			stmt.setString(3,wfecha);
+			stmt.setString(4, id);
+			
+
+			if (stmt.executeUpdate()==1) {
+				sesion.setId(newId);
+				sesion.setFecha(fecha);
+				sesion.setPrecio(precio);
+								
+			}
+			
+		} catch (SQLException e) {
+			System.out.println("Error de SQL");
+			e.printStackTrace();
+		} finally {
+			
+			try {
+				this.closeConnection();
+			} catch (SQLException e) {
+				System.out.println("Error en el cierre de la BD");
+				e.printStackTrace();
+			}
+		}
+
+		return sesion;
+	}
+	
+	@Override
+	public ArrayList<String> getPelisId() {
+		ArrayList<String> ids = new ArrayList<String>();
+		openConnection();
+		ResultSet rs = null;
+		try {
+			stmt = con.prepareStatement(GetPeliIds);
+								
+			rs = stmt.executeQuery();
+			while(rs.next()) {
+				ids.add(rs.getString("id"));
+			}
+			
+		}catch (SQLException e) {
+			System.out.println("Error en el cierre de la BD");
+			e.printStackTrace();
+		}
+		
+		return ids;
+		
+	}
+
+	@Override
+	public Pelicula modificarPeli(Pelicula peli, String newId, Genero genero, String titulo, int pegi, int duracion, String sinopsis, String id) {
+		this.openConnection();
+		
+		try {
+			stmt = con.prepareStatement(ModificarPeli);
+
+			stmt.setString(1,newId);
+			stmt.setString(2,genero.toString());
+			stmt.setString(3,titulo);
+			stmt.setInt(4, pegi);
+			stmt.setInt(5, duracion);
+			stmt.setString(6, sinopsis);
+			stmt.setString(7,id);
+
+			if (stmt.executeUpdate()==1) {
+				peli.setId(newId);
+				peli.setGenero(genero);
+				peli.setTitulo(titulo);
+				peli.setPegi(pegi);
+				peli.setDuracion(duracion);
+				peli.setSinopsis(sinopsis);
+			}
+			
+		} catch (SQLException e) {
+			System.out.println("Error de SQL");
+			e.printStackTrace();
+		} finally {
+			
+			try {
+				this.closeConnection();
+			} catch (SQLException e) {
+				System.out.println("Error en el cierre de la BD");
+				e.printStackTrace();
+			}
+		}
+
+		return peli;
+	}
+
+	
+	
+	@Override
+	public ArrayList<String> getSalasId() {
+		ArrayList<String> ids = new ArrayList<String>();
+		openConnection();
+		ResultSet rs = null;
+		try {
+			stmt = con.prepareStatement(GetSalaId);
+								
+			rs = stmt.executeQuery();
+			while(rs.next()) {
+				ids.add(rs.getString("id"));
+			}
+			
+		}catch (SQLException e) {
+			System.out.println("Error en el cierre de la BD");
+			e.printStackTrace();
+		}
+		
+		return ids;
+		
+	}
+
+	@Override
+	public Sala modificarSala(Sala sala,String newid, int aforo, String id) {
+		
+		this.openConnection();
+		
+		try {
+			stmt = con.prepareStatement(ModificarSala);
+
+			stmt.setString(1,newid);
+			stmt.setInt(2,aforo);
+			stmt.setString(3,id);
+			
+
+			if (stmt.executeUpdate()==1) {
+				sala.setAforo(aforo);
+				sala.setId(newid);
+				
+			}
+			
+		} catch (SQLException e) {
+			System.out.println("Error de SQL");
+			e.printStackTrace();
+		} finally {
+			
+			try {
+				this.closeConnection();
+			} catch (SQLException e) {
+				System.out.println("Error en el cierre de la BD");
+				e.printStackTrace();
+			}
+		}
+
+		return sala;
+		
+	}
 	
 	@Override
 	public void registrarSala(String id, int aforo) {

@@ -8,6 +8,19 @@ public class Pelicula {
 	private int duracion;
 	private String sinopsis;
 	
+	public Pelicula() {
+		
+	}
+	
+	public Pelicula(String id, Genero genero, String titulo, int pegi, int duracion, String sinopsis) {
+		this.id=id;
+		this.genero=genero;
+		this.titulo=titulo;
+		this.pegi=pegi;
+		this.duracion=duracion;
+		this.sinopsis=sinopsis;
+	}
+	
 	public String getId() {
 		return id;
 	}
