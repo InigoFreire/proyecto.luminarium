@@ -37,7 +37,7 @@ public class Controller implements IController{
 	final String GetPeliIds = "select id from peliculas";
 	final String ModificarPeli = "update peliculas set id=?, genero=?, titulo=?, PEGI=?, duracion=?, sinopsis=? where id=?";
 	final String GetSesionIds = "select id from sesiones";
-	final String ModificarSesion = "update sesiones set id=?, precio=?, fecha=? where id=?";
+	final String ModificarSesion = "update sesiones set id=?, precio=?, fecha=?, idSala=?, idPelicula where id=?";
 	final String GetUltimoIdSala = "call IncrementarIDSalas(@new_id)";
 	final String GetUltimoIdSesion = "call IncrementarIDSesion(@new_id)";
 	final String GetUltimoIdPeli = "call IncrementarIDPeli(@new_id)";
@@ -210,9 +210,9 @@ public class Controller implements IController{
 	}
 
 	@Override
-	public Sesion modificarSesion(Sesion sesion, String newId, double precio, LocalDateTime fecha, String id) {
+	public Sesion modificarSesion(Sesion sesion, String newId, double precio, LocalDateTime fecha, String idSala, int idPeli, String id) {
 		this.openConnection();
-		DateTimeFormatter formateador = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		DateTimeFormatter formateador = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         String wfecha;
 
         wfecha = fecha.format(formateador);
@@ -222,6 +222,8 @@ public class Controller implements IController{
 			stmt.setString(1,newId);
 			stmt.setDouble(2,precio);
 			stmt.setString(3,wfecha);
+			stmt.setString(4, idSala);
+			stmt.setInt(5, idPeli);
 			stmt.setString(4, id);
 			
 

@@ -5,6 +5,8 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -88,7 +90,6 @@ public class ESesion extends JFrame implements ActionListener{
 		contentPane.add(lblSesionId);
 		
 		textSesionId = new JTextField();
-		textSesionId.setEditable(false);
 		textSesionId.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		textSesionId.setBounds(223, 157, 299, 56);
 		contentPane.add(textSesionId);
@@ -170,6 +171,12 @@ public class ESesion extends JFrame implements ActionListener{
 			comboBoxPelicula.addItem(titulo);
 		}
 		
+		textSesionId.setText(sesion.getId());
+		textPrecio.setText(String.valueOf(sesion.getPrecio()));
+		textFecha.setText(sesion.getFecha().toString());
+		comboBoxSala.setSelectedItem(sesion.getIdSala());
+		comboBoxPelicula.setSelectedItem(sesion.getIdPeli());
+		
 		btnVolver.addActionListener(this);
 		btnModificar.addActionListener(this);
 		comboBoxPelicula.addActionListener(this);
@@ -197,7 +204,7 @@ public class ESesion extends JFrame implements ActionListener{
 				}
 			}
 			if(correcto){
-				controlador.modificarSesion(sesion, textSesionId.getText(), Double.parseDouble(textPrecio.getText()), LocalDate.parse(textFecha.getText()), sesion.getId());
+				controlador.modificarSesion(sesion, textSesionId.getText(), Double.parseDouble(textPrecio.getText()), LocalDateTime.parse(textFecha.getText(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")), (String) comboBoxSala.getSelectedItem(), pelis.get(comboBoxPelicula.getSelectedItem()), sesion.getId());
 				JOptionPane.showMessageDialog(this,(String)"Sesion modificada correctamente","",JOptionPane.INFORMATION_MESSAGE,null);	
 			}
 		}

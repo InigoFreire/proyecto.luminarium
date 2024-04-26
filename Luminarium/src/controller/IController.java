@@ -35,7 +35,7 @@ public interface IController {
 
 	public ArrayList<String> getPelisId();
 
-	public Sesion modificarSesion(Sesion sesion, String newId, double precio, LocalDateTime fecha, String id);
+	public Sesion modificarSesion(Sesion sesion, String newId, double precio, LocalDateTime fecha, String idSala, int idPeli, String id);
 
 	public ArrayList<String> getSesionId();
 
