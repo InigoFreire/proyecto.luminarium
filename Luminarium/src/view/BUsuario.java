@@ -3,6 +3,7 @@ package view;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -19,10 +20,12 @@ public class BUsuario extends JFrame implements ActionListener{
 	private Controller controlador;
 	private Usuario user;
 	private JButton btnVolver;
+	private ArrayList<Usuario> usuariosABorrar;
 
-	public BUsuario(Controller c, Usuario u) {
+	public BUsuario(Controller c, Usuario u, ArrayList<Usuario> a) {
 		this.controlador=c;
 		this.user=u;
+		this.usuariosABorrar=a;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();

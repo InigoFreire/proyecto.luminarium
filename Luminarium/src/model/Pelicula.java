@@ -44,6 +44,11 @@ public class Pelicula {
 	public void setSinopsis(String sinopsis) {
 		this.sinopsis = sinopsis;
 	}
+	@Override
+	public String toString() {
+		return "Pelicula [id=" + id + ", genero=" + genero + ", titulo=" + titulo + ", pegi=" + pegi + ", duracion="
+				+ duracion + ", sinopsis=" + sinopsis + "]";
+	}
 	
 	
 }

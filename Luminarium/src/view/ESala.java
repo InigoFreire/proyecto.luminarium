@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import controller.Controller;
+import model.Sala;
 import model.Usuario;
 
 public class ESala extends JFrame implements ActionListener{
@@ -19,10 +20,12 @@ public class ESala extends JFrame implements ActionListener{
 	private Controller controlador;
 	private Usuario user;
 	private JButton btnVolver;
+	private Sala sala;
 
-	public ESala(Controller c, Usuario u) {
+	public ESala(Controller c, Usuario u, Sala s) {
 		this.controlador=c;
 		this.user=u;
+		this.sala=s;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();

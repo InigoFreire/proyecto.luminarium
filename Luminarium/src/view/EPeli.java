@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import controller.Controller;
+import model.Pelicula;
 import model.Usuario;
 
 public class EPeli extends JFrame implements ActionListener{
@@ -19,10 +20,12 @@ public class EPeli extends JFrame implements ActionListener{
 	private Controller controlador;
 	private Usuario user;
 	private JButton btnVolver;
+	private Pelicula pelicula;
 
-	public EPeli(Controller c, Usuario u) {
+	public EPeli(Controller c, Usuario u, Pelicula p) {
 		this.controlador=c;
 		this.user=u;
+		this.pelicula=p;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();

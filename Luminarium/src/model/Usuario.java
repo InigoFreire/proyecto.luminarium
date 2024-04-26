@@ -107,6 +107,11 @@ public class Usuario {
 	public void setAdminCheck(boolean adminCheck) {
 		this.adminCheck = adminCheck;
 	}
-    
-    
+
+	@Override
+	public String toString() {
+		return "Usuario [dni=" + dni + ", contraseña=" + contraseña + ", nombre=" + nombre + ", apellido=" + apellido
+				+ ", email=" + email + ", metodoPago=" + metodoPago + ", fechaCaducidadTarjeta=" + fechaCaducidadTarjeta
+				+ ", adminCheck=" + adminCheck + "]";
+	}    
 }

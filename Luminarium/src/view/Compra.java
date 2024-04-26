@@ -27,7 +27,7 @@ import java.awt.Color;
 public class Compra extends JFrame implements ActionListener{
 
 	private static final long serialVersionUID = 1L;
-	private static Stack<VPeli> stack = new Stack<>();
+	private static Stack<VPelicula> stack = new Stack<>();
 	private JPanel contentPane;
 	private JMenuItem mntmExit;
 	private JButton btnAtras, btnCompra, btnSumarEntrada, btnRestarEntrada;
@@ -124,7 +124,7 @@ public class Compra extends JFrame implements ActionListener{
 		btnAtras.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (!stack.isEmpty()) {
-					VPeli anterior = stack.pop();
+					VPelicula anterior = stack.pop();
 					anterior.setVisible(true);
 					dispose();
 				}

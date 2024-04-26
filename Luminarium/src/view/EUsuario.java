@@ -26,16 +26,23 @@ public class EUsuario extends JFrame implements ActionListener {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private Controller controlador;
-	private Usuario user;
+	private Usuario user, usuarioAEditar;
 	private JTextField textNombre, textDni, textEmail, textApellido, textNTarjeta, textFechaCaducidad;
 	private JLabel lblNombre, lblApellido, lblContrasena, lblDni, lblEmail, lblRepiteContrasena, lblCabecera, lblPassError, lblNTarjeta, lblFechaCaducidadyyyymm;
 	private JButton btnRegistrarse, btnVolver; 
 	private JPasswordField password, passwordR;
-	private String[][] peliculas;
-		
+
+	
+	public EUsuario (Controller c, Usuario u, Usuario uAE) {
+		//desde VUsuario llamo a este constructor pasandote en el tercer parametro el usuario que se quiere editar
+		this.controlador=c;
+		this.user=u;
+		this.usuarioAEditar=uAE;
+	}
 	public EUsuario(Controller c, Usuario u) {
 			this.controlador=c;
 			this.user=u;
+			
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1083, 698);
@@ -192,8 +199,8 @@ public class EUsuario extends JFrame implements ActionListener {
 			String passwd = new String (password.getPassword());
 			if(passwd.equals(new String (passwordR.getPassword()))) {
 				controlador.modificarDatosUsuario(user, user.getDni(), textDni.getText(), textNombre.getText(), textApellido.getText(), passwd, textEmail.getText());
-				peliculas = controlador.getPelis();
-				VPeli frame = new VPeli (controlador, user);
+				//peliculas = controlador.getPelis();
+				VPelicula frame = new VPelicula (controlador, user);
 				frame.setVisible(true);
 				this.dispose();
 			} else {

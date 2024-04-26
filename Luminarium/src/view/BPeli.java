@@ -3,6 +3,7 @@ package view;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -10,6 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import controller.Controller;
+import model.Pelicula;
 import model.Usuario;
 
 public class BPeli extends JFrame implements ActionListener{
@@ -19,10 +21,12 @@ public class BPeli extends JFrame implements ActionListener{
 	private Controller controlador;
 	private Usuario user;
 	private JButton btnVolver;
+	private ArrayList<Pelicula> peliculasABorrar;
 
-	public BPeli(Controller c, Usuario u) {
+	public BPeli(Controller c, Usuario u, ArrayList<Pelicula> a) {
 		this.controlador=c;
 		this.user=u;
+		this.peliculasABorrar=a;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
