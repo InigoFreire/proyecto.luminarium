@@ -25,6 +25,10 @@ import model.Sesion;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import java.awt.Color;
+import javax.swing.JInternalFrame;
+import javax.swing.JTextField;
+import javax.swing.JPasswordField;
+import javax.swing.JCheckBox;
 
 public class Compra extends JFrame implements ActionListener{
 
@@ -40,6 +44,11 @@ public class Compra extends JFrame implements ActionListener{
 	private Pelicula pelicula;
 	//private Sesion sesion;
 	private int numEntradas;
+	private JLabel lblCheckout;
+	private JTextField cardNumField;
+	private JTextField fechaCaducidadField;
+	private JPasswordField cvcField;
+	private JLabel lblCvc;
 	
 	public Compra(Controller controllerInput, Usuario usuarioInput, Pelicula peliInput){//, Sesion sesionInput) {
 		this.user=usuarioInput;
@@ -55,6 +64,60 @@ public class Compra extends JFrame implements ActionListener{
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		
+		JInternalFrame checkoutFrame = new JInternalFrame("Ventana de pago");
+		checkoutFrame.setBounds(430, 100, 550, 450);
+		contentPane.add(checkoutFrame);
+		checkoutFrame.getContentPane().setLayout(null);
+		
+		lblCheckout = new JLabel("Introduzca un método de pago, por favor:");
+		lblCheckout.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblCheckout.setBounds(80, 31, 300, 30);
+		checkoutFrame.getContentPane().add(lblCheckout);
+		
+		cardNumField = new JTextField();
+		cardNumField.setToolTipText("Introduzca método de pago");
+		cardNumField.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		cardNumField.setBounds(80, 66, 350, 25);
+		checkoutFrame.getContentPane().add(cardNumField);
+		cardNumField.setColumns(10);
+		
+		JLabel lblFechaCaducidad = new JLabel("Fecha caducidad");
+		lblFechaCaducidad.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		lblFechaCaducidad.setBounds(80, 125, 96, 25);
+		checkoutFrame.getContentPane().add(lblFechaCaducidad);
+		
+		fechaCaducidadField = new JTextField();
+		fechaCaducidadField.setHorizontalAlignment(SwingConstants.CENTER);
+		fechaCaducidadField.setForeground(new Color(192, 192, 192));
+		fechaCaducidadField.setText("01/24");
+		fechaCaducidadField.setToolTipText("La fecha de caducidad de la tarjeta.");
+		fechaCaducidadField.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		fechaCaducidadField.setBounds(80, 152, 96, 25);
+		checkoutFrame.getContentPane().add(fechaCaducidadField);
+		fechaCaducidadField.setColumns(10);
+		
+		lblCvc = new JLabel("CVC");
+		lblCvc.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		lblCvc.setBounds(334, 125, 96, 25);
+		checkoutFrame.getContentPane().add(lblCvc);
+		
+		cvcField = new JPasswordField();
+		cvcField.setToolTipText("El código de seguridad ubicado en el reverso de la tarjeta.");
+		cvcField.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		cvcField.setEchoChar('*');
+		cvcField.setBounds(334, 152, 96, 25);
+		checkoutFrame.getContentPane().add(cvcField);
+		
+		JButton btnCheckout = new JButton("Realizar pago");
+		btnCheckout.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btnCheckout.setBounds(180, 340, 175, 40);
+		checkoutFrame.getContentPane().add(btnCheckout);
+		
+		JCheckBox chckbxNewCheckBox = new JCheckBox("Guardar este método de pago para futuras compras");
+		chckbxNewCheckBox.setBounds(180, 385, 265, 21);
+		checkoutFrame.getContentPane().add(chckbxNewCheckBox);
+		checkoutFrame.setVisible(true);
 		
 		btnAtras = new JButton("Pag. anterior");
 		btnAtras.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -124,11 +187,12 @@ public class Compra extends JFrame implements ActionListener{
 				lblCantidadEntradas.setText(Integer.toString(aux));
 			}
 		} else if (e.getSource() == btnCompra) {
-		// Pop-up para confirmar datos de tarjeta?
+			// Pop-up para confirmar datos de tarjeta?
+			
+			
 			
 			// Actualizar entradas disponibles
 			
-
 			// Configurar el filtro para archivos de texto
 	        FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivos de texto (.txt)", "txt");
 	        fileChooser.setFileFilter(filter);
