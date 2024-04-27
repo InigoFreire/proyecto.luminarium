@@ -1,6 +1,5 @@
 package view;
 
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -21,13 +20,12 @@ import javax.swing.filechooser.FileSystemView;
 import controller.Controller;
 import model.Usuario;
 import model.Pelicula;
-import model.Sesion;
+//import model.Sesion;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import java.awt.Color;
 import javax.swing.JInternalFrame;
 import javax.swing.JTextField;
-import javax.swing.JPasswordField;
 import javax.swing.JCheckBox;
 
 public class Compra extends JFrame implements ActionListener{
@@ -36,19 +34,20 @@ public class Compra extends JFrame implements ActionListener{
 	private static Stack<VPelicula> stack = new Stack<>();
 	private JPanel contentPane;
 	private JMenuItem mntmExit;
-	private JButton btnAtras, btnCompra, btnSumarEntrada, btnRestarEntrada;
+	private JButton btnAtras, btnCompra, btnSumarEntrada, btnRestarEntrada, btnCheckout;
 	private JLabel lblTitulo, lblCantidad, lblCantidadEntradas;
     private JFileChooser fileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+    private JInternalFrame checkoutFrame;
+    private JLabel lblCheckout, lblCheckoutError;
+	private JTextField cardNumField, fechaCaducidadField, cvcField;
+	private JLabel lblFechaCaducidad,lblCvc;
+	private JCheckBox checkboxSaveCard;
 	private Usuario user;
 	private Controller controlador;
 	private Pelicula pelicula;
 	//private Sesion sesion;
 	private int numEntradas;
-	private JLabel lblCheckout;
-	private JTextField cardNumField;
-	private JTextField fechaCaducidadField;
-	private JPasswordField cvcField;
-	private JLabel lblCvc;
+	
 	
 	public Compra(Controller controllerInput, Usuario usuarioInput, Pelicula peliInput){//, Sesion sesionInput) {
 		this.user=usuarioInput;
@@ -65,7 +64,8 @@ public class Compra extends JFrame implements ActionListener{
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JInternalFrame checkoutFrame = new JInternalFrame("Ventana de pago");
+		checkoutFrame = new JInternalFrame("Ventana de pago");
+		checkoutFrame.setEnabled(false);
 		checkoutFrame.setBounds(430, 100, 550, 450);
 		contentPane.add(checkoutFrame);
 		checkoutFrame.getContentPane().setLayout(null);
@@ -76,13 +76,15 @@ public class Compra extends JFrame implements ActionListener{
 		checkoutFrame.getContentPane().add(lblCheckout);
 		
 		cardNumField = new JTextField();
+		cardNumField.setForeground(new Color(192, 192, 192));
+		cardNumField.setText("0000 0000 0000 0000");
 		cardNumField.setToolTipText("Introduzca método de pago");
 		cardNumField.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		cardNumField.setBounds(80, 66, 350, 25);
 		checkoutFrame.getContentPane().add(cardNumField);
 		cardNumField.setColumns(10);
 		
-		JLabel lblFechaCaducidad = new JLabel("Fecha caducidad");
+		lblFechaCaducidad = new JLabel("Fecha caducidad");
 		lblFechaCaducidad.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		lblFechaCaducidad.setBounds(80, 125, 96, 25);
 		checkoutFrame.getContentPane().add(lblFechaCaducidad);
@@ -102,21 +104,30 @@ public class Compra extends JFrame implements ActionListener{
 		lblCvc.setBounds(334, 125, 96, 25);
 		checkoutFrame.getContentPane().add(lblCvc);
 		
-		cvcField = new JPasswordField();
+		cvcField = new JTextField();
+		cvcField.setHorizontalAlignment(SwingConstants.CENTER);
+		cvcField.setForeground(new Color(192, 192, 192));
+		cvcField.setText("000");
 		cvcField.setToolTipText("El código de seguridad ubicado en el reverso de la tarjeta.");
 		cvcField.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		cvcField.setEchoChar('*');
 		cvcField.setBounds(334, 152, 96, 25);
 		checkoutFrame.getContentPane().add(cvcField);
 		
-		JButton btnCheckout = new JButton("Realizar pago");
+		btnCheckout = new JButton("Realizar pago");
 		btnCheckout.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btnCheckout.setBounds(180, 340, 175, 40);
 		checkoutFrame.getContentPane().add(btnCheckout);
 		
-		JCheckBox chckbxNewCheckBox = new JCheckBox("Guardar este método de pago para futuras compras");
-		chckbxNewCheckBox.setBounds(180, 385, 265, 21);
-		checkoutFrame.getContentPane().add(chckbxNewCheckBox);
+		
+		checkboxSaveCard = new JCheckBox("Guardar este método de pago para futuras compras");
+		checkboxSaveCard.setBounds(135, 385, 265, 21);
+		checkoutFrame.getContentPane().add(checkboxSaveCard);
+		
+		lblCheckoutError = new JLabel("");
+		lblCheckoutError.setEnabled(false);
+		lblCheckoutError.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblCheckoutError.setBounds(80, 238, 350, 30);
+		checkoutFrame.getContentPane().add(lblCheckoutError);
 		checkoutFrame.setVisible(true);
 		
 		btnAtras = new JButton("Pag. anterior");
@@ -187,40 +198,38 @@ public class Compra extends JFrame implements ActionListener{
 				lblCantidadEntradas.setText(Integer.toString(aux));
 			}
 		} else if (e.getSource() == btnCompra) {
-			// Pop-up para confirmar datos de tarjeta?
+			// Pop-up para confirmar datos de tarjeta
+			checkoutFrame.setEnabled(true);
+			if (cardNumField.hasFocus()){
+				cardNumField.setText("");
+				cardNumField.setForeground(new Color(0,0,0));
+				fechaCaducidadField.setForeground(new Color(0,0,0));
+				cvcField.setForeground(new Color(0,0,0));
+			}
 			
-			
-			
-			// Actualizar entradas disponibles
-			
-			// Configurar el filtro para archivos de texto
-	        FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivos de texto (.txt)", "txt");
-	        fileChooser.setFileFilter(filter);
-	        // Diálogo de guardar archivo
-	        int returnValue = fileChooser.showSaveDialog(null);
-	        // Selección del usuario
-	        if (returnValue == JFileChooser.APPROVE_OPTION) {
-	            File selectedFile = fileChooser.getSelectedFile();
-	            // Asegurarse de que la extensión sea .txt
-	            String filePath = selectedFile.getAbsolutePath();
-	            if (!filePath.endsWith(".txt")) {
-	                selectedFile = new File(filePath + ".txt");
-	            }
-	            // Escribir
-	            try {
-	                FileWriter writer = new FileWriter(selectedFile);
-	                writer.write("DNI del cliente: "+user.getDni()+"\nPelícula: "+pelicula.getTitulo()+" (ID: "+pelicula.getId()+")"+"\nEntradas compradas: "+lblCantidadEntradas.getText());//+"\n Sesión (dd/MM/AA): "+sesion.getFecha());
-	                writer.close();
-	                System.out.println("Archivo guardado en: " + selectedFile.getAbsolutePath());
-	            } catch (IOException e1) {
-	                e1.printStackTrace();
-	            }
-	        } else {
-	            System.out.println("El usuario canceló la operación.");
-	        }
-		} else if (e.getSource() == btnCompra) {
-			// Pop-up para confirmar datos de tarjeta?
-			
+			if (e.getSource() == btnCheckout) {//Comprobar formato de tarjeta
+				int auxCardNum = cardNumField.getText().length();
+				if (auxCardNum != 12){
+					lblCheckoutError.setText("ERROR. El nº de tarjeta debe tener 12 dígitos de longitud.");
+				}
+
+				int auxFechaCadu = fechaCaducidadField.getText().length();
+				if (auxFechaCadu != 4){
+					lblCheckoutError.setText("ERROR. La fecha de caducidad debe tener 4 dígitos de longitud.");
+				}
+				
+				int auxCvc = cvcField.getText().length();
+				if (auxCvc != 3) {
+					lblCheckoutError.setText("ERROR. El campo 'CVC' debe tener 3 dígitos de longitud.");
+				}
+				//Excepcion o error manual?
+
+				if (checkboxSaveCard.isSelected() && !user.equals(null)){
+					//Código para guardar el nº de tarjeta
+				}else {
+					lblCheckoutError.setText("ERROR. Debe estar registrado para poder guardar el método de pago.");
+				}
+			}
 			
 			
 			// Actualizar entradas disponibles
