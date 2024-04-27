@@ -218,6 +218,38 @@ public class Compra extends JFrame implements ActionListener{
 	        } else {
 	            System.out.println("El usuario canceló la operación.");
 	        }
+		} else if (e.getSource() == btnCompra) {
+			// Pop-up para confirmar datos de tarjeta?
+			
+			
+			
+			// Actualizar entradas disponibles
+			
+			// Configurar el filtro para archivos de texto
+	        FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivos de texto (.txt)", "txt");
+	        fileChooser.setFileFilter(filter);
+	        // Diálogo de guardar archivo
+	        int returnValue = fileChooser.showSaveDialog(null);
+	        // Selección del usuario
+	        if (returnValue == JFileChooser.APPROVE_OPTION) {
+	            File selectedFile = fileChooser.getSelectedFile();
+	            // Asegurarse de que la extensión sea .txt
+	            String filePath = selectedFile.getAbsolutePath();
+	            if (!filePath.endsWith(".txt")) {
+	                selectedFile = new File(filePath + ".txt");
+	            }
+	            // Escribir
+	            try {
+	                FileWriter writer = new FileWriter(selectedFile);
+	                writer.write("DNI del cliente: "+user.getDni()+"\nPelícula: "+pelicula.getTitulo()+" (ID: "+pelicula.getId()+")"+"\nEntradas compradas: "+lblCantidadEntradas.getText());//+"\n Sesión (dd/MM/AA): "+sesion.getFecha());
+	                writer.close();
+	                System.out.println("Archivo guardado en: " + selectedFile.getAbsolutePath());
+	            } catch (IOException e1) {
+	                e1.printStackTrace();
+	            }
+	        } else {
+	            System.out.println("El usuario canceló la operación.");
+	        }
 		} else if (e.getSource() == mntmExit) {
 			LogIn logIn = new LogIn(controlador);
 			logIn.setVisible(true);
