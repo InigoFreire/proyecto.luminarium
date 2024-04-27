@@ -45,7 +45,6 @@ public class APeli extends JFrame implements ActionListener{
 	private JTextField textSinopsis;
 	private JLabel lblSinopsisError;
 	private JLabel lblIdError;
-	
 
 	public APeli(Controller c, Usuario u) {
 		this.controlador=c;
@@ -192,7 +191,6 @@ public class APeli extends JFrame implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		
 		Object o=e.getSource();	
 		
 		if (o==btnVolver) {
@@ -200,6 +198,7 @@ public class APeli extends JFrame implements ActionListener{
 			menuA.setVisible(true);
 			dispose();
 		}
+
 		if (o==btnModificar) {
 			
 			lblGeneroError.setText("");

@@ -11,9 +11,11 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import controller.Controller;
+
 import model.Genero;
 import model.Pelicula;
 import model.Usuario;
+
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
@@ -48,13 +50,11 @@ public class EPeli extends JFrame implements ActionListener{
 	private JTextField textSinopsis;
 	private JLabel lblSinopsisError;
 	private JLabel lblIdError;
-	
 
 	public EPeli(Controller c, Usuario u, Pelicula p) {
 		this.controlador=c;
 		this.user=u;
 		this.peli=p;
-		
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1083, 698);
@@ -202,7 +202,6 @@ public class EPeli extends JFrame implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		
 		Object o=e.getSource();	
 		
 		if (o==btnVolver) {
@@ -210,6 +209,7 @@ public class EPeli extends JFrame implements ActionListener{
 			menuA.setVisible(true);
 			dispose();
 		}
+		
 		if (o==btnModificar) {
 			
 			lblGeneroError.setText("");

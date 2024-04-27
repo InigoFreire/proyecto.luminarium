@@ -15,16 +15,16 @@ public interface IController {
 
 	public Usuario logIn(String usuario, String password);
 
-	public Usuario modificarDatosUsuario(Usuario us, String dni, String dniInput,String nombre, String apellido, String passwd1, String email);
+	public Usuario modificarDatosUsuario(Usuario us, String dni, String nombre, String apellido, String passwd1, String email);
 	
-	public Usuario modificarDatosUsuarioPago(Usuario us, String dni, String dniInput, String nombre, String apellido, String passwd1, String email, String tarjeta, YearMonth fechaCaducidad);
+	public Usuario modificarDatosUsuarioPago(Usuario us, String dni, String nombre, String apellido, String passwd1, String email, String tarjeta, YearMonth fechaCaducidad);
 	
 	public void registrarUsuario(String dni, String nombre, String apellido, String passwd1, String email);
 	
 	public String[][] getPelis();
 
 	public Pelicula getPeliInfo(String id);
-
+	
 	public void registrarSala(String id, int aforo);
 
 	public Sala modificarSala(Sala sala, String newid, int aforo, String id);
@@ -49,6 +49,21 @@ public interface IController {
 
 	public int getUltimoIdPeli();
 
-	public void registrarPeli(String id, Genero genero, String titulo, int pegi, int duracion, String sinopsis);  
-
+	public void registrarPeli(String id, Genero genero, String titulo, int pegi, int duracion, String sinopsis);
+	
+	// añadido por aitziber
+	public Pelicula getPeliPorTitulo(String titulo);
+	// añadido por aitziber
+	public String[][] getSalas();
+	// añadido por aitziber
+	public Sala getSalaPorId(String id);
+	// añadido por aitziber
+	public String[][] getSesiones();
+	// añadido por aitziber
+	public Sesion getSesionPorId(String id);
+	// añadido por aitziber
+	public String[][] getUsuarios();
+	// añadido por aitziber
+	public Usuario getUsuarioPorDni(String dni);
+	
 }

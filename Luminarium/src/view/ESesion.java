@@ -1,10 +1,8 @@
 package view;
 
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -17,9 +15,10 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import controller.Controller;
-import model.Genero;
+
 import model.Sesion;
 import model.Usuario;
+
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
@@ -58,7 +57,7 @@ public class ESesion extends JFrame implements ActionListener{
 		this.controlador=c;
 		this.user=u;
 		this.sesion=s;
-
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1083, 698);
 		contentPane = new JPanel();
@@ -175,7 +174,7 @@ public class ESesion extends JFrame implements ActionListener{
 		textPrecio.setText(String.valueOf(sesion.getPrecio()));
 		textFecha.setText(sesion.getFecha().toString());
 		comboBoxSala.setSelectedItem(sesion.getIdSala());
-		comboBoxPelicula.setSelectedItem(sesion.getIdPeli());
+		comboBoxPelicula.setSelectedItem(sesion.getIdPelicula());
 		
 		btnVolver.addActionListener(this);
 		btnModificar.addActionListener(this);
@@ -193,6 +192,7 @@ public class ESesion extends JFrame implements ActionListener{
 			menuA.setVisible(true);
 			dispose();
 		}
+		
 		if(o==btnModificar) {
 			
 			boolean correcto=true;

@@ -8,7 +8,6 @@ public class Sala {
 		
 	}
 	
-	
 	public String getId() {
 		return id;
 	}
@@ -21,5 +20,9 @@ public class Sala {
 	public void setAforo(int aforo) {
 		this.aforo = aforo;
 	}
-	
+
+	@Override
+	public String toString() {
+		return "Sala [id=" + id + ", aforo=" + aforo + "]";
+	}
 }

@@ -175,14 +175,15 @@ public class ASesion extends JFrame implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
 		Object o=e.getSource();	
 		LocalDateTime fecha = null;
+		
 		if (o==btnVolver) {
 			MenuAdmin menuA = new MenuAdmin(controlador, user);
 			menuA.setVisible(true);
 			dispose();
 		}
+		
 		if(o==btnModificar) {
 			boolean correcto = true;
 			lblFechaError.setText("");

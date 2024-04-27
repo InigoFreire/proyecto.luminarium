@@ -1,5 +1,9 @@
 package view;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -10,13 +14,10 @@ import model.Usuario;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.swing.SwingConstants;
-import javax.swing.JButton;
 import java.awt.Color;
 import javax.swing.JPasswordField;
 
@@ -45,8 +46,7 @@ public class AUsuario extends JFrame implements ActionListener {
 	private JLabel lblEmailError;
 	private JLabel lblNombreError;
 	private JLabel lblApellidoError;
-	private Usuario user;
-	
+	private Usuario user;	
 	
 	public AUsuario(Controller Con, Usuario us) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -185,7 +185,6 @@ public class AUsuario extends JFrame implements ActionListener {
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		
 		if(e.getSource()==btnRegistrarse) {
 			try {
 				verificarDatos();
@@ -275,6 +274,5 @@ public class AUsuario extends JFrame implements ActionListener {
         if(!correcto){
             throw new IllegalEntryData ("Datos introducidos incorrectos");
         }
-		
 	}
 }
