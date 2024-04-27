@@ -101,7 +101,7 @@ public class LogIn extends JFrame implements ActionListener {
 					this.dispose();
 				}
 				else {
-				VPeli frame = new VPeli(c, user);
+				VPelicula frame = new VPelicula(c, user);
 				frame.setVisible(true);
 				this.dispose();
 				}
@@ -110,7 +110,7 @@ public class LogIn extends JFrame implements ActionListener {
 			}
 		} else if (e.getSource()==btnInvitado) {
 			Usuario user = new Usuario();
-			VPeli frame = new VPeli(c, user);
+			VPelicula frame = new VPelicula(c, user);
 			frame.setVisible(true);
 			this.dispose();
 		} else if (e.getSource()==btnRegistrar) {

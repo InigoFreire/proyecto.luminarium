@@ -24,7 +24,7 @@ import java.util.Stack;
 public class InfoPeli extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
-	private static Stack<VPeli> stack = new Stack<>();
+	private static Stack<VPelicula> stack = new Stack<>();
 	private JPanel contentPane;
 	private JLabel lblFoto, lblTitulo, lblGenero, lblPegi, lblDuracion, lblSinopsis;
 	private JButton btnComprar;
@@ -115,7 +115,7 @@ public class InfoPeli extends JFrame implements ActionListener {
 		btnAtras.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (!stack.isEmpty()) {
-					VPeli anterior = stack.pop();
+					VPelicula anterior = stack.pop();
 					anterior.setVisible(true);
 					dispose();
 				}
