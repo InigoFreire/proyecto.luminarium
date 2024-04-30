@@ -220,13 +220,7 @@ public class EPeli extends JFrame implements ActionListener{
 			lblSinopsisError.setText("");
 			
 			boolean correcto=true;
-			ArrayList<String> ids = controlador.getPelisId();
-			for(String id:ids) {
-				if(id.equalsIgnoreCase(textId.getText())&&!id.equalsIgnoreCase(peli.getId())) {
-					lblIdError.setText("Ya existe otra peli con ese ID");
-					correcto=false;
-				}
-			}
+			
 			//Controlar Enum genero 
 			try {
 				Genero.valueOf(textGenero.getText().toUpperCase());

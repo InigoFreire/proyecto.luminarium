@@ -152,13 +152,7 @@ public class ESesion extends JFrame implements ActionListener{
 			lblFechaError.setText("");
 			
 			boolean correcto=true;
-			ArrayList<String> ids = controlador.getSesionId();
-			for(String id:ids) {
-				if(id.equalsIgnoreCase(textSesionId.getText())&&!id.equalsIgnoreCase(sesion.getId())) {
-					lblIdError.setText("Ya existe otra peli con ese ID");
-					correcto=false;
-				}
-			}
+			
 			//Controlar que precio no sea negativo
 			if(Double.parseDouble(textPrecio.getText())<0) {
 				lblPrecioError.setText("El precio no puede ser negativo");

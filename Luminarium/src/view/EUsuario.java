@@ -248,8 +248,8 @@ public class EUsuario extends JFrame implements ActionListener {
 		btnVolver.setBounds(523, 592, 264, 56);
 		contentPane.add(btnVolver);
 		if(!user.isAdminCheck()) {
-			textDni.setVisible(false);
-			lblDni.setVisible(false);
+			textDni.setEditable(false);
+			
 		}
 		btnVolver.addActionListener(this);	
 		

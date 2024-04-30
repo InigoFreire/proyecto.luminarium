@@ -123,13 +123,7 @@ public class ESala extends JFrame implements ActionListener{
 			lblAforoError.setText("");
 			
 			boolean correcto=true;
-			ArrayList<String> ids = controlador.getSalasId();
-			for(String id:ids) {
-				if(id.equalsIgnoreCase(textSalaId.getText())&&!id.equalsIgnoreCase(sala.getId())) {
-					lblIDsalaError.setText("Ya existe otra sala con ese ID");
-					correcto=false;
-				}
-			}
+			
 			if(textSalaAforo.getText().length()>3) {
 				lblAforoError.setText("No se admiten mas de 3 cifras");
 				correcto=false;
