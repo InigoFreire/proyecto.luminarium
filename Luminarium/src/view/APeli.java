@@ -22,7 +22,7 @@ public class APeli extends JFrame implements ActionListener{
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private Controller controlador;
+	private Controller controlador = new Controller();
 	private Usuario user;
 	private JButton btnVolver;
 	private JButton btnModificar; 

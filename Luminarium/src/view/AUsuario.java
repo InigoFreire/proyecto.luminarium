@@ -38,7 +38,7 @@ public class AUsuario extends JFrame implements ActionListener {
 	private JLabel lblCabecera;
 	private JButton btnRegistrarse;
 	private JButton btnVolver;
-	private Controller c;
+	private Controller c = new Controller();
 	private JLabel lblPassError;
 	private JPasswordField password;
 	private JPasswordField passwordR;

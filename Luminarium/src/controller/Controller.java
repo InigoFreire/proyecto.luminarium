@@ -42,12 +42,12 @@ public class Controller implements IController {
 	final String ModificarPeli = "update peliculas set id=?, genero=?, titulo=?, PEGI=?, duracion=?, sinopsis=? where id=?";
 	final String GetSesionIds = "select id from sesiones";
 	final String ModificarSesion = "update sesiones set id=?, precio=?, fecha=?, idSala=?, idPelicula where id=?";
-	final String GetUltimoIdSala = "call IncrementarIDSalas(@new_id)";
-	final String GetUltimoIdSesion = "call IncrementarIDSesion(@new_id)";
-	final String GetUltimoIdPeli = "call IncrementarIDPeli(@new_id)";
+	final String GetUltimoIdSala = "call GetNextIDFromSalas()";
+	final String GetUltimoIdSesion = "call GetNextIDFromSesiones()";
+	final String GetUltimoIdPeli = "call GetNextIDFromPeliculas()";
 	final String INSERTARsesion = "INSERT INTO sesiones VALUES (?,?,?,?,?)";
 	final String INSERTARpeli = "INSERT INTO peliculas VALUES (?,?,?,?,?,?)";
-	final String GetPelisIdTitulo = "SELECT id, titulo FROM peliculas";
+	final String GetPelisIdTitulo = "SELECT titulo, id FROM peliculas";
 	// añadido por aitziber
 	final String GETPeliPorTitulo = "SELECT * FROM peliculas WHERE titulo = ?";
 	// añadido por aitziber
@@ -106,8 +106,9 @@ public class Controller implements IController {
 			stmt = con.prepareStatement(GetUltimoIdPeli);
 								
 			rs = stmt.executeQuery();
-			id = rs.getInt("id");
-			
+			if (rs.next()) {
+				id = rs.getInt("NextID");
+			}
 		}catch (SQLException e) {
 			System.out.println("Error en la consulta de la BD");
 			e.printStackTrace();
@@ -146,11 +147,11 @@ public class Controller implements IController {
 		try {
 			stmt = con.prepareStatement(INSERTARsesion);
 			
-			stmt.setInt(5, idPeli);
-			stmt.setString(4, idSala);
-			stmt.setString(3, fecha.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
-			stmt.setInt(2, precio);
 			stmt.setString(1, id);
+			stmt.setInt(2, precio);
+			stmt.setString(3, fecha.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+			stmt.setString(4, idSala);
+			stmt.setInt(5, idPeli);
 			
 			stmt.executeUpdate();
 			
@@ -178,7 +179,9 @@ public class Controller implements IController {
 			stmt = con.prepareStatement(GetUltimoIdSesion);
 								
 			rs = stmt.executeQuery();
-			id = rs.getString("id");
+			if (rs.next()) {
+				id = rs.getString("NextID");
+			}
 			
 		}catch (SQLException e) {
 			System.out.println("Error en la consulta de la BD");
@@ -197,8 +200,9 @@ public class Controller implements IController {
 			stmt = con.prepareStatement(GetUltimoIdSala);
 								
 			rs = stmt.executeQuery();
-			id = rs.getString("id");
-			
+			if (rs.next()) {
+				id = rs.getString("NextID");
+			}
 		}catch (SQLException e) {
 			System.out.println("Error en la consulta de la BD");
 			e.printStackTrace();
@@ -831,8 +835,7 @@ public class Controller implements IController {
 	}
 
 	@Override
-	public Usuario modificarDatosUsuarioPago(Usuario us, String dni, String nombre, String apellido,
-			String passwd1, String email, String tarjeta, YearMonth fechaCaducidad) {
+	public Usuario modificarDatosUsuarioPago(Usuario us, String dni, String nombre, String apellido, String passwd1, String email, String tarjeta, YearMonth fechaCaducidad) {
 		// Abrimos la conexión
 		this.openConnection();
 
@@ -907,7 +910,7 @@ public class Controller implements IController {
 	private void openConnection() {
 		try {
 			String url = "jdbc:mysql://localhost:3306/cines_g2?serverTimezone=Europe/Madrid&useSSL=false";
-			con = DriverManager.getConnection(url, "dami_g2", "abcd*1234");
+			con = DriverManager.getConnection(url, "root", "abcd*1234");
 
 		} catch (SQLException e) {
 			System.out.println("Error al intentar abrir la BD");

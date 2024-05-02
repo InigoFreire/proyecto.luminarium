@@ -76,7 +76,7 @@ public class ESesion extends JFrame implements ActionListener{
 		btnModificar.setFont(new Font("Tahoma", Font.BOLD, 19));
 		contentPane.add(btnModificar);
 		
-		lblCabecera = new JLabel("AÑADIR SESION");
+		lblCabecera = new JLabel("EDITAR SESION");
 		lblCabecera.setFont(new Font("Tahoma", Font.BOLD, 19));
 		lblCabecera.setHorizontalAlignment(SwingConstants.CENTER);
 		lblCabecera.setBounds(251, 47, 501, 56);

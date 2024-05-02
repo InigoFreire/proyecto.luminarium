@@ -23,7 +23,7 @@ public class ASala extends JFrame implements ActionListener{
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private Controller controlador;
+	private Controller controlador = new Controller();
 	private Usuario user;
 	private JButton btnVolver, btnRegistrar;
 	private JTextField textId;
@@ -52,6 +52,7 @@ public class ASala extends JFrame implements ActionListener{
 		textId.setBounds(138, 246, 325, 54);
 		contentPane.add(textId);
 		textId.setColumns(10);
+		textId.setText(controlador.getUltimoIdSala());
 		
 		textAforo = new JTextField();
 		textAforo.setBounds(558, 246, 325, 54);
@@ -75,7 +76,7 @@ public class ASala extends JFrame implements ActionListener{
 		btnRegistrar.setBounds(440, 472, 166, 40);
 		contentPane.add(btnRegistrar);
 		
-		lblAforoError = new JLabel("New label");
+		lblAforoError = new JLabel("");
 		lblAforoError.setHorizontalAlignment(SwingConstants.CENTER);
 		lblAforoError.setForeground(Color.RED);
 		lblAforoError.setFont(new Font("Tahoma", Font.PLAIN, 25));
@@ -93,10 +94,7 @@ public class ASala extends JFrame implements ActionListener{
 			menuA.setVisible(true);
 			dispose();
 		} else if (e.getSource()==btnRegistrar) {
-			String patron = "^S\\d+";
-	        Pattern pattern = Pattern.compile(patron);
-	        Matcher matcher = pattern.matcher(textId.getText());
-	        if (matcher.matches() && !textAforo.equals("")) {
+	        if (!textAforo.equals("")) {
 	        	controlador.registrarSala(textId.getText(), Integer.parseInt(textAforo.getText()));
 	        } else if (textAforo.equals("")) {
 	        	lblAforoError.setText("Introduce aforo");

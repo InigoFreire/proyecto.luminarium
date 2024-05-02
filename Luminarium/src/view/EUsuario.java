@@ -535,8 +535,8 @@ public class EUsuario extends JFrame implements ActionListener {
         }
 		
 		if(correcto) {
-			controlador.modificarDatosUsuarioPago(user, user.getDni(), textDni.getText(), textNombre.getText(), textApellido.getText(), passwd, textEmail.getText(), textNTarjeta.getText(), YearMonth.parse(textFechaCaducidad.getText()));
-			VPeli frame = new VPeli(controlador, user);
+			controlador.modificarDatosUsuarioPago(user, textDni.getText(), textNombre.getText(), textApellido.getText(), passwd, textEmail.getText(), textNTarjeta.getText(), YearMonth.parse(textFechaCaducidad.getText()));
+			VPelicula frame = new VPelicula(controlador, user);
 			frame.setVisible(true);
 			this.dispose();
 		} else {
