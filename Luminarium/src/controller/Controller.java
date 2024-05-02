@@ -36,8 +36,50 @@ public class Controller implements IController{
 	final String ModificarPeli = "update peliculas set id=?, genero=?, titulo=?, PEGI=?, duracion=?, sinopsis=? where id=?";
 	final String GetSesionIds = "select id from sesiones";
 	final String ModificarSesion = "update sesiones set id=?, precio=?, fecha=? where id=?";
+	final String getHoraSesion = "select * from sesiones where idPelicula=? and ticketRestante>0";
 	
 	
+	
+	
+	@Override
+	public ArrayList<Sesion> getHoraSesion(String id) {
+		ArrayList<Sesion> horas = new ArrayList<Sesion>();
+		openConnection();
+		ResultSet rs = null;
+		Sesion sesion = new Sesion();
+		
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime dateTime = null;
+		try {
+			stmt = con.prepareStatement(getHoraSesion);
+			stmt.setString(1,id);
+								
+			rs = stmt.executeQuery();
+						
+			while(rs.next()) {
+				sesion.setId(rs.getString("id"));
+				sesion.setIdPelicula(rs.getString("idPelicula"));
+				sesion.setIdSala(rs.getString("idSala"));
+				sesion.setTicketRestante(rs.getInt("ticketRestante"));
+				sesion.setPrecio(rs.getDouble("precio"));
+				dateTime = LocalDateTime.parse(rs.getString("fecha"), formatter);
+				sesion.setFecha(dateTime);
+				
+				horas.add(sesion);
+				
+			}
+			
+		}catch (SQLException e) {
+			System.out.println("Error en el cierre de la BD");
+			e.printStackTrace();
+		}
+		
+		
+		
+		
+		return horas;
+	}
+
 	
 	@Override
 	public ArrayList<String> getSesionId() {
@@ -501,6 +543,7 @@ public class Controller implements IController{
 		return dnis;
 	}
 
+	
 	
 
 	

@@ -38,5 +38,7 @@ public interface IController {
 	public ArrayList<String> getSesionId();
 	
 	public Sesion modificarSesion(Sesion sesion,String newId, double precio, LocalDateTime fecha, String id);
+	
+	public ArrayList<Sesion> getHoraSesion(String id);
 
 }

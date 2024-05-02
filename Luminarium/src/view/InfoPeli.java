@@ -9,6 +9,7 @@ import javax.swing.border.EmptyBorder;
 import controller.Controller;
 import model.Genero;
 import model.Pelicula;
+import model.Sesion;
 import model.Usuario;
 
 import javax.swing.JLabel;
@@ -19,23 +20,31 @@ import javax.swing.JButton;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Time;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Stack;
 import javax.swing.JComboBox;
 
 public class InfoPeli extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
-	private static Stack<VPeli> stack = new Stack<>();
+	
 	private JPanel contentPane;
 	private JLabel lblFoto, lblTitulo, lblGenero, lblPegi, lblDuracion, lblSinopsis;
-	private JButton btnNewButton;
+	private JButton btnComprar;
 	private JMenuBar menuBar;
 	private JMenu mnUsuario;
 	private JMenuItem mntmModificar, mntmExit;
 	private Usuario user;
 	private Controller controlador;
 	private Pelicula peli;
-
+	private JButton btnAtras;
+	private JComboBox<String> comboBoxSesion;
+	private ArrayList<Sesion> horas = new ArrayList<Sesion>();
+	private String hora;
+	
 	public InfoPeli(Controller c, Usuario u, Pelicula p) {
 		this.user = u;
 		this.controlador = c;
@@ -54,35 +63,35 @@ public class InfoPeli extends JFrame implements ActionListener {
 		contentPane.add(lblFoto);
 
 		lblTitulo = new JLabel("");
-		lblTitulo.setBounds(399, 67, 520, 37);
+		lblTitulo.setBounds(391, 67, 520, 37);
 		contentPane.add(lblTitulo);
-		lblTitulo.setText(p.getTitulo());
+		lblTitulo.setText(peli.getTitulo());
 
 		lblGenero = new JLabel("");
 		lblGenero.setBounds(612, 114, 88, 23);
 		contentPane.add(lblGenero);
-		lblGenero.setText(p.getGenero().name());
+		lblGenero.setText(peli.getGenero().name());
 
 		lblPegi = new JLabel("");
 		lblPegi.setBounds(785, 114, 88, 23);
 		contentPane.add(lblPegi);
-		lblPegi.setText("+" + p.getPegi());
+		lblPegi.setText("+" + peli.getPegi());
 
 		lblDuracion = new JLabel("");
 		lblDuracion.setBounds(399, 221, 230, 37);
 		contentPane.add(lblDuracion);
-		lblDuracion.setText(p.getDuracion() + " min");
+		lblDuracion.setText(peli.getDuracion() + " min");
 
 		lblSinopsis = new JLabel("");
 		lblSinopsis.setBounds(399, 294, 560, 154);
 		contentPane.add(lblSinopsis);
-		lblSinopsis.setText(p.getSinopsis());
+		lblSinopsis.setText(peli.getSinopsis());
 
-		btnNewButton = new JButton("Comprar entradas");
-		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 25));
-		btnNewButton.setBounds(823, 614, 236, 37);
+		btnComprar = new JButton("Comprar entradas");
+		btnComprar.setBounds(823, 614, 236, 37);
+		btnComprar.setFont(new Font("Tahoma", Font.PLAIN, 25));
 
-		contentPane.add(btnNewButton);
+		contentPane.add(btnComprar);
 
 		menuBar = new JMenuBar();
 		menuBar.setBounds(882, 10, 177, 36);
@@ -98,12 +107,29 @@ public class InfoPeli extends JFrame implements ActionListener {
 		mntmExit = new JMenuItem("Cerrar Sesión");
 		mnUsuario.add(mntmExit);
 
-		JButton btnAtras = new JButton("Pag. anterior");
-		btnAtras.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btnAtras = new JButton("Pag. anterior");
 		btnAtras.setBounds(10, 626, 177, 23);
+		btnAtras.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		contentPane.add(btnAtras);
+		
+		horas =c.getHoraSesion(peli.getId());
+		comboBoxSesion = new JComboBox<String>();
+		if(horas.isEmpty()) {
+			comboBoxSesion.addItem("No hay sesiones disponibles");
+		}else {
+			for(Sesion sesion:horas) {
+				hora = sesion.getFecha().toString();
+				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd   HH:mm:ss");
+				hora=LocalDateTime.parse(hora).format(formatter);
+				hora= hora.substring(0,hora.length()-3);
+				hora=hora.substring(5);
+				comboBoxSesion.addItem(hora);
+			}
+		}
+		comboBoxSesion.setBounds(440, 507, 160, 30);
+		contentPane.add(comboBoxSesion);
 
-		btnNewButton.addActionListener(this);
+		btnComprar.addActionListener(this);
 
 		mntmModificar.addActionListener(this);
 		mntmExit.addActionListener(this);
@@ -113,15 +139,7 @@ public class InfoPeli extends JFrame implements ActionListener {
 			}
 		});
 
-		btnAtras.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (!stack.isEmpty()) {
-					VPeli anterior = stack.pop();
-					anterior.setVisible(true);
-					dispose();
-				}
-			}
-		});
+		btnAtras.addActionListener(this);
 	}
 
 	@Override
@@ -136,6 +154,25 @@ public class InfoPeli extends JFrame implements ActionListener {
 			LogIn logIn = new LogIn(controlador);
 			logIn.setVisible(true);
 			dispose();
+		}
+		if(e.getSource()==btnAtras) {
+			VPeli vpeli = new VPeli(controlador, user);
+			vpeli.setVisible(true);
+			this.dispose();
+		}
+		if(e.getSource()==btnComprar) {
+			hora = (String)comboBoxSesion.getSelectedItem(); 
+			Sesion sesionEle=null;
+			for(Sesion sesion:horas) {
+				if(sesion.getFecha().toString().contains(hora)) {
+					sesionEle=sesion;
+				}
+			}
+			
+			
+			Compra vcompra= new Compra(controlador, user,peli,sesionEle);
+			vcompra.setVisible(true);
+			this.dispose();
 		}
 	}
 }

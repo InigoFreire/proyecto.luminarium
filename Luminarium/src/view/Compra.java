@@ -19,6 +19,8 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
 
 import controller.Controller;
+import model.Pelicula;
+import model.Sesion;
 import model.Usuario;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
@@ -36,10 +38,14 @@ public class Compra extends JFrame implements ActionListener{
 	private Usuario user;
 	private Controller controlador;
 	private int numEntradas;
+	private Pelicula peli;
+	private Sesion sesion;
 	
-	public Compra(Controller c, Usuario u) { //Hay que añadir los datos de sesión y pelicula desde la ventana anterior
+	public Compra(Controller c, Usuario u,Pelicula p,Sesion s) { 
 		this.user=u;
 		this.controlador=c;
+		this.peli=p;
+		this.sesion=s;
 		numEntradas=0;
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
