@@ -32,6 +32,7 @@ public class EUsuario extends JFrame implements ActionListener {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private Controller controlador;
+
 	private Usuario user;
 	private JTextField textNombre, textEmail, textApellido, textNTarjeta, textFechaCaducidad;
 	private JLabel lblNombre, lblApellido, lblContrasena, lblEmail, lblRepiteContrasena, lblCabecera, lblPassError, lblNTarjeta, lblFechaCaducidadyyyymm;
@@ -48,10 +49,12 @@ public class EUsuario extends JFrame implements ActionListener {
 	private JTextField textDni;
 	private JLabel lblDni;
 	private JButton btnVolver ;
-		
-	public EUsuario(Controller c, Usuario u) {
+	private Usuario userM;
+	
+	public EUsuario(Controller c, Usuario u, Usuario m) {
 			this.controlador=c;
 			this.user=u;
+			this.userM=m;
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1083, 698);
@@ -159,7 +162,6 @@ public class EUsuario extends JFrame implements ActionListener {
 		textApellido.setText(u.getApellido());
 		textEmail.setText(u.getEmail());
 		
-		
 		textNTarjeta = new JTextField();
 		textNTarjeta.setBounds(191, 503, 224, 56);
 		contentPane.add(textNTarjeta);
@@ -247,7 +249,7 @@ public class EUsuario extends JFrame implements ActionListener {
 		btnVolver.setFont(new Font("Tahoma", Font.BOLD, 19));
 		btnVolver.setBounds(523, 592, 264, 56);
 		contentPane.add(btnVolver);
-		if(!user.isAdminCheck()) {
+		if(!userM.isAdminCheck()) {
 			textDni.setEditable(false);
 			
 		}
@@ -256,16 +258,19 @@ public class EUsuario extends JFrame implements ActionListener {
 		lblFechaCaducidadyyyymm.setVisible(true);
 		textFechaCaducidad.setVisible(true);
 		if(u.getMetodoPago()!=null) {
-			textNTarjeta.setText(user.getMetodoPago());
-			textFechaCaducidad.setText(String.format("%d-%02d", user.getFechaCaducidadTarjeta().getYear(), user.getFechaCaducidadTarjeta().getMonthValue()));
+			textNTarjeta.setText(userM.getMetodoPago());
+			textFechaCaducidad.setText(String.format("%d-%02d", userM.getFechaCaducidadTarjeta().getYear(), userM.getFechaCaducidadTarjeta().getMonthValue()));
 		}
 		
+
 	
 	
+
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
+
 		Object o= e.getSource();
 		
 		if(o==btnModificar) {
@@ -276,17 +281,22 @@ public class EUsuario extends JFrame implements ActionListener {
 			}
 		}
 		if (o==btnVolver) {
-			if(user.isAdminCheck()) {
-				MenuAdmin menuA = new MenuAdmin(controlador, user);
+			if(userM.isAdminCheck()) {
+				MenuAdmin menuA = new MenuAdmin(controlador, userM);
 				menuA.setVisible(true);
 				dispose();
 			}
 			else {
-				VPeli frame = new VPeli(controlador, user);
+				VPeli frame = new VPeli(controlador, userM);
+
 				frame.setVisible(true);
 				this.dispose();
 			}
-			
+		}
+		else if (e.getSource()==btnVolver) {
+			MenuAdmin menuA = new MenuAdmin(controlador, userM);
+			menuA.setVisible(true);
+			dispose();
 		}
 		
 	}
@@ -349,7 +359,7 @@ public class EUsuario extends JFrame implements ActionListener {
 		 //Comprobar si DNI ya existe en la base de datos y no es el del usuario activo
 		ArrayList<String> dnis=controlador.getDni();
 		for(String dni:dnis) {
-			if(dni.equalsIgnoreCase(textDni.getText())&&!dni.equalsIgnoreCase(user.getDni())) {
+			if(dni.equalsIgnoreCase(textDni.getText())&&!dni.equalsIgnoreCase(userM.getDni())) {
 				correcto=false;
 				lblDniError.setText("Ese DNI ya existe en la base de datos");
 			}
@@ -387,9 +397,9 @@ public class EUsuario extends JFrame implements ActionListener {
 		
 		if(correcto) {
 			if(textNTarjeta.getText().equals("")) {
-				controlador.modificarDatosUsuario(user, user.getDni(), textDni.getText(),textNombre.getText(), textApellido.getText(), passwd, textEmail.getText());
+				controlador.modificarDatosUsuario(userM, userM.getDni(), textDni.getText(),textNombre.getText(), textApellido.getText(), passwd, textEmail.getText());
 			}else {
-				controlador.modificarDatosUsuarioPago(user, user.getDni(), textDni.getText(),textNombre.getText(), textApellido.getText(), passwd, textEmail.getText(), textNTarjeta.getText(), YearMonth.parse(textFechaCaducidad.getText()));
+				controlador.modificarDatosUsuarioPago(userM, userM.getDni(), textDni.getText(),textNombre.getText(), textApellido.getText(), passwd, textEmail.getText(), textNTarjeta.getText(), YearMonth.parse(textFechaCaducidad.getText()));
 			}
 		
 			JOptionPane.showMessageDialog(this,(String)"Usuario modificado correctamente","",JOptionPane.INFORMATION_MESSAGE,null);

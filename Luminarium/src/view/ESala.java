@@ -37,6 +37,7 @@ public class ESala extends JFrame implements ActionListener{
 	private JLabel lblIDsalaError; 
 	private JLabel lblAforoError;
 
+
 	public ESala(Controller c, Usuario u, Sala s) {
 		this.controlador=c;
 		this.user=u;
@@ -50,6 +51,7 @@ public class ESala extends JFrame implements ActionListener{
 		contentPane.setLayout(null);
 
 		btnVolver = new JButton("Volver");
+
 		btnVolver.setBounds(523, 592, 264, 56);
 		btnVolver.setFont(new Font("Tahoma", Font.BOLD, 19));
 		contentPane.add(btnVolver);
@@ -107,6 +109,7 @@ public class ESala extends JFrame implements ActionListener{
 		
 		btnModificar.addActionListener(this);
 		btnVolver.addActionListener(this);	
+
 	}
 
 	@Override
@@ -115,6 +118,7 @@ public class ESala extends JFrame implements ActionListener{
 		Object o=e.getSource();	
 		
 		if (o==btnVolver) {
+
 			MenuAdmin menuA = new MenuAdmin(controlador, user); 
 			menuA.setVisible(true);
 			dispose();
@@ -135,4 +139,5 @@ public class ESala extends JFrame implements ActionListener{
 		}
 	}
 	
+
 }

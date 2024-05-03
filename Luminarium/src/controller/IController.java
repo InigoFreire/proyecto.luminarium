@@ -42,5 +42,28 @@ public interface IController {
 	
 	public ArrayList<Sesion> getHoraSesion(String id);
 	
-	public ArrayList<Sesion> getSesiones();
+	public ArrayList<Sesion> geTSesiones();
+	
+	public HashMap<String, Integer> getTituloIdPelis();
+	
+	
+
+	
+	
+	
+	// añadido por aitziber
+		public Pelicula getPeliPorTitulo(String titulo);
+	// añadido por aitziber
+	public String[][] getSalas();
+	// añadido por aitziber
+	public Sala getSalaPorId(String id);
+	// añadido por aitziber
+	public String[][] getSesiones();
+	// añadido por aitziber
+	public Sesion getSesionPorId(String id);
+	// añadido por aitziber
+	public String[][] getUsuarios();
+	// añadido por aitziber
+	public Usuario getUsuarioPorDni(String dni);
+
 }

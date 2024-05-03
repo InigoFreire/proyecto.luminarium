@@ -5,7 +5,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import controller.Controller;
 import model.Pelicula;
-import model.TablaPelis;
+import model.Tabla;
 import model.Usuario;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
@@ -39,7 +39,7 @@ public class VPeli extends JFrame implements ActionListener {
 		this.user = u;
 		this.peliculas = c.getPelis();
 		String[] columna = { "TITULO", "PEGI" };
-		TablaPelis model = new TablaPelis(peliculas, columna);
+		Tabla model = new Tabla(peliculas, columna);
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1083, 698);
@@ -104,7 +104,7 @@ public class VPeli extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		
 		if (e.getSource()==mntmModificar) {
-			EUsuario frame = new EUsuario(controlador, user);
+			EUsuario frame = new EUsuario(controlador, user,user);
 			frame.setVisible(true);
 			this.dispose();
 		} else if (e.getSource()==mntmExit) {

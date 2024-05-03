@@ -1,10 +1,10 @@
 package view;
 
-import java.awt.EventQueue;
+
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
+
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -12,7 +12,9 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import controller.Controller;
+
 import model.Genero;
+
 import model.Pelicula;
 import model.Usuario;
 import javax.swing.JLabel;
@@ -49,14 +51,14 @@ public class EPeli extends JFrame implements ActionListener{
 	private JTextField textSinopsis;
 	private JLabel lblSinopsisError;
 	private JLabel lblIdError;
-	
+	private Pelicula pelicula;
+
 
 	public EPeli(Controller c, Usuario u, Pelicula p) {
 		this.controlador=c;
 		this.user=u;
+
 		this.peli=p;
-		
-		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1083, 698);
 		contentPane = new JPanel();
@@ -66,6 +68,7 @@ public class EPeli extends JFrame implements ActionListener{
 		contentPane.setLayout(null);
 
 		btnVolver = new JButton("Volver");
+
 		btnVolver.setBounds(523, 592, 264, 56);
 		btnVolver.setFont(new Font("Tahoma", Font.BOLD, 19));
 		contentPane.add(btnVolver);
@@ -199,18 +202,22 @@ public class EPeli extends JFrame implements ActionListener{
 		
 		btnVolver.addActionListener(this);
 		btnModificar.addActionListener(this);
+
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+
 		
 		Object o=e.getSource();	
 		
+
 		if (o==btnVolver) {
 			MenuAdmin menuA = new MenuAdmin(controlador, user);
 			menuA.setVisible(true);
 			dispose();
 		}
+
 		if (o==btnModificar) {
 			
 			lblGeneroError.setText("");
@@ -255,5 +262,6 @@ public class EPeli extends JFrame implements ActionListener{
 				JOptionPane.showMessageDialog(this,(String)"Sala modificada correctamente","",JOptionPane.INFORMATION_MESSAGE,null);	
 			}
 		}
+
 	}
 }

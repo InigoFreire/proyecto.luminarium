@@ -118,7 +118,7 @@ public class MenuAdmin extends JFrame implements ActionListener {
 			}
 			dispose();
 		} else if (o == mntmModificar) {
-			EUsuario frame = new EUsuario(controlador, user);
+			EUsuario frame = new EUsuario(controlador, user,user);
 			frame.setVisible(true);
 			this.dispose();
 		} else if (o == mntmExit) {

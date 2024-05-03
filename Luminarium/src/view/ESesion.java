@@ -1,14 +1,14 @@
 package view;
 
-import java.awt.EventQueue;
+
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -16,7 +16,6 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import controller.Controller;
-import model.Genero;
 import model.Sesion;
 import model.Usuario;
 import javax.swing.JLabel;
@@ -49,13 +48,18 @@ public class ESesion extends JFrame implements ActionListener{
 	private JLabel lblSesionPeli;
 	private JComboBox<String> comboBoxSala;
 	private JComboBox<String> comboBoxPeli;
-	private ArrayList<Sesion> sesiones;
+	
+	private ArrayList<String> idSalas;
+	private HashMap<String, Integer> pelis;
+
 
 	public ESesion(Controller c, Usuario u, Sesion s) {
 		this.controlador=c;
 		this.user=u;
 		this.sesion=s;
-		this.sesiones=c.getSesiones();
+		
+		pelis = controlador.getTituloIdPelis();
+		idSalas = controlador.getSalasId();
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1083, 698);
@@ -64,6 +68,7 @@ public class ESesion extends JFrame implements ActionListener{
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+
 
 		btnVolver = new JButton("Volver");
 		btnVolver.setBounds(521, 592, 264, 56);
@@ -160,27 +165,37 @@ public class ESesion extends JFrame implements ActionListener{
 		comboBoxPeli.setBounds(679, 434, 275, 56);
 		contentPane.add(comboBoxPeli);
 		
-		for(Sesion sesion1:sesiones) {
-			comboBoxSala.addItem(sesion1.getIdSala());
-			comboBoxPeli.addItem(sesion1.getIdPelicula());
+		for (String id:idSalas) {
+			comboBoxSala.addItem(id);
+		}
+		String indexPeli=null;
+		for (String titulo:pelis.keySet()) {
+			comboBoxPeli.addItem(titulo);
 			
 		}
+		
+		
+		comboBoxPeli.setSelectedItem();
 		comboBoxSala.setSelectedItem(sesion.getIdSala());
-		comboBoxPeli.setSelectedItem(sesion.getIdPelicula());
+		
 		btnVolver.addActionListener(this);
 		btnModificar.addActionListener(this);
+
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+
 		
 		Object o=e.getSource();	
 		
+
 		if (o==btnVolver) {
 			MenuAdmin menuA = new MenuAdmin(controlador, user);
 			menuA.setVisible(true);
 			dispose();
 		}
+
 		if(o==btnModificar) {
 			
 			lblPrecioError.setText("");
@@ -207,5 +222,6 @@ public class ESesion extends JFrame implements ActionListener{
 				JOptionPane.showMessageDialog(this,(String)"Sesion modificada correctamente","",JOptionPane.INFORMATION_MESSAGE,null);	
 			}
 		}
+
 	}
 }

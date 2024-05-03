@@ -36,7 +36,6 @@ public class LogIn extends JFrame implements ActionListener {
 	private JLabel lblError;
 	private Controller c;
 	private JButton btnRegistrar;
-	private String[][] peliculas;
 
 	public LogIn(Controller cont) {
 		this.c=cont;
@@ -113,18 +112,22 @@ public class LogIn extends JFrame implements ActionListener {
 					this.dispose();
 				}
 				else {
-				peliculas = c.getPelis();
+
+				
 				VPeli frame = new VPeli(c, user);
+
 				frame.setVisible(true);
 				this.dispose();
 				}
 			} else {
 				lblError.setText("Usuario no encontrado.");
 			}
+
 		} else if (o==btnInvitado) {
 			Usuario user = null;
-			peliculas = c.getPelis();
+			
 			VPeli frame = new VPeli(c, user);
+
 			frame.setVisible(true);
 			this.dispose();
 		} else if (o==btnRegistrar) {

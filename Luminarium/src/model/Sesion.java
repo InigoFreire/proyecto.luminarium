@@ -1,6 +1,7 @@
 package model;
 
 
+
 import java.time.LocalDateTime;
 
 public class Sesion {
@@ -73,4 +74,5 @@ public class Sesion {
 	}
 	
 	
+
 }

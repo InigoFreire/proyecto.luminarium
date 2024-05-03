@@ -30,7 +30,6 @@ import javax.swing.JComboBox;
 public class InfoPeli extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
-	
 	private JPanel contentPane;
 	private JLabel lblFoto, lblTitulo, lblGenero, lblPegi, lblDuracion, lblSinopsis;
 	private JButton btnComprar;
@@ -139,14 +138,16 @@ public class InfoPeli extends JFrame implements ActionListener {
 			}
 		});
 
+
 		btnAtras.addActionListener(this);
+
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == mntmModificar) {
 
-			EUsuario frame = new EUsuario(controlador, user);
+			EUsuario frame = new EUsuario(controlador, user,user);
 
 			frame.setVisible(true);
 			this.dispose();
