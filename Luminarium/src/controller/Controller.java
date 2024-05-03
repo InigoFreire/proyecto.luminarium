@@ -46,7 +46,7 @@ public class Controller implements IController{
 		ArrayList<Sesion> horas = new ArrayList<Sesion>();
 		openConnection();
 		ResultSet rs = null;
-		Sesion sesion = new Sesion();
+		
 		
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime dateTime = null;
@@ -57,6 +57,7 @@ public class Controller implements IController{
 			rs = stmt.executeQuery();
 						
 			while(rs.next()) {
+				Sesion sesion = new Sesion();
 				sesion.setId(rs.getString("id"));
 				sesion.setIdPelicula(rs.getString("idPelicula"));
 				sesion.setIdSala(rs.getString("idSala"));

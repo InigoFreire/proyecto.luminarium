@@ -43,7 +43,7 @@ public class InfoPeli extends JFrame implements ActionListener {
 	private JButton btnAtras;
 	private JComboBox<String> comboBoxSesion;
 	private ArrayList<Sesion> horas = new ArrayList<Sesion>();
-	private String hora;
+	private String hora,horaS;
 	
 	public InfoPeli(Controller c, Usuario u, Pelicula p) {
 		this.user = u;
@@ -164,7 +164,11 @@ public class InfoPeli extends JFrame implements ActionListener {
 			hora = (String)comboBoxSesion.getSelectedItem(); 
 			Sesion sesionEle=null;
 			for(Sesion sesion:horas) {
-				if(sesion.getFecha().toString().contains(hora)) {
+				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd   HH:mm:ss");
+				horaS=LocalDateTime.parse(sesion.getFecha().toString()).format(formatter);
+				horaS= horaS.substring(0,horaS.length()-3);
+				horaS=horaS.substring(5);
+				if(horaS.contains(hora)) {
 					sesionEle=sesion;
 				}
 			}
