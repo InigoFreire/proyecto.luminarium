@@ -133,6 +133,7 @@ public class LogIn extends JFrame implements ActionListener {
 			this.dispose();
 		}
 		
+		
 	}
 	
 }

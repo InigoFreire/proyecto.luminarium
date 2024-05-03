@@ -4,6 +4,7 @@ package controller;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import model.Genero;
 import model.Pelicula;
@@ -40,5 +41,6 @@ public interface IController {
 	public Sesion modificarSesion(Sesion sesion,String newId, double precio, LocalDateTime fecha, String id);
 	
 	public ArrayList<Sesion> getHoraSesion(String id);
-
+	
+	public ArrayList<Sesion> getSesiones();
 }

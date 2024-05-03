@@ -24,6 +24,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import java.awt.Color;
+import javax.swing.JComboBox;
 
 public class ESesion extends JFrame implements ActionListener{
 
@@ -44,11 +45,18 @@ public class ESesion extends JFrame implements ActionListener{
 	private JLabel lblFecha;
 	private JLabel lblFechaError;
 	private Sesion sesion;
+	private JLabel lblSesionSala;
+	private JLabel lblSesionPeli;
+	private JComboBox<String> comboBoxSala;
+	private JComboBox<String> comboBoxPeli;
+	private ArrayList<Sesion> sesiones;
 
 	public ESesion(Controller c, Usuario u, Sesion s) {
 		this.controlador=c;
 		this.user=u;
 		this.sesion=s;
+		this.sesiones=c.getSesiones();
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1083, 698);
 		contentPane = new JPanel();
@@ -58,7 +66,7 @@ public class ESesion extends JFrame implements ActionListener{
 		contentPane.setLayout(null);
 
 		btnVolver = new JButton("Volver");
-		btnVolver.setBounds(523, 592, 264, 56);
+		btnVolver.setBounds(521, 592, 264, 56);
 		btnVolver.setFont(new Font("Tahoma", Font.BOLD, 19));
 		contentPane.add(btnVolver);
 		
@@ -76,62 +84,89 @@ public class ESesion extends JFrame implements ActionListener{
 		lblSesionId = new JLabel("ID");
 		lblSesionId.setHorizontalAlignment(SwingConstants.CENTER);
 		lblSesionId.setFont(new Font("Tahoma", Font.BOLD, 19));
-		lblSesionId.setBounds(64, 161, 275, 56);
+		lblSesionId.setBounds(10, 150, 275, 56);
 		contentPane.add(lblSesionId);
 		
 		textSesionId = new JTextField();
 		textSesionId.setEditable(false);
 		textSesionId.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		textSesionId.setBounds(346, 161, 299, 56);
+		textSesionId.setBounds(284, 150, 299, 56);
 		contentPane.add(textSesionId);
 		textSesionId.setColumns(10);
 		
 		lblIdError = new JLabel("");
 		lblIdError.setForeground(new Color(255, 0, 0));
 		lblIdError.setFont(new Font("Tahoma", Font.BOLD, 18));
-		lblIdError.setBounds(655, 161, 320, 56);
+		lblIdError.setBounds(284, 217, 299, 56);
 		contentPane.add(lblIdError);
 		
 		lblPrecio = new JLabel("PRECIO");
 		lblPrecio.setHorizontalAlignment(SwingConstants.CENTER);
 		lblPrecio.setFont(new Font("Tahoma", Font.BOLD, 19));
-		lblPrecio.setBounds(64, 317, 275, 56);
+		lblPrecio.setBounds(10, 306, 275, 56);
 		contentPane.add(lblPrecio);
 		
 		textPrecio = new JTextField();
 		textPrecio.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		textPrecio.setColumns(10);
-		textPrecio.setBounds(346, 317, 299, 56);
+		textPrecio.setBounds(292, 306, 299, 56);
 		contentPane.add(textPrecio);
 		
 		lblPrecioError = new JLabel("");
 		lblPrecioError.setForeground(Color.RED);
 		lblPrecioError.setFont(new Font("Tahoma", Font.BOLD, 18));
-		lblPrecioError.setBounds(655, 317, 320, 56);
+		lblPrecioError.setBounds(292, 373, 299, 56);
 		contentPane.add(lblPrecioError);
 		
 		lblFecha = new JLabel("FECHA\r\n");
 		lblFecha.setHorizontalAlignment(SwingConstants.CENTER);
 		lblFecha.setFont(new Font("Tahoma", Font.BOLD, 19));
-		lblFecha.setBounds(64, 476, 275, 56);
+		lblFecha.setBounds(10, 465, 275, 56);
 		contentPane.add(lblFecha);
 		
 		textFecha = new JTextField();
 		textFecha.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		textFecha.setColumns(10);
-		textFecha.setBounds(346, 476, 299, 56);
+		textFecha.setBounds(292, 465, 299, 56);
 		contentPane.add(textFecha);
 		
 		lblFechaError = new JLabel("");
 		lblFechaError.setForeground(Color.RED);
 		lblFechaError.setFont(new Font("Tahoma", Font.BOLD, 18));
-		lblFechaError.setBounds(655, 476, 320, 56);
+		lblFechaError.setBounds(292, 532, 299, 56);
 		contentPane.add(lblFechaError);
 		
 		textSesionId.setText(sesion.getId());
 		textPrecio.setText(String.valueOf(sesion.getPrecio()));
 		textFecha.setText(sesion.getFecha().toString());
 		
+		lblSesionSala = new JLabel("ID Sala");
+		lblSesionSala.setHorizontalAlignment(SwingConstants.CENTER);
+		lblSesionSala.setFont(new Font("Tahoma", Font.BOLD, 19));
+		lblSesionSala.setBounds(679, 200, 275, 56);
+		contentPane.add(lblSesionSala);
+		
+		lblSesionPeli = new JLabel("ID Pelicula");
+		lblSesionPeli.setHorizontalAlignment(SwingConstants.CENTER);
+		lblSesionPeli.setFont(new Font("Tahoma", Font.BOLD, 19));
+		lblSesionPeli.setBounds(679, 367, 275, 56);
+		contentPane.add(lblSesionPeli);
+		
+		comboBoxSala = new JComboBox<String>();
+		comboBoxSala.setBounds(679, 267, 275, 56);
+		contentPane.add(comboBoxSala);
+		
+		comboBoxPeli = new JComboBox<String>();
+		comboBoxPeli.setBounds(679, 434, 275, 56);
+		contentPane.add(comboBoxPeli);
+		
+		for(Sesion sesion1:sesiones) {
+			comboBoxSala.addItem(sesion1.getIdSala());
+			comboBoxPeli.addItem(sesion1.getIdPelicula());
+			
+		}
+		comboBoxSala.setSelectedItem(sesion.getIdSala());
+		comboBoxPeli.setSelectedItem(sesion.getIdPelicula());
 		btnVolver.addActionListener(this);
 		btnModificar.addActionListener(this);
 	}
