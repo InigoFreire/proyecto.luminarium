@@ -35,7 +35,7 @@ public interface IController {
 
 	public ArrayList<String> getPelisId();
 
-	public Sesion modificarSesion(Sesion sesion, String newId, double precio, LocalDateTime fecha, String idSala, int idPeli, String id);
+	public Sesion modificarSesion(Sesion sesion, String newId, double precio, LocalDateTime fecha, String idSala, String idPeli, String id);
 
 	public ArrayList<String> getSesionId();
 
@@ -43,9 +43,9 @@ public interface IController {
 
 	public String getUltimoIdSesion();
 
-	public void registrarSesion(String id, int precio, LocalDateTime fecha, String idSala, int idPeli);
+	public void registrarSesion(String id, int precio, LocalDateTime fecha, String idSala, String idPeli);
 
-	public HashMap<String, Integer> getTituloIdPelis();
+	public HashMap<String, String> getTituloIdPelis();
 
 	public int getUltimoIdPeli();
 

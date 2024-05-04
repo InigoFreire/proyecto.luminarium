@@ -59,22 +59,22 @@ public class InfoPeli extends JFrame implements ActionListener {
 		lblTitulo.setText(p.getTitulo());
 
 		lblGenero = new JLabel("");
-		lblGenero.setBounds(612, 114, 88, 23);
+		lblGenero.setBounds(399, 114, 88, 23);
 		contentPane.add(lblGenero);
 		lblGenero.setText(p.getGenero().name());
 
 		lblPegi = new JLabel("");
-		lblPegi.setBounds(785, 114, 88, 23);
+		lblPegi.setBounds(399, 153, 88, 23);
 		contentPane.add(lblPegi);
 		lblPegi.setText("+" + p.getPegi());
 
 		lblDuracion = new JLabel("");
-		lblDuracion.setBounds(399, 221, 230, 37);
+		lblDuracion.setBounds(399, 186, 230, 37);
 		contentPane.add(lblDuracion);
 		lblDuracion.setText(p.getDuracion() + " min");
 
 		lblSinopsis = new JLabel("");
-		lblSinopsis.setBounds(399, 294, 560, 154);
+		lblSinopsis.setBounds(399, 240, 560, 154);
 		contentPane.add(lblSinopsis);
 		lblSinopsis.setText(p.getSinopsis());
 

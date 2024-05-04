@@ -6,7 +6,7 @@ public class Sesion {
     private String id;
     private double precio;
     private LocalDateTime fecha;
-    private int idPelicula;
+    private String idPelicula;
     private String idSala;
 
     public Sesion() {
@@ -37,11 +37,11 @@ public class Sesion {
         this.fecha = fecha;
     }
 
-    public int getIdPelicula() {
+    public String getIdPelicula() {
         return idPelicula;
     }
 
-    public void setIdPelicula(int idPelicula) {
+    public void setIdPelicula(String idPelicula) {
         this.idPelicula = idPelicula;
     }
 

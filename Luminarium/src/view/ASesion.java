@@ -48,7 +48,7 @@ public class ASesion extends JFrame implements ActionListener{
 	private JComboBox<String> comboBoxSala;
 	private JComboBox<String> comboBoxPelicula;
 	private ArrayList<String> idSalas = controlador.getSalasId();
-	private HashMap<String, Integer> pelis = controlador.getTituloIdPelis();
+	private HashMap<String, String> pelis = controlador.getTituloIdPelis();
 
 	public ASesion(Controller c, Usuario u) {
 		this.controlador=c;

@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -50,13 +51,15 @@ public class ESesion extends JFrame implements ActionListener{
 	private JLabel lblSala;
 	private JComboBox<String> comboBoxSala;
 	private JComboBox<String> comboBoxPelicula;
-	private ArrayList<String> idSalas = controlador.getSalasId();
-	private HashMap<String, Integer> pelis = controlador.getTituloIdPelis();
+	private ArrayList<String> idSalas;
+	private HashMap<String, String> pelis;
 
 	public ESesion(Controller c, Usuario u, Sesion s) {
 		this.controlador=c;
 		this.user=u;
 		this.sesion=s;
+		this.idSalas = controlador.getSalasId();
+		this.pelis = controlador.getTituloIdPelis();
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1083, 698);
@@ -166,15 +169,18 @@ public class ESesion extends JFrame implements ActionListener{
 		for (String id:idSalas) {
 			comboBoxSala.addItem(id);
 		}
-		for (String titulo:pelis.keySet()) {
-			comboBoxPelicula.addItem(titulo);
+		
+		for (Map.Entry<String, String> entry : pelis.entrySet()) {
+			comboBoxPelicula.addItem(entry.getKey());
+			if (sesion.getIdPelicula().equals(entry.getValue())) {
+				comboBoxPelicula.setSelectedItem(entry.getKey());
+			}
 		}
 		
 		textSesionId.setText(sesion.getId());
 		textPrecio.setText(String.valueOf(sesion.getPrecio()));
 		textFecha.setText(sesion.getFecha().toString());
 		comboBoxSala.setSelectedItem(sesion.getIdSala());
-		comboBoxPelicula.setSelectedItem(sesion.getIdPelicula());
 		
 		btnVolver.addActionListener(this);
 		btnModificar.addActionListener(this);

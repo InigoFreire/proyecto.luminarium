@@ -48,20 +48,13 @@ public class Controller implements IController {
 	final String INSERTARsesion = "INSERT INTO sesiones VALUES (?,?,?,?,?)";
 	final String INSERTARpeli = "INSERT INTO peliculas VALUES (?,?,?,?,?,?)";
 	final String GetPelisIdTitulo = "SELECT titulo, id FROM peliculas";
-	// añadido por aitziber
 	final String GETPeliPorTitulo = "SELECT * FROM peliculas WHERE titulo = ?";
-	// añadido por aitziber
 	final String GETSalas = "SELECT id, aforo FROM salas";
-	// añadido por aitziber
 	final String GETSalaPorId = "SELECT * FROM salas WHERE id = ?";
-	// añadido por aitziber
 	final String GETSesiones = "SELECT sesiones.id, sesiones.precio, sesiones.fecha, \r\n"
 			+ "(SELECT titulo FROM peliculas WHERE id = sesiones.idPelicula) AS tituloPelicula, sesiones.idSala FROM sesiones";	
-	// añadido por aitziber
 	final String GETSesionPorId = "SELECT * FROM sesiones WHERE id = ?";
-	// añadido por aitziber
 	final String GETUsuarios = "SELECT dni, nombre, apellido, adminCheck FROM usuarios";
-	// añadido por aitziber
 	final String GETUsuarioPorDni = "SELECT * FROM usuarios WHERE dni = ?";
 	
 	@Override
@@ -118,8 +111,8 @@ public class Controller implements IController {
 	}
 	
 	@Override
-	public HashMap<String, Integer> getTituloIdPelis() {
-		HashMap<String, Integer> pelis = new HashMap<String, Integer>();
+	public HashMap<String, String> getTituloIdPelis() {
+		HashMap<String, String> pelis = new HashMap<String, String>();
 		this.openConnection();
 		ResultSet rs = null;
 		try {
@@ -127,7 +120,7 @@ public class Controller implements IController {
 								
 			rs = stmt.executeQuery();
 			while(rs.next()) {
-				pelis.put(rs.getString("titulo"), rs.getInt("id"));
+				pelis.put(rs.getString("titulo"), rs.getString("id"));
 			}
 			
 		}catch (SQLException e) {
@@ -139,7 +132,7 @@ public class Controller implements IController {
 	}
 	
 	@Override
-	public void registrarSesion(String id, int precio, LocalDateTime fecha, String idSala, int idPeli) {
+	public void registrarSesion(String id, int precio, LocalDateTime fecha, String idSala, String idPeli) {
 		
 		// Abrimos la conexión
 		this.openConnection();
@@ -151,7 +144,7 @@ public class Controller implements IController {
 			stmt.setInt(2, precio);
 			stmt.setString(3, fecha.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
 			stmt.setString(4, idSala);
-			stmt.setInt(5, idPeli);
+			stmt.setString(5, idPeli);
 			
 			stmt.executeUpdate();
 			
@@ -233,7 +226,7 @@ public class Controller implements IController {
 	}
 
 	@Override
-	public Sesion modificarSesion(Sesion sesion, String newId, double precio, LocalDateTime fecha, String idSala, int idPeli, String id) {
+	public Sesion modificarSesion(Sesion sesion, String newId, double precio, LocalDateTime fecha, String idSala, String idPeli, String id) {
 		this.openConnection();
 		DateTimeFormatter formateador = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         String wfecha;
@@ -242,11 +235,11 @@ public class Controller implements IController {
 		try {
 			stmt = con.prepareStatement(ModificarPeli);
 
-			stmt.setString(1,newId);
-			stmt.setDouble(2,precio);
-			stmt.setString(3,wfecha);
+			stmt.setString(1, newId);
+			stmt.setDouble(2, precio);
+			stmt.setString(3, wfecha);
 			stmt.setString(4, idSala);
-			stmt.setInt(5, idPeli);
+			stmt.setString(5, idPeli);
 			stmt.setString(4, id);
 			
 
@@ -254,7 +247,8 @@ public class Controller implements IController {
 				sesion.setId(newId);
 				sesion.setFecha(fecha);
 				sesion.setPrecio(precio);
-								
+				sesion.setIdPelicula(idPeli);
+				sesion.setIdSala(idSala);
 			}
 			
 		} catch (SQLException e) {
@@ -485,8 +479,7 @@ public class Controller implements IController {
 		}
 		return peliculas;
 	}
-
-	// añadido por aitziber
+	
 	@Override
 	public Pelicula getPeliPorTitulo(String titulo) {
 		Pelicula pelicula = null;
@@ -518,7 +511,7 @@ public class Controller implements IController {
 		}
 		return pelicula;
 	}
-	// añadido por aitziber
+	
 	@Override
 	public String[][] getUsuarios() {
 		int rowNum = 0, i = 0;
@@ -557,7 +550,7 @@ public class Controller implements IController {
 		}
 		return usuarios;
 	}
-	// añadido por aitziber
+	
 	@Override
 	public Usuario getUsuarioPorDni(String dni) {
 		Usuario usuario = null;
@@ -594,7 +587,7 @@ public class Controller implements IController {
 		}
 		return usuario;
 	}
-	// añadido por aitziber
+	
 	@Override
 	public String[][] getSalas() {
 		int rowNum = 0, i = 0;
@@ -627,7 +620,7 @@ public class Controller implements IController {
 		}
 		return salas;
 	}
-	// añadido por aitziber
+	
 	@Override
 	public Sala getSalaPorId(String id) {
 		Sala sala = null;
@@ -655,7 +648,7 @@ public class Controller implements IController {
 		}
 		return sala;
 	}
-	// añadido por aitziber
+	
 	@Override
 	public String[][] getSesiones() {
 		int rowNum = 0, i = 0;
@@ -706,7 +699,7 @@ public class Controller implements IController {
 		}
 		return sesiones;
 	}
-	// añadido por aitziber
+	
 	@Override
 	public Sesion getSesionPorId(String id) {
 		Sesion sesion = null;
@@ -723,7 +716,7 @@ public class Controller implements IController {
 				sesion.setId(rs.getString("id"));
 				sesion.setPrecio(rs.getDouble("precio"));
 				sesion.setFecha(rs.getTimestamp("fecha").toLocalDateTime());
-				sesion.setIdPelicula(rs.getInt("idPelicula"));
+				sesion.setIdPelicula(rs.getString("idPelicula"));
 				sesion.setIdSala(rs.getString("idSala"));
 			}
 		} catch (SQLException e) {
@@ -769,7 +762,7 @@ public class Controller implements IController {
 				us.setEmail(rs.getString("email"));
 				if (rs.getString("metodoPago") != null) {
 					us.setMetodoPago(rs.getString("metodoPago"));
-					us.setFechaCaducidadTarjeta(YearMonth.parse(rs.getString("fechaCaducidadTarjeta")));
+					us.setFechaCaducidadTarjeta(YearMonth.parse(rs.getString("fechaCaducidadTarjeta"), DateTimeFormatter.ofPattern("MM/yy")));
 				}
 				us.setAdminCheck(rs.getBoolean("adminCheck"));
 			} else
@@ -847,7 +840,7 @@ public class Controller implements IController {
 			stmt.setString(3, email);
 			stmt.setString(4, passwd1);
 			stmt.setString(5, tarjeta);
-			stmt.setString(6, String.format("%d-%02d", us.getFechaCaducidadTarjeta().getYear(), us.getFechaCaducidadTarjeta().getMonthValue()));
+			stmt.setString(6, String.format("%02d/%02d", us.getFechaCaducidadTarjeta().getMonthValue(), us.getFechaCaducidadTarjeta().getYear() % 100));
 			stmt.setString(7, dni);
 
 			if (stmt.executeUpdate() == 1) {

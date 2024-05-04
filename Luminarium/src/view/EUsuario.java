@@ -8,6 +8,7 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -244,7 +245,7 @@ public class EUsuario extends JFrame implements ActionListener {
 		textNTarjeta.setText(uAE.getMetodoPago());
 		lblFechaCaducidadyyyymm.setVisible(true);
 		textFechaCaducidad.setVisible(true);
-		textFechaCaducidad.setText(String.format("%d-%02d", uAE.getFechaCaducidadTarjeta().getYear(), uAE.getFechaCaducidadTarjeta().getMonthValue()));
+		textFechaCaducidad.setText(String.format("%02d/%02d", user.getFechaCaducidadTarjeta().getMonthValue(), user.getFechaCaducidadTarjeta().getYear() % 100));
 	}
 	
 	public EUsuario(Controller c, Usuario u) {
@@ -445,7 +446,7 @@ public class EUsuario extends JFrame implements ActionListener {
 		textNTarjeta.setText(user.getMetodoPago());
 		lblFechaCaducidadyyyymm.setVisible(true);
 		textFechaCaducidad.setVisible(true);
-		textFechaCaducidad.setText(String.format("%d-%02d", user.getFechaCaducidadTarjeta().getYear(), user.getFechaCaducidadTarjeta().getMonthValue()));
+		textFechaCaducidad.setText(String.format("%02d/%02d", user.getFechaCaducidadTarjeta().getMonthValue(), user.getFechaCaducidadTarjeta().getYear() % 100));
 	}
 	
 	@Override
@@ -510,11 +511,11 @@ public class EUsuario extends JFrame implements ActionListener {
         	correcto=false;
         }
 		//Comprobar que el formato de caducidad es correcto
-        Regex = "\\d{4}-(0[1-9]|1[0-2])";
+        Regex = "(0[1-9]|1[0-2])\\/\\d{2}";
         pattern = Pattern.compile(Regex);
         matcher = pattern.matcher(textFechaCaducidad.getText());
         if(!matcher.matches()) {
-        	lblCaducidadError.setText("Introduce una fecha de cucidad correcta Formato:\"yyyy-mm\"");
+        	lblCaducidadError.setText("Introduce una fecha de cucidad correcta Formato:\"MM/yy\"");
         	correcto=false;
         }
 		
@@ -535,7 +536,7 @@ public class EUsuario extends JFrame implements ActionListener {
         }
 		
 		if(correcto) {
-			controlador.modificarDatosUsuarioPago(user, textDni.getText(), textNombre.getText(), textApellido.getText(), passwd, textEmail.getText(), textNTarjeta.getText(), YearMonth.parse(textFechaCaducidad.getText()));
+			controlador.modificarDatosUsuarioPago(user, textDni.getText(), textNombre.getText(), textApellido.getText(), passwd, textEmail.getText(), textNTarjeta.getText(), YearMonth.parse(textFechaCaducidad.getText(), DateTimeFormatter.ofPattern("MM/yy")));
 			VPelicula frame = new VPelicula(controlador, user);
 			frame.setVisible(true);
 			this.dispose();
