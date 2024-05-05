@@ -281,23 +281,19 @@ public class EUsuario extends JFrame implements ActionListener {
 			}
 		}
 		if (o==btnVolver) {
-			if(userM.isAdminCheck()) {
-				MenuAdmin menuA = new MenuAdmin(controlador, userM);
+			if(user.isAdminCheck()) {
+				MenuAdmin menuA = new MenuAdmin(controlador, user);
 				menuA.setVisible(true);
 				dispose();
 			}
 			else {
-				VPeli frame = new VPeli(controlador, userM);
+				VPeli frame = new VPeli(controlador, user);
 
 				frame.setVisible(true);
 				this.dispose();
 			}
 		}
-		else if (e.getSource()==btnVolver) {
-			MenuAdmin menuA = new MenuAdmin(controlador, userM);
-			menuA.setVisible(true);
-			dispose();
-		}
+		
 		
 	}
 	public void verificarDatos() throws IllegalEntryData {

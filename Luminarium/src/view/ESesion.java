@@ -9,6 +9,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -16,6 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import controller.Controller;
+import model.Sala;
 import model.Sesion;
 import model.Usuario;
 import javax.swing.JLabel;
@@ -48,9 +50,11 @@ public class ESesion extends JFrame implements ActionListener{
 	private JLabel lblSesionPeli;
 	private JComboBox<String> comboBoxSala;
 	private JComboBox<String> comboBoxPeli;
-	
+	private JLabel lblTickets;
+	private JLabel lblTicketsError;
 	private ArrayList<String> idSalas;
-	private HashMap<String, Integer> pelis;
+	private HashMap<String, String> pelis;
+	private JTextField textTickets;
 
 
 	public ESesion(Controller c, Usuario u, Sesion s) {
@@ -99,6 +103,25 @@ public class ESesion extends JFrame implements ActionListener{
 		contentPane.add(textSesionId);
 		textSesionId.setColumns(10);
 		
+		lblTickets = new JLabel("Tickets restantes");
+		lblTickets.setHorizontalAlignment(SwingConstants.CENTER);
+		lblTickets.setFont(new Font("Tahoma", Font.BOLD, 19));
+		lblTickets.setBounds(687, 398, 275, 56);
+		contentPane.add(lblTickets);
+		
+		textTickets = new JTextField();
+		textTickets.setText((String) null);
+		textTickets.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		textTickets.setColumns(10);
+		textTickets.setBounds(687, 466, 299, 56);
+		contentPane.add(textTickets);
+		
+		lblTicketsError = new JLabel("");
+		lblTicketsError.setForeground(Color.RED);
+		lblTicketsError.setFont(new Font("Tahoma", Font.BOLD, 18));
+		lblTicketsError.setBounds(687, 532, 299, 56);
+		contentPane.add(lblTicketsError);
+		
 		lblIdError = new JLabel("");
 		lblIdError.setForeground(new Color(255, 0, 0));
 		lblIdError.setFont(new Font("Tahoma", Font.BOLD, 18));
@@ -144,39 +167,51 @@ public class ESesion extends JFrame implements ActionListener{
 		textSesionId.setText(sesion.getId());
 		textPrecio.setText(String.valueOf(sesion.getPrecio()));
 		textFecha.setText(sesion.getFecha().toString());
+		textTickets.setText(String.valueOf(sesion.getTicketRestante()));
 		
 		lblSesionSala = new JLabel("ID Sala");
 		lblSesionSala.setHorizontalAlignment(SwingConstants.CENTER);
 		lblSesionSala.setFont(new Font("Tahoma", Font.BOLD, 19));
-		lblSesionSala.setBounds(679, 200, 275, 56);
+		lblSesionSala.setBounds(687, 90, 275, 56);
 		contentPane.add(lblSesionSala);
 		
 		lblSesionPeli = new JLabel("ID Pelicula");
 		lblSesionPeli.setHorizontalAlignment(SwingConstants.CENTER);
 		lblSesionPeli.setFont(new Font("Tahoma", Font.BOLD, 19));
-		lblSesionPeli.setBounds(679, 367, 275, 56);
+		lblSesionPeli.setBounds(687, 246, 275, 56);
 		contentPane.add(lblSesionPeli);
 		
 		comboBoxSala = new JComboBox<String>();
-		comboBoxSala.setBounds(679, 267, 275, 56);
+		comboBoxSala.setBounds(687, 157, 275, 56);
 		contentPane.add(comboBoxSala);
 		
 		comboBoxPeli = new JComboBox<String>();
-		comboBoxPeli.setBounds(679, 434, 275, 56);
+		comboBoxPeli.setBounds(687, 313, 275, 56);
 		contentPane.add(comboBoxPeli);
 		
 		for (String id:idSalas) {
 			comboBoxSala.addItem(id);
 		}
-		String indexPeli=null;
-		for (String titulo:pelis.keySet()) {
+		
+	/*	for (String titulo:pelis.keySet()) {
 			comboBoxPeli.addItem(titulo);
 			
+		}*/
+		for (Map.Entry<String, String> entry : pelis.entrySet()) {
+			comboBoxPeli.addItem(entry.getKey());
+			if (sesion.getIdPelicula().equals(entry.getValue())) {
+				comboBoxPeli.setSelectedItem(entry.getKey());
+			}
 		}
 		
+			
+	
 		
-		comboBoxPeli.setSelectedItem();
+		
+		//comboBoxPeli.setSelectedItem();
 		comboBoxSala.setSelectedItem(sesion.getIdSala());
+		
+		
 		
 		btnVolver.addActionListener(this);
 		btnModificar.addActionListener(this);
@@ -200,8 +235,11 @@ public class ESesion extends JFrame implements ActionListener{
 			
 			lblPrecioError.setText("");
 			lblFechaError.setText("");
+			lblTicketsError.setText("");
 			
+			ArrayList<Sala> salas = controlador.getSalasM();
 			boolean correcto=true;
+			
 			
 			//Controlar que precio no sea negativo
 			if(Double.parseDouble(textPrecio.getText())<0) {
@@ -210,15 +248,28 @@ public class ESesion extends JFrame implements ActionListener{
 			}
 			//Comprobar LocalDateTime tiene formato correcto
 			try {
-			    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+			    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 			    LocalDateTime dateTime = LocalDateTime.parse(textFecha.getText(), formatter);
 			}catch (DateTimeParseException error) {
-				lblFechaError.setText("formato \"yyyy-MM-dd'T'HH:mm:ss\" incorrecto o fecha incorrecta");
+				lblFechaError.setText("formato \"yyyy-MM-dd'T'HH:mm\" incorrecto o fecha incorrecta");
 				correcto=false;
 			}
+			//Comprobar que el numero de tickets no supera el aforo de la sala en el combo box
+			for(Sala sala:salas) {
+				if(sala.getId().equals((String)comboBoxSala.getSelectedItem())) {
+					int maxTickets = sala.getAforo();
+					if(maxTickets<Integer.parseInt(textTickets.getText())) {
+						correcto=false;
+						lblTicketsError.setText("Aforo maximo: "+ maxTickets);
+					}
+				}
+			}
+			
 			
 			if(correcto){
-				controlador.modificarSesion(sesion, textSesionId.getText(), Double.parseDouble(textPrecio.getText()), LocalDateTime.parse(textFecha.getText()), sesion.getId());
+				String idPeli = (String)comboBoxPeli.getSelectedItem();
+				idPeli = pelis.get(idPeli); 
+				controlador.modificarSesion(sesion, textSesionId.getText(), Double.parseDouble(textPrecio.getText()), LocalDateTime.parse(textFecha.getText()), (String)comboBoxSala.getSelectedItem(),idPeli,sesion.getId(),Integer.parseInt(textTickets.getText()));
 				JOptionPane.showMessageDialog(this,(String)"Sesion modificada correctamente","",JOptionPane.INFORMATION_MESSAGE,null);	
 			}
 		}

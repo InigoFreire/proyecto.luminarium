@@ -43,10 +43,12 @@ public class Controller implements IController {
 	final String GetPeliIds = "select id from peliculas";
 	final String ModificarPeli = "update peliculas set id=?, genero=?, titulo=?, PEGI=?, duracion=?, sinopsis=? where id=?";
 	final String GetSesionIds = "select id from sesiones";
-	final String ModificarSesion = "update sesiones set id=?, precio=?, fecha=? where id=?";
+	final String ModificarSesion = "update sesiones set id=?, precio=?, fecha=?, idSala=?, idPelicula=?, ticketRestante=? where id=?";
 	final String getHoraSesion = "select * from sesiones where idPelicula=? and ticketRestante>0";
 	final String getSesion = "select * from sesiones";
 	final String GetPelisIdTitulo = "SELECT titulo, id FROM peliculas";
+	
+	
 	// añadido por aitziber
 	final String GETPeliPorTitulo = "SELECT * FROM peliculas WHERE titulo = ?";
 	// añadido por aitziber
@@ -65,8 +67,43 @@ public class Controller implements IController {
 	
 	
 	@Override
-	public HashMap<String, Integer> getTituloIdPelis() {
-		HashMap<String, Integer> pelis = new HashMap<String, Integer>();
+	public ArrayList<Sala> getSalasM() {
+		ArrayList<Sala> salas = new ArrayList<Sala>();
+		openConnection();
+		ResultSet rs = null;
+		
+		
+        
+		try {
+			stmt = con.prepareStatement(GETSalas);
+			
+								
+			rs = stmt.executeQuery();
+						
+			while(rs.next()) {
+				Sala sala = new Sala();
+				sala.setId(rs.getString("id"));
+				sala.setAforo(rs.getInt("aforo"));
+				
+				salas.add(sala);
+				
+			}
+			
+		}catch (SQLException e) {
+			System.out.println("Error en el cierre de la BD");
+			e.printStackTrace();
+		}
+		
+		
+		
+		
+		return salas;
+	}
+
+	
+	@Override
+	public HashMap<String, String> getTituloIdPelis() {
+		HashMap<String, String> pelis = new HashMap<String, String>();
 		this.openConnection();
 		ResultSet rs = null;
 		try {
@@ -74,7 +111,7 @@ public class Controller implements IController {
 								
 			rs = stmt.executeQuery();
 			while(rs.next()) {
-				pelis.put(rs.getString("titulo"), rs.getInt("id"));
+				pelis.put(rs.getString("titulo"), rs.getString("id"));
 			}
 			
 		}catch (SQLException e) {
@@ -188,7 +225,7 @@ public class Controller implements IController {
 	}
 
 	@Override
-	public Sesion modificarSesion(Sesion sesion, String newId, double precio, LocalDateTime fecha, String id) {
+	public Sesion modificarSesion(Sesion sesion, String newId, double precio, LocalDateTime fecha, String idSala,String idPelicula,String id,int tickets) {
 		this.openConnection();
 		DateTimeFormatter formateador = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String wfecha = fecha.format(formateador);
@@ -200,7 +237,10 @@ public class Controller implements IController {
 			stmt.setString(1,newId);
 			stmt.setDouble(2,precio);
 			stmt.setString(3,wfecha);
-			stmt.setString(4, id);
+			stmt.setString(4,idSala);
+			stmt.setString(5,idPelicula);
+			stmt.setInt(6, tickets);
+			stmt.setString(7, id);
 			
 
 			if (stmt.executeUpdate()==1) {
@@ -885,6 +925,7 @@ public class Controller implements IController {
 		return dnis;
 	}
 
+	
 
 	
 

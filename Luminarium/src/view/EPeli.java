@@ -184,7 +184,7 @@ public class EPeli extends JFrame implements ActionListener{
 		textSinopsis = new JTextField();
 		textSinopsis.setFont(new Font("Tahoma", Font.BOLD, 20));
 		textSinopsis.setColumns(10);
-		textSinopsis.setBounds(318, 471, 274, 59);
+		textSinopsis.setBounds(318, 471, 274, 56);
 		contentPane.add(textSinopsis);
 		
 		lblSinopsisError = new JLabel("");
@@ -232,7 +232,7 @@ public class EPeli extends JFrame implements ActionListener{
 			try {
 				Genero.valueOf(textGenero.getText().toUpperCase());
 			}catch (IllegalArgumentException error) {
-				lblGeneroError.setText("El genero introducido no existe en la base de datos");
+				JOptionPane.showMessageDialog(this,(String)"El genero tiene que ser una de las siguientes opciones:\n \"DRAMA, CIENCIA_FICCION, COMEDIA, AVENTURA, ANIMACION, THRILLER, FANTASIA, ROMANCE, ACCION, SUSPENSO\"","ERROR GENERO",JOptionPane.INFORMATION_MESSAGE,null);
 				correcto=false;
 			}
 			//Controlar longitud del titulo

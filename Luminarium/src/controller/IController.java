@@ -38,13 +38,15 @@ public interface IController {
 	
 	public ArrayList<String> getSesionId();
 	
-	public Sesion modificarSesion(Sesion sesion,String newId, double precio, LocalDateTime fecha, String id);
+	public Sesion modificarSesion(Sesion sesion,String newId, double precio, LocalDateTime fecha, String idSala,String idPelicula,String id,int ticketRestante);
 	
 	public ArrayList<Sesion> getHoraSesion(String id);
 	
 	public ArrayList<Sesion> geTSesiones();
 	
-	public HashMap<String, Integer> getTituloIdPelis();
+	public HashMap<String, String> getTituloIdPelis();
+	
+	public ArrayList<Sala> getSalasM(); 
 	
 	
 
