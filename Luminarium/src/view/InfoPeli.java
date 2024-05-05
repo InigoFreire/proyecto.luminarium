@@ -128,7 +128,7 @@ public class InfoPeli extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == mntmModificar) {
 
-			EUsuario frame = new EUsuario(controlador, user);
+			EUsuario frame = new EUsuario(controlador, user, user);
 
 			frame.setVisible(true);
 			this.dispose();

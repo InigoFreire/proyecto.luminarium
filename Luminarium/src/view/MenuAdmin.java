@@ -22,7 +22,7 @@ public class MenuAdmin extends JFrame implements ActionListener {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JButton btnPeli, btnSesion, btnSala, btnUsuario;
-	private JLabel lblBienvenida, lblAvatar;
+	private JLabel lblBienvenida;
 	private JFrame ventana;
 	private Controller controlador;
 	private Usuario user;
@@ -40,13 +40,7 @@ public class MenuAdmin extends JFrame implements ActionListener {
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-
-		//lblAvatar = new JLabel("");
-		//lblAvatar.setBounds(372, 10, 54, 58);
-		//contentPane.add(lblAvatar);
-
-		// el avatar no se ve completo
-		//lblAvatar.setIcon(new ImageIcon("./src/resources/avatar.png"));
+		
 		lblBienvenida = new JLabel("Bienvenida "+user.getNombre()+" "+user.getApellido());
 		lblBienvenida.setFont(new Font("Tahoma", Font.BOLD, 17));
 		lblBienvenida.setHorizontalAlignment(SwingConstants.LEFT);
@@ -114,7 +108,7 @@ public class MenuAdmin extends JFrame implements ActionListener {
 			}
 			dispose();
 		} else if (o == mntmModificar) {
-			EUsuario frame = new EUsuario(controlador, user);
+			EUsuario frame = new EUsuario(controlador, user, user);
 			frame.setVisible(true);
 			this.dispose();
 		} else if (o == mntmExit) {

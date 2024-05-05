@@ -163,9 +163,13 @@ public class ASesion extends JFrame implements ActionListener{
 		for (String id:idSalas) {
 			comboBoxSala.addItem(id);
 		}
+		
 		for (String titulo:pelis.keySet()) {
 			comboBoxPelicula.addItem(titulo);
 		}
+		
+		comboBoxSala.setSelectedIndex(-1);
+		comboBoxPelicula.setSelectedIndex(-1);
 		
 		btnVolver.addActionListener(this);
 		btnModificar.addActionListener(this);

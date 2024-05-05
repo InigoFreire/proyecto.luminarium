@@ -127,7 +127,7 @@ public class VSesion extends JFrame implements ActionListener {
 			menuA.setVisible(true);
 			dispose();
 		} else if (e.getSource() == mntmModificar) {
-			EUsuario frame = new EUsuario(controlador, user);
+			EUsuario frame = new EUsuario(controlador, user, user);
 			frame.setVisible(true);
 			this.dispose();
 		} else if (e.getSource() == mntmExit) {
