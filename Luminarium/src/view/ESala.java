@@ -127,7 +127,7 @@ public class ESala extends JFrame implements ActionListener{
 			lblAforoError.setText("");
 			
 			boolean correcto=true;
-			
+			//Controlar que no mete mas de 3 cifras
 			if(textSalaAforo.getText().length()>3) {
 				lblAforoError.setText("No se admiten mas de 3 cifras");
 				correcto=false;

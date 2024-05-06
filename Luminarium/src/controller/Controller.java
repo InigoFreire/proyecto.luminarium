@@ -57,7 +57,7 @@ public class Controller implements IController {
 	final String GETSalaPorId = "SELECT * FROM salas WHERE id = ?";
 	// añadido por aitziber
 	final String GETSesiones = "SELECT sesiones.id, sesiones.precio, sesiones.fecha, \r\n"
-			+ "(SELECT titulo FROM peliculas WHERE id = sesiones.idPelicula) AS tituloPelicula, sesiones.idSala FROM sesiones";	
+			+ "(SELECT titulo FROM peliculas WHERE id = sesiones.idPelicula) AS tituloPelicula, sesiones.idSala, sesiones.ticketRestante FROM sesiones";	
 	// añadido por aitziber
 	final String GETSesionPorId = "SELECT * FROM sesiones WHERE id = ?";
 	// añadido por aitziber
@@ -641,7 +641,7 @@ public class Controller implements IController {
 				rowNum += 1;
 			}
 			rs.beforeFirst();
-			sesiones = new String[rowNum][6];
+			sesiones = new String[rowNum][7];
 
 			while (rs.next()) {
 				sesiones[i][0] = rs.getString("id");
@@ -659,7 +659,7 @@ public class Controller implements IController {
 				
 				sesiones[i][4] = rs.getString("tituloPelicula");
 				sesiones[i][5] = rs.getString("idSala");
-
+				sesiones[i][6] = rs.getString("ticketRestante");
 				i++;
 			}
 		} catch (SQLException e) {
@@ -692,6 +692,7 @@ public class Controller implements IController {
 				sesion.setFecha(rs.getTimestamp("fecha").toLocalDateTime());
 				sesion.setIdPelicula(rs.getString("idPelicula"));
 				sesion.setIdSala(rs.getString("idSala"));
+				sesion.setTicketRestante(rs.getInt("ticketRestante"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

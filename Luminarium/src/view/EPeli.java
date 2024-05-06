@@ -22,6 +22,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import java.awt.Color;
+import javax.swing.JTextPane;
+import javax.swing.JTextArea;
 
 public class EPeli extends JFrame implements ActionListener{
 
@@ -48,10 +50,10 @@ public class EPeli extends JFrame implements ActionListener{
 	private JTextField textDuracion;
 	private JLabel lblDuracionError;
 	private JLabel lblSinopsis;
-	private JTextField textSinopsis;
 	private JLabel lblSinopsisError;
 	private JLabel lblIdError;
 	private Pelicula pelicula;
+	private JTextArea textAreaSinopsis;
 
 
 	public EPeli(Controller c, Usuario u, Pelicula p) {
@@ -181,24 +183,30 @@ public class EPeli extends JFrame implements ActionListener{
 		lblSinopsis.setBounds(56, 474, 241, 56);
 		contentPane.add(lblSinopsis);
 		
-		textSinopsis = new JTextField();
-		textSinopsis.setFont(new Font("Tahoma", Font.BOLD, 20));
-		textSinopsis.setColumns(10);
-		textSinopsis.setBounds(318, 471, 274, 56);
-		contentPane.add(textSinopsis);
-		
 		lblSinopsisError = new JLabel("");
 		lblSinopsisError.setForeground(Color.RED);
 		lblSinopsisError.setFont(new Font("Tahoma", Font.BOLD, 20));
 		lblSinopsisError.setBounds(593, 471, 241, 56);
 		contentPane.add(lblSinopsisError);
 		
+		textAreaSinopsis = new JTextArea();
+		textAreaSinopsis.setFont(new Font("Monospaced", Font.BOLD, 17));
+		textAreaSinopsis.setBounds(318, 471, 274, 117);
+		contentPane.add(textAreaSinopsis);
+		textAreaSinopsis.setLineWrap(true);
+		textAreaSinopsis.setWrapStyleWord(true);
+		
 		textId.setText(peli.getId());
 		textGenero.setText(peli.getGenero().toString());
 		textTitulo.setText(peli.getTitulo());
 		textPegi.setText(String.valueOf(peli.getPegi()));
 		textDuracion.setText(String.valueOf(peli.getDuracion()));
-		textSinopsis.setText(peli.getSinopsis());
+		textAreaSinopsis.append(peli.getSinopsis());
+		
+		
+		
+		
+		
 		
 		btnVolver.addActionListener(this);
 		btnModificar.addActionListener(this);
@@ -252,13 +260,13 @@ public class EPeli extends JFrame implements ActionListener{
 				correcto=false;
 			}
 			//Controlar longitud del String de sinopsis
-			if(textSinopsis.getText().length()>150) {
+			if(textAreaSinopsis.getText().length()>150) {
 				lblSinopsisError.setText("La longitud de la sinopsis no puede ser mas de 150 caracteres");
 				correcto=false;
 			}
 					
 			if(correcto){
-				controlador.modificarPeli(peli, textId.getText(),Genero.valueOf(textGenero.getText().toUpperCase()), textTitulo.getText(), Integer.parseInt(textPegi.getText()), Integer.parseInt(textDuracion.getText()), textSinopsis.getText(), peli.getId());
+				controlador.modificarPeli(peli, textId.getText(),Genero.valueOf(textGenero.getText().toUpperCase()), textTitulo.getText(), Integer.parseInt(textPegi.getText()), Integer.parseInt(textDuracion.getText()), textAreaSinopsis.getText(), peli.getId());
 				JOptionPane.showMessageDialog(this,(String)"Sala modificada correctamente","",JOptionPane.INFORMATION_MESSAGE,null);	
 			}
 		}

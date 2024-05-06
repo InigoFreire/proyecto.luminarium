@@ -158,9 +158,9 @@ public class EUsuario extends JFrame implements ActionListener {
 		contentPane.add(lblFechaCaducidadyyyymm);
 		
 		btnModificar.addActionListener(this);
-		textNombre.setText(u.getNombre());
-		textApellido.setText(u.getApellido());
-		textEmail.setText(u.getEmail());
+		textNombre.setText(userM.getNombre());
+		textApellido.setText(userM.getApellido());
+		textEmail.setText(userM.getEmail());
 		
 		textNTarjeta = new JTextField();
 		textNTarjeta.setBounds(191, 503, 224, 56);
@@ -243,7 +243,7 @@ public class EUsuario extends JFrame implements ActionListener {
 		textDni.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		textDni.setColumns(10);
 		contentPane.add(textDni);
-		textDni.setText(u.getDni());
+		textDni.setText(userM.getDni());
 		
 		btnVolver = new JButton("Volver");
 		btnVolver.setFont(new Font("Tahoma", Font.BOLD, 19));
@@ -257,7 +257,7 @@ public class EUsuario extends JFrame implements ActionListener {
 		
 		lblFechaCaducidadyyyymm.setVisible(true);
 		textFechaCaducidad.setVisible(true);
-		if(u.getMetodoPago()!=null) {
+		if(userM.getMetodoPago()!=null) {
 			textNTarjeta.setText(userM.getMetodoPago());
 			textFechaCaducidad.setText(String.format("%d-%02d", userM.getFechaCaducidadTarjeta().getYear(), userM.getFechaCaducidadTarjeta().getMonthValue()));
 		}
