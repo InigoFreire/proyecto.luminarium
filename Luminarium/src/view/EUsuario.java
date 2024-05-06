@@ -141,11 +141,13 @@ public class EUsuario extends JFrame implements ActionListener {
 		contentPane.add(lblPassError);
 		
 		password = new JPasswordField();
+		password.setHorizontalAlignment(SwingConstants.CENTER);
 		password.setBounds(191, 374, 224, 56);
 		password.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		contentPane.add(password);
 		
 		passwordR = new JPasswordField();
+		passwordR.setHorizontalAlignment(SwingConstants.CENTER);
 		passwordR.setBounds(624, 374, 224, 56);
 		passwordR.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		contentPane.add(passwordR);
@@ -154,14 +156,12 @@ public class EUsuario extends JFrame implements ActionListener {
 		lblNTarjeta.setBounds(191, 455, 224, 56);
 		lblNTarjeta.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNTarjeta.setFont(new Font("Tahoma", Font.BOLD, 20));
-		lblNTarjeta.setVisible(false);
 		contentPane.add(lblNTarjeta);
 		
-		lblFechaCaducidadyyyymm = new JLabel("FECHA CADUCIDAD (YYYY-MM)");
+		lblFechaCaducidadyyyymm = new JLabel("FECHA CADUCIDAD");
 		lblFechaCaducidadyyyymm.setBounds(551, 455, 359, 56);
 		lblFechaCaducidadyyyymm.setHorizontalAlignment(SwingConstants.CENTER);
 		lblFechaCaducidadyyyymm.setFont(new Font("Tahoma", Font.BOLD, 20));
-		lblFechaCaducidadyyyymm.setVisible(false);
 		contentPane.add(lblFechaCaducidadyyyymm);
 		
 		btnRegistrarse.addActionListener(this);
@@ -172,15 +172,17 @@ public class EUsuario extends JFrame implements ActionListener {
 		textEmail.setText(uAE.getEmail());
 		
 		textNTarjeta = new JTextField();
+		textNTarjeta.setHorizontalAlignment(SwingConstants.CENTER);
+		textNTarjeta.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		textNTarjeta.setBounds(191, 503, 224, 56);
 		contentPane.add(textNTarjeta);
-		textNTarjeta.setVisible(false);
 		textNTarjeta.setColumns(10);
 		
 		textFechaCaducidad = new JTextField();
+		textFechaCaducidad.setHorizontalAlignment(SwingConstants.CENTER);
+		textFechaCaducidad.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		textFechaCaducidad.setBounds(624, 503, 224, 56);
 		textFechaCaducidad.setColumns(10);
-		textFechaCaducidad.setVisible(false);
 		contentPane.add(textFechaCaducidad);
 		
 		lblNombreError = new JLabel("");
@@ -239,12 +241,8 @@ public class EUsuario extends JFrame implements ActionListener {
 		lblCaducidadError.setBounds(871, 516, 136, 43);
 		contentPane.add(lblCaducidadError);
 		
-		lblNTarjeta.setVisible(true);
-		textNTarjeta.setVisible(true);
 		textNTarjeta.setText(uAE.getMetodoPago());
-		lblFechaCaducidadyyyymm.setVisible(true);
-		textFechaCaducidad.setVisible(true);
-		textFechaCaducidad.setText(String.format("%02d/%02d", user.getFechaCaducidadTarjeta().getMonthValue(), user.getFechaCaducidadTarjeta().getYear() % 100));
+		textFechaCaducidad.setText(String.format("%02d/%02d", uAE.getFechaCaducidadTarjeta().getMonthValue(), uAE.getFechaCaducidadTarjeta().getYear() % 100));
 	}
 	
 	@Override
