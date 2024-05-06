@@ -25,4 +25,5 @@ public class Sala {
 	public String toString() {
 		return "Sala [id=" + id + ", aforo=" + aforo + "]";
 	}
+	
 }

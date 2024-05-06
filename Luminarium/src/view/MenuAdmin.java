@@ -6,11 +6,14 @@ import javax.swing.border.EmptyBorder;
 import java.awt.Font;
 
 import controller.Controller;
+
 import model.Usuario;
+
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.lang.reflect.InvocationTargetException;
 import java.awt.event.ActionEvent;
+
 import javax.swing.SwingConstants;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -85,9 +88,7 @@ public class MenuAdmin extends JFrame implements ActionListener {
 		mntmExit.addActionListener(this);
 
 	}
-/**
- * 
- */
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub

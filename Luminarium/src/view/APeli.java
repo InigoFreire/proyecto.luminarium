@@ -5,8 +5,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
 
 import controller.Controller;
@@ -30,7 +32,6 @@ public class APeli extends JFrame implements ActionListener{
 	private JLabel lblId;
 	private JTextField textId;
 	private JLabel lblGenero;
-	private JTextField textGenero;
 	private JLabel lblGeneroError;
 	private JLabel lblTitulo;
 	private JTextField textTitulo;
@@ -42,9 +43,10 @@ public class APeli extends JFrame implements ActionListener{
 	private JTextField textDuracion;
 	private JLabel lblDuracionError;
 	private JLabel lblSinopsis;
-	private JTextField textSinopsis;
 	private JLabel lblSinopsisError;
 	private JLabel lblIdError;
+	private JTextArea textAreaSinopsis;
+	private JComboBox<String> comboBoxGenero;
 
 	public APeli(Controller c, Usuario u) {
 		this.controlador=c;
@@ -98,12 +100,6 @@ public class APeli extends JFrame implements ActionListener{
 		lblGenero.setFont(new Font("Tahoma", Font.BOLD, 20));
 		lblGenero.setBounds(56, 194, 241, 56);
 		contentPane.add(lblGenero);
-		
-		textGenero = new JTextField();
-		textGenero.setFont(new Font("Tahoma", Font.BOLD, 20));
-		textGenero.setColumns(10);
-		textGenero.setBounds(318, 194, 274, 59);
-		contentPane.add(textGenero);
 		
 		lblGeneroError = new JLabel("");
 		lblGeneroError.setForeground(Color.RED);
@@ -171,17 +167,26 @@ public class APeli extends JFrame implements ActionListener{
 		lblSinopsis.setBounds(56, 474, 241, 56);
 		contentPane.add(lblSinopsis);
 		
-		textSinopsis = new JTextField();
-		textSinopsis.setFont(new Font("Tahoma", Font.BOLD, 20));
-		textSinopsis.setColumns(10);
-		textSinopsis.setBounds(318, 471, 274, 59);
-		contentPane.add(textSinopsis);
-		
 		lblSinopsisError = new JLabel("");
 		lblSinopsisError.setForeground(Color.RED);
 		lblSinopsisError.setFont(new Font("Tahoma", Font.BOLD, 20));
 		lblSinopsisError.setBounds(593, 471, 241, 56);
 		contentPane.add(lblSinopsisError);
+		
+		textAreaSinopsis = new JTextArea();
+		textAreaSinopsis.setFont(new Font("Monospaced", Font.BOLD, 17));
+		textAreaSinopsis.setBounds(318, 471, 274, 117);
+		contentPane.add(textAreaSinopsis);
+		textAreaSinopsis.setLineWrap(true);
+		textAreaSinopsis.setWrapStyleWord(true);
+		
+		comboBoxGenero = new JComboBox<String>();
+		comboBoxGenero.setBounds(318, 193, 274, 57);
+		contentPane.add(comboBoxGenero);
+
+		for (Genero genero:Genero.values()) {
+			comboBoxGenero.addItem(genero.toString());
+		}
 		
 		textId.setText(String.valueOf(controlador.getUltimoIdPeli()));
 		
@@ -208,38 +213,35 @@ public class APeli extends JFrame implements ActionListener{
 			lblSinopsisError.setText("");
 			
 			boolean correcto=true;
-			//Controlar Enum genero 
-			try {
-				Genero.valueOf(textGenero.getText().toUpperCase());
-			}catch (IllegalArgumentException error) {
-				lblGeneroError.setText("El genero introducido no existe en la base de datos");
-				correcto=false;
-			}
+			
 			//Controlar longitud del titulo
 			if(textTitulo.getText().length()>60) {
-				lblTituloError.setText("El titulo tiene que contener menor de 60 caracteres");
+				lblTituloError.setText("El titulo tiene que contener menos de 60 caracteres");
 				correcto=false;
 			}
+			
 			//Controlar Edad Pegi
 			int pegi = Integer.parseInt(textPegi.getText());
 			if(pegi<0 || pegi>18) {
 				lblPegiError.setText("PEGI tiene que ser una edad entre \"0\" y \"18\"");
 				correcto=false;
 			}
+			
 			//Controlar duracion de la peli
 			if(textDuracion.getText().length()>3) {
 				lblDuracionError.setText("El numero introducido no puede tener mas de 3 cifras");
 				correcto=false;
 			}
+			
 			//Controlar longitud del String de sinopsis
-			if(textSinopsis.getText().length()>150) {
+			if(textAreaSinopsis.getText().length()>150) {
 				lblSinopsisError.setText("La longitud de la sinopsis no puede ser mas de 150 caracteres");
 				correcto=false;
 			}
 					
 			if(correcto){
-				controlador.registrarPeli(textId.getText(), Genero.valueOf(textGenero.getText().toUpperCase()), textTitulo.getText(), Integer.parseInt(textPegi.getText()), Integer.parseInt(textDuracion.getText()), textSinopsis.getText());
-				JOptionPane.showMessageDialog(this,(String)"Sala modificada correctamente","",JOptionPane.INFORMATION_MESSAGE,null);	
+				controlador.registrarPeli(textId.getText(), Genero.valueOf((String)comboBoxGenero.getSelectedItem()), textTitulo.getText(), Integer.parseInt(textPegi.getText()), Integer.parseInt(textDuracion.getText()), textAreaSinopsis.getText());
+				JOptionPane.showMessageDialog(this,(String)"Pelicula añadida correctamente","",JOptionPane.INFORMATION_MESSAGE,null);	
 			}
 		}
 	}

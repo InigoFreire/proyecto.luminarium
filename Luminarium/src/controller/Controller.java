@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.sql.Timestamp;
 import java.sql.Date;
 import java.sql.Time;
+
 import model.Genero;
 import model.Pelicula;
 import model.Sala;
@@ -29,33 +30,35 @@ public class Controller implements IController {
 
 	// Sentencias SQL
 	final String OBTENERusuario = "SELECT * FROM usuarios WHERE dni=? AND contraseña=?";
-	final String MODIFICARusuario = "UPDATE USUARIOS SET nombre=?, apellido=?, email=?, contraseña=?, adminCheck=false WHERE dni=?";
-	final String MODIFICARusuarioPago = "UPDATE USUARIOS SET nombre=?, apellido=?, email=?, contraseña=?, metodoPago=?, fechaCaducidadTarjeta=?, adminCheck=false WHERE dni=?";
+	final String MODIFICARusuario = "UPDATE USUARIOS SET nombre=?, apellido=?, email=?, contraseña=?, dni=?, adminCheck=false WHERE dni=?";
+	final String MODIFICARusuarioPago = "UPDATE USUARIOS SET nombre=?, apellido=?, email=?, contraseña=?, metodoPago=?, fechaCaducidadTarjeta=?, dni=?, adminCheck=false WHERE dni=?";
 	final String INSERTARusuario = "INSERT INTO USUARIOS VALUES (?,?,?,?,?,NULL,NULL,false)";
 	final String INSERTARSala = "INSERT INTO salas VALUES (?,?)";
 	final String GETPeliCorto = "SELECT titulo,PEGI from peliculas";
-	final String GetPeliInfo = "select * from peliculas where titulo = ?";	
+	final String GetPeliInfo = "select * from peliculas where titulo = ?";
 	final String GetDni = "select dni from usuarios";
 	final String GetSalaId = "select id from salas";
 	final String ModificarSala = "update salas set id = ?, aforo=? where id =?";
 	final String GetPeliIds = "select id from peliculas";
 	final String ModificarPeli = "update peliculas set id=?, genero=?, titulo=?, PEGI=?, duracion=?, sinopsis=? where id=?";
-	final String GetSesionIds = "select id from sesiones";
-	final String ModificarSesion = "update sesiones set id=?, precio=?, fecha=?, idSala=?, idPelicula where id=?";
 	final String GetUltimoIdSala = "call GetNextIDFromSalas()";
 	final String GetUltimoIdSesion = "call GetNextIDFromSesiones()";
 	final String GetUltimoIdPeli = "call GetNextIDFromPeliculas()";
 	final String INSERTARsesion = "INSERT INTO sesiones VALUES (?,?,?,?,?)";
 	final String INSERTARpeli = "INSERT INTO peliculas VALUES (?,?,?,?,?,?)";
 	final String GetPelisIdTitulo = "SELECT titulo, id FROM peliculas";
+	final String ModificarSesion = "update sesiones set id=?, precio=?, fecha=?, idSala=?, idPelicula=?, ticketRestante=? where id=?";
+	final String getHoraSesion = "select * from sesiones where idPelicula=? and ticketRestante>0";
+	final String getSesion = "select * from sesiones";
 	final String GETPeliPorTitulo = "SELECT * FROM peliculas WHERE titulo = ?";
 	final String GETSalas = "SELECT id, aforo FROM salas";
 	final String GETSalaPorId = "SELECT * FROM salas WHERE id = ?";
 	final String GETSesiones = "SELECT sesiones.id, sesiones.precio, sesiones.fecha, \r\n"
-			+ "(SELECT titulo FROM peliculas WHERE id = sesiones.idPelicula) AS tituloPelicula, sesiones.idSala FROM sesiones";	
+			+ "(SELECT titulo FROM peliculas WHERE id = sesiones.idPelicula) AS tituloPelicula, sesiones.idSala, sesiones.ticketRestante FROM sesiones";
 	final String GETSesionPorId = "SELECT * FROM sesiones WHERE id = ?";
 	final String GETUsuarios = "SELECT dni, nombre, apellido, adminCheck FROM usuarios";
 	final String GETUsuarioPorDni = "SELECT * FROM usuarios WHERE dni = ?";
+	final String GetSesionIds = "select id from sesiones";
 	
 	@Override
 	public void registrarPeli(String id, Genero genero, String titulo, int pegi, int duracion, String sinopsis) {
@@ -64,7 +67,7 @@ public class Controller implements IController {
 		this.openConnection();
 		
 		try {
-			stmt = con.prepareStatement(INSERTARsesion);
+			stmt = con.prepareStatement(INSERTARpeli);
 			
 			stmt.setString(6, sinopsis);
 			stmt.setInt(5, duracion);
@@ -108,27 +111,6 @@ public class Controller implements IController {
 		}
 		
 		return id;
-	}
-	
-	@Override
-	public HashMap<String, String> getTituloIdPelis() {
-		HashMap<String, String> pelis = new HashMap<String, String>();
-		this.openConnection();
-		ResultSet rs = null;
-		try {
-			stmt = con.prepareStatement(GetPelisIdTitulo);
-								
-			rs = stmt.executeQuery();
-			while(rs.next()) {
-				pelis.put(rs.getString("titulo"), rs.getString("id"));
-			}
-			
-		}catch (SQLException e) {
-			System.out.println("Error en el cierre de la BD");
-			e.printStackTrace();
-		}
-		
-		return pelis;
 	}
 	
 	@Override
@@ -205,27 +187,6 @@ public class Controller implements IController {
 	}
 	
 	@Override
-	public ArrayList<String> getSesionId() {
-		ArrayList<String> ids = new ArrayList<String>();
-		this.openConnection();
-		ResultSet rs = null;
-		try {
-			stmt = con.prepareStatement(GetSesionIds);
-								
-			rs = stmt.executeQuery();
-			while(rs.next()) {
-				ids.add(rs.getString("id"));
-			}
-			
-		}catch (SQLException e) {
-			System.out.println("Error en el cierre de la BD");
-			e.printStackTrace();
-		}
-		
-		return ids;
-	}
-
-	@Override
 	public Sesion modificarSesion(Sesion sesion, String newId, double precio, LocalDateTime fecha, String idSala, String idPeli, String id) {
 		this.openConnection();
 		DateTimeFormatter formateador = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
@@ -249,6 +210,226 @@ public class Controller implements IController {
 				sesion.setPrecio(precio);
 				sesion.setIdPelicula(idPeli);
 				sesion.setIdSala(idSala);
+			}
+			
+		} catch (SQLException e) {
+			System.out.println("Error de SQL");
+			e.printStackTrace();
+		} finally {
+			
+			try {
+				this.closeConnection();
+			} catch (SQLException e) {
+				System.out.println("Error en el cierre de la BD");
+				e.printStackTrace();
+			}
+		}
+
+		return sesion;
+	}
+	
+	@Override
+	public void registrarSala(String id, int aforo) {
+		
+		// Abrimos la conexión
+		this.openConnection();
+		
+		try {
+			stmt = con.prepareStatement(INSERTARSala);
+
+			stmt.setInt(2, aforo);
+			stmt.setString(1, id);
+			
+			stmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			System.out.println("Error de SQL");
+			e.printStackTrace();
+		} finally {
+			
+			try {
+				this.closeConnection();
+			} catch (SQLException e) {
+				System.out.println("Error en el cierre de la BD");
+				e.printStackTrace();
+			}
+		}
+
+	}
+	
+	@Override
+	public ArrayList<Sala> getSalasM() {
+		ArrayList<Sala> salas = new ArrayList<Sala>();
+		openConnection();
+		ResultSet rs = null;
+        
+		try {
+			stmt = con.prepareStatement(GETSalas);
+								
+			rs = stmt.executeQuery();
+						
+			while(rs.next()) {
+				Sala sala = new Sala();
+				sala.setId(rs.getString("id"));
+				sala.setAforo(rs.getInt("aforo"));
+				salas.add(sala);
+			}
+			
+		}catch (SQLException e) {
+			System.out.println("Error en el cierre de la BD");
+			e.printStackTrace();
+		}
+		
+		return salas;
+	}
+
+	@Override
+	public HashMap<String, String> getTituloIdPelis() {
+		HashMap<String, String> pelis = new HashMap<String, String>();
+		this.openConnection();
+		ResultSet rs = null;
+		try {
+			stmt = con.prepareStatement(GetPelisIdTitulo);
+								
+			rs = stmt.executeQuery();
+			while(rs.next()) {
+				pelis.put(rs.getString("titulo"), rs.getString("id"));
+			}
+			
+		}catch (SQLException e) {
+			System.out.println("Error en el cierre de la BD");
+			e.printStackTrace();
+		}
+		
+		return pelis;
+	}
+	
+	@Override
+	public ArrayList<Sesion> geTSesiones() {
+		ArrayList<Sesion> horas = new ArrayList<Sesion>();
+		openConnection();
+		ResultSet rs = null;
+		
+		
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime dateTime = null;
+		try {
+			stmt = con.prepareStatement(getSesion);
+			
+								
+			rs = stmt.executeQuery();
+						
+			while(rs.next()) {
+				Sesion sesion = new Sesion();
+				sesion.setId(rs.getString("id"));
+				sesion.setIdPelicula(rs.getString("idPelicula"));
+				sesion.setIdSala(rs.getString("idSala"));
+				sesion.setTicketRestante(rs.getInt("ticketRestante"));
+				sesion.setPrecio(rs.getDouble("precio"));
+				dateTime = LocalDateTime.parse(rs.getString("fecha"), formatter);
+				sesion.setFecha(dateTime);
+				
+				horas.add(sesion);
+				
+			}
+			
+		}catch (SQLException e) {
+			System.out.println("Error en el cierre de la BD");
+			e.printStackTrace();
+		}
+		
+		
+		
+		
+		return horas;
+	}
+	
+	@Override
+	public ArrayList<Sesion> getHoraSesion(String id) {
+		ArrayList<Sesion> horas = new ArrayList<Sesion>();
+		openConnection();
+		ResultSet rs = null;
+		
+		
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime dateTime = null;
+		try {
+			stmt = con.prepareStatement(getHoraSesion);
+			stmt.setString(1,id);
+								
+			rs = stmt.executeQuery();
+						
+			while(rs.next()) {
+				Sesion sesion = new Sesion();
+				sesion.setId(rs.getString("id"));
+				sesion.setIdPelicula(rs.getString("idPelicula"));
+				sesion.setIdSala(rs.getString("idSala"));
+				sesion.setTicketRestante(rs.getInt("ticketRestante"));
+				sesion.setPrecio(rs.getDouble("precio"));
+				dateTime = LocalDateTime.parse(rs.getString("fecha"), formatter);
+				sesion.setFecha(dateTime);
+				
+				horas.add(sesion);
+				
+			}
+			
+		}catch (SQLException e) {
+			System.out.println("Error en el cierre de la BD");
+			e.printStackTrace();
+		}
+		
+		
+		
+		
+		return horas;
+	}
+
+	
+	@Override
+	public ArrayList<String> getSesionId() {
+		ArrayList<String> ids = new ArrayList<String>();
+		openConnection();
+		ResultSet rs = null;
+		try {
+			stmt = con.prepareStatement(GetSesionIds);
+								
+			rs = stmt.executeQuery();
+			while(rs.next()) {
+				ids.add(rs.getString("id"));
+			}
+			
+		}catch (SQLException e) {
+			System.out.println("Error en el cierre de la BD");
+			e.printStackTrace();
+		}
+		
+		return ids;
+	}
+
+	@Override
+	public Sesion modificarSesion(Sesion sesion, String newId, double precio, LocalDateTime fecha, String idSala,String idPelicula,String id,int tickets) {
+		this.openConnection();
+		DateTimeFormatter formateador = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String wfecha = fecha.format(formateador);
+
+       
+		try {
+			stmt = con.prepareStatement(ModificarSesion);
+
+			stmt.setString(1,newId);
+			stmt.setDouble(2,precio);
+			stmt.setString(3,wfecha);
+			stmt.setString(4,idSala);
+			stmt.setString(5,idPelicula);
+			stmt.setInt(6, tickets);
+			stmt.setString(7, id);
+			
+
+			if (stmt.executeUpdate()==1) {
+				sesion.setId(newId);
+				sesion.setFecha(fecha);
+				sesion.setPrecio(precio);
+								
 			}
 			
 		} catch (SQLException e) {
@@ -364,12 +545,10 @@ public class Controller implements IController {
 			stmt.setString(1,newid);
 			stmt.setInt(2,aforo);
 			stmt.setString(3,id);
-			
 
 			if (stmt.executeUpdate()==1) {
 				sala.setAforo(aforo);
-				sala.setId(newid);
-				
+				sala.setId(newid);	
 			}
 			
 		} catch (SQLException e) {
@@ -387,35 +566,6 @@ public class Controller implements IController {
 
 		return sala;
 		
-	}
-	
-	@Override
-	public void registrarSala(String id, int aforo) {
-		
-		// Abrimos la conexión
-		this.openConnection();
-		
-		try {
-			stmt = con.prepareStatement(INSERTARSala);
-
-			stmt.setInt(2, aforo);
-			stmt.setString(1, id);
-			
-			stmt.executeUpdate();
-			
-		} catch (SQLException e) {
-			System.out.println("Error de SQL");
-			e.printStackTrace();
-		} finally {
-			
-			try {
-				this.closeConnection();
-			} catch (SQLException e) {
-				System.out.println("Error en el cierre de la BD");
-				e.printStackTrace();
-			}
-		}
-
 	}
 	
 	@Override
@@ -554,7 +704,7 @@ public class Controller implements IController {
 	@Override
 	public Usuario getUsuarioPorDni(String dni) {
 		Usuario usuario = null;
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/yy");
 		ResultSet rs = null;
 		
 		this.openConnection();
@@ -667,7 +817,7 @@ public class Controller implements IController {
 				rowNum += 1;
 			}
 			rs.beforeFirst();
-			sesiones = new String[rowNum][6];
+			sesiones = new String[rowNum][7];
 
 			while (rs.next()) {
 				sesiones[i][0] = rs.getString("id");
@@ -685,7 +835,7 @@ public class Controller implements IController {
 				
 				sesiones[i][4] = rs.getString("tituloPelicula");
 				sesiones[i][5] = rs.getString("idSala");
-
+				sesiones[i][6] = rs.getString("ticketRestante");
 				i++;
 			}
 		} catch (SQLException e) {
@@ -718,6 +868,7 @@ public class Controller implements IController {
 				sesion.setFecha(rs.getTimestamp("fecha").toLocalDateTime());
 				sesion.setIdPelicula(rs.getString("idPelicula"));
 				sesion.setIdSala(rs.getString("idSala"));
+				sesion.setTicketRestante(rs.getInt("ticketRestante"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -790,8 +941,7 @@ public class Controller implements IController {
 	}
 
 	@Override
-	public Usuario modificarDatosUsuario(Usuario us, String dni, String nombre, String apellido,
-			String passwd1, String email) {
+	public Usuario modificarDatosUsuario(Usuario us, String dni, String newDni, String nombre, String apellido, String passwd1, String email) {
 		// Abrimos la conexión
 		this.openConnection();
 
@@ -802,13 +952,15 @@ public class Controller implements IController {
 			stmt.setString(2, apellido);
 			stmt.setString(3, email);
 			stmt.setString(4, passwd1);
-			stmt.setString(5, dni);
+			stmt.setString(5, newDni);
+			stmt.setString(6, dni);
 
 			if (stmt.executeUpdate() == 1) {
 				us.setNombre(nombre);
 				us.setApellido(apellido);
 				us.setEmail(email);
 				us.setContraseña(passwd1);
+				us.setDni(newDni);
 			}
 
 		} catch (SQLException e) {
@@ -828,7 +980,7 @@ public class Controller implements IController {
 	}
 
 	@Override
-	public Usuario modificarDatosUsuarioPago(Usuario us, String dni, String nombre, String apellido, String passwd1, String email, String tarjeta, YearMonth fechaCaducidad) {
+	public Usuario modificarDatosUsuarioPago(Usuario us, String dni, String newDni, String nombre, String apellido, String passwd1, String email, String tarjeta, YearMonth fechaCaducidad) {
 		// Abrimos la conexión
 		this.openConnection();
 
@@ -840,8 +992,9 @@ public class Controller implements IController {
 			stmt.setString(3, email);
 			stmt.setString(4, passwd1);
 			stmt.setString(5, tarjeta);
-			stmt.setString(6, String.format("%02d/%02d", us.getFechaCaducidadTarjeta().getMonthValue(), us.getFechaCaducidadTarjeta().getYear() % 100));
-			stmt.setString(7, dni);
+			stmt.setString(6, String.format("%02d/%02d", fechaCaducidad.getMonthValue(), fechaCaducidad.getYear() % 100));
+			stmt.setString(7, newDni);
+			stmt.setString(8, dni);
 
 			if (stmt.executeUpdate() == 1) {
 				us.setNombre(nombre);
@@ -850,6 +1003,7 @@ public class Controller implements IController {
 				us.setContraseña(passwd1);
 				us.setMetodoPago(tarjeta);
 				us.setFechaCaducidadTarjeta(fechaCaducidad);
+				us.setDni(newDni);
 			}
 
 		} catch (SQLException e) {
@@ -918,4 +1072,37 @@ public class Controller implements IController {
 			con.close();
 		System.out.println("------------------------");
 	}
+
+
+	@Override
+	public ArrayList<String> getDni() {
+		ArrayList<String> dnis = new ArrayList<String>();
+		openConnection();
+		ResultSet rs = null;
+		try {
+			stmt = con.prepareStatement(GetDni);
+								
+			rs = stmt.executeQuery();
+			while(rs.next()) {
+				dnis.add(rs.getString("dni"));
+			}
+			
+		}catch (SQLException e) {
+			System.out.println("Error en el cierre de la BD");
+			e.printStackTrace();
+		}
+		
+		return dnis;
+	}
+
+	
+
+	
+
+	
+	
+
+	
+	
+	
 }

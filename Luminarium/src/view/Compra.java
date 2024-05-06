@@ -18,6 +18,8 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
 
 import controller.Controller;
+import model.Pelicula;
+import model.Sesion;
 import model.Usuario;
 import model.Pelicula;
 //import model.Sesion;
@@ -47,13 +49,14 @@ public class Compra extends JFrame implements ActionListener{
 	private Pelicula pelicula;
 	//private Sesion sesion;
 	private int numEntradas;
+	private Pelicula peli;
+	private Sesion sesion;
 	
-	
-	public Compra(Controller controllerInput, Usuario usuarioInput, Pelicula peliInput){//, Sesion sesionInput) {
-		this.user=usuarioInput;
-		this.controlador=controllerInput;
-		this.pelicula=peliInput;
-		//this.sesion=sesionInput;
+	public Compra(Controller c, Usuario u,Pelicula p,Sesion s) { 
+		this.user=u;
+		this.controlador=c;
+		this.peli=p;
+		this.sesion=s;
 		numEntradas=0;
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

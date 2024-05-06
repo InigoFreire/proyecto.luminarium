@@ -46,7 +46,7 @@ public class VSesion extends JFrame implements ActionListener {
 		this.controlador = c;
 		this.user = u;
 		sesiones = c.getSesiones();
-		String[] columna = { "ID", "precio", "fecha", "hora", "pelicula", "ID sala" };
+		String[] columna = { "ID", "precio", "fecha", "hora", "pelicula", "ID sala", "Entradas disponibles" };
 		Tabla model = new Tabla(sesiones, columna);
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

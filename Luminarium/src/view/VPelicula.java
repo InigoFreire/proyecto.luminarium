@@ -150,7 +150,7 @@ public class VPelicula extends JFrame implements ActionListener {
 			MenuAdmin frame = new MenuAdmin(controlador, user);
 			frame.setVisible(true);
 			dispose();
-
+			
 		} else if (e.getSource() == mntmModificar) {
 			EUsuario frame = new EUsuario(controlador, user, user);
 			frame.setVisible(true);
