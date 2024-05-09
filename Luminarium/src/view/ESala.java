@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import controller.Controller;
+import excepciones.IllegalEntryData;
 import model.Sala;
 import model.Usuario;
 import javax.swing.JLabel;
@@ -20,6 +21,10 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import java.awt.Color;
 
+/**
+ * Esta clase representa la interfaz gráfica para modificar una sala existente en el sistema.
+ * Extiende la clase JFrame e implementa ActionListener para manejar eventos de botones y campos de texto.
+ */
 public class ESala extends JFrame implements ActionListener{
 
 	private static final long serialVersionUID = 1L;
@@ -124,20 +129,33 @@ public class ESala extends JFrame implements ActionListener{
 			dispose();
 		}
 		if(o==btnModificar) {
-			lblAforoError.setText("");
-			
-			boolean correcto=true;
-			//Controlar que no mete mas de 3 cifras
-			if(textSalaAforo.getText().length()>3) {
-				lblAforoError.setText("No se admiten mas de 3 cifras");
-				correcto=false;
-			}
-			if(correcto) {
-				controlador.modificarSala(sala, textSalaId.getText(),Integer.parseInt(textSalaAforo.getText()),sala.getId());
-				JOptionPane.showMessageDialog(this,(String)"Sala modificada correctamente","",JOptionPane.INFORMATION_MESSAGE,null);	
+			try {
+				verificarDatos();
+			} catch (IllegalEntryData error) {
+				 System.out.println("ERROR: "+error.getMessage());
 			}
 		}
 	}
-	
-
+		
+	/**
+	 * Verifica los datos ingresados por el usuario en un formulario de modificación de sala.
+	 * Realiza una validación para asegurarse de que la longitud del número de aforo no excede las 3 cifras.
+	 * Si la validación es exitosa, se llama al método modificarSala() del controlador para actualizar la información de la sala en la base de datos.
+	 * 
+	 * @throws IllegalEntryData Si los datos ingresados por el usuario son incorrectos.
+	 */
+	public void verificarDatos() throws IllegalEntryData {
+		lblAforoError.setText("");
+		
+		boolean correcto=true;
+		//Controlar que no mete mas de 3 cifras
+		if(textSalaAforo.getText().length()>3) {
+			lblAforoError.setText("No se admiten mas de 3 cifras");
+			correcto=false;
+		}
+		if(correcto) {
+			controlador.modificarSala(sala, textSalaId.getText(),Integer.parseInt(textSalaAforo.getText()),sala.getId());
+			JOptionPane.showMessageDialog(this,(String)"Sala modificada correctamente","",JOptionPane.INFORMATION_MESSAGE,null);	
+		}
+	}
 }

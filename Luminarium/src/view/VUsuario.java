@@ -25,13 +25,17 @@ import controller.Controller;
 import model.Tabla;
 import model.Usuario;
 
+/**
+ * La clase VUsuario es una ventana de interfaz gráfica de usuario (GUI) que muestra información sobre los usuarios en el sistema.
+ * Extiende la clase JFrame e implementa la interfaz ActionListener para manejar eventos de acción.
+ */
 public class VUsuario extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private Controller controlador;
 	private Usuario user;
-	private JButton btnVolver, btnAñadir, btnEditar, btnBorrar;
+	private JButton btnVolver, btnAniadir, btnEditar, btnBorrar;
 	private JLabel lblUsuarios;
 	private String[][] usuarios;
 	private JTable tablaUsuarios;
@@ -82,10 +86,10 @@ public class VUsuario extends JFrame implements ActionListener {
 		mnUsuario.add(mntmExit);
 		mntmExit.addActionListener(this);
 
-		btnAñadir = new JButton("Añadir");
-		btnAñadir.setBounds(925, 90, 127, 31);
-		contentPane.add(btnAñadir);
-		btnAñadir.addActionListener(this);
+		btnAniadir = new JButton("Aniadir");
+		btnAniadir.setBounds(925, 90, 127, 31);
+		contentPane.add(btnAniadir);
+		btnAniadir.addActionListener(this);
 
 		btnEditar = new JButton("Editar");
 		btnEditar.setBounds(925, 140, 127, 31);
@@ -109,7 +113,7 @@ public class VUsuario extends JFrame implements ActionListener {
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
 				int nFilasSeleccionadas = tablaUsuarios.getSelectedRowCount();
-				btnAñadir.setEnabled(nFilasSeleccionadas < 1);
+				btnAniadir.setEnabled(nFilasSeleccionadas < 1);
 				btnEditar.setEnabled(nFilasSeleccionadas == 1);
 				btnBorrar.setEnabled(nFilasSeleccionadas > 0);
 
@@ -132,7 +136,7 @@ public class VUsuario extends JFrame implements ActionListener {
 			LogIn logIn = new LogIn(controlador);
 			logIn.setVisible(true);
 			dispose();
-		} else if (e.getSource() == btnAñadir) {
+		} else if (e.getSource() == btnAniadir) {
 			AUsuario frame = new AUsuario(controlador, user);
 			frame.setVisible(true);
 			dispose();

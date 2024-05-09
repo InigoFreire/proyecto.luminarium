@@ -24,6 +24,10 @@ import javax.swing.JButton;
 import java.awt.Color;
 import javax.swing.JPasswordField;
 
+/**
+ * La clase Registrar es una ventana de interfaz gráfica de usuario (GUI) que permite a los usuarios registrarse en un sistema.
+ * Extiende la clase JFrame y implementa la interfaz ActionListener para manejar eventos de acción.
+ */
 public class Registrar extends JFrame implements ActionListener { 
 
 	private static final long serialVersionUID = 1L;

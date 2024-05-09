@@ -5,8 +5,14 @@ import model.Sala;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Esta clase contiene pruebas unitarias para la clase Sala.
+ */
 public class SalaTest {
 
+    /**
+     * Prueba el constructor de la clase Sala y los métodos getters.
+     */
     @Test
     void testConstructorAndGetters() {
         Sala sala = new Sala();
@@ -17,6 +23,9 @@ public class SalaTest {
         assertEquals(100, sala.getAforo());
     }
 
+    /**
+     * Prueba los métodos setters de la clase Sala.
+     */
     @Test
     void testSetters() {
         Sala sala = new Sala();
@@ -27,4 +36,5 @@ public class SalaTest {
         assertEquals(80, sala.getAforo());
     }
 }
+
 

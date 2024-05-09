@@ -5,7 +5,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
@@ -23,6 +22,11 @@ import model.Sala;
 import model.Sesion;
 import model.Usuario;
 
+/**
+ * Controlador principal de la aplicación.
+ * Esta clase gestiona la lógica de negocio y la comunicación con la base de datos para las operaciones relacionadas
+ * con la gestión de películas, sesiones, salas y usuarios.
+ */
 public class Controller implements IController {
 
 	private Connection con;
@@ -60,10 +64,22 @@ public class Controller implements IController {
 	final String GETUsuarioPorDni = "SELECT * FROM usuarios WHERE dni = ?";
 	final String GetSesionIds = "select id from sesiones";
 	
+	/**
+	 * Registra una película en la base de datos.
+	 * 
+	 * Este metodo establece una conexion con la base de datos y registra una nueva pelicula utilizando los parametros
+	 * proporcionados. Si se produce un error durante la ejecución de la consulta SQL, se imprime un mensaje de error 
+	 * en la consola y se muestra la traza de la excepcion. Finalmente, se cierra la conexión con la base de datos.
+	 * 
+	 * @param id El ID de la película a registrar.
+	 * @param genero El género de la película.
+	 * @param titulo El título de la película.
+	 * @param pegi El rating de la película según el sistema PEGI.
+	 * @param duracion La duración de la película en minutos.
+	 * @param sinopsis La sinopsis de la película.
+	 */
 	@Override
 	public void registrarPeli(String id, Genero genero, String titulo, int pegi, int duracion, String sinopsis) {
-		
-		// Abrimos la conexión
 		this.openConnection();
 		
 		try {
@@ -93,26 +109,51 @@ public class Controller implements IController {
 
 	}
 	
+	/**
+	 * Devuelve el proximo ID de pelicula para almacenar en la base de datos.
+	 * 
+	 * Este metodo establece una conexión con la base de datos, ejecuta un procedimiento para obtener el ultimo ID de pelicula mas 1,
+	 * y devuelve el valor obtenido. Si no se puede realizar la consulta debido a un error de SQL, se imprime un mensaje de 
+	 * error en la consola y se muestra la traza de la excepción.
+	 * 
+	 * @return El proximo ID de pelicula para almacenar en la base de datos.
+	 */
 	@Override
 	public int getUltimoIdPeli() {
-		this.openConnection();
-		ResultSet rs = null;
-		int id = 0;
-		try {
-			stmt = con.prepareStatement(GetUltimoIdPeli);
-								
-			rs = stmt.executeQuery();
-			if (rs.next()) {
-				id = rs.getInt("NextID");
-			}
-		}catch (SQLException e) {
-			System.out.println("Error en la consulta de la BD");
-			e.printStackTrace();
-		}
-		
-		return id;
+	    this.openConnection();
+	    ResultSet rs = null;
+	    int id = 0;
+	    
+	    try {
+	        stmt = con.prepareStatement(GetUltimoIdPeli);
+	       
+	        rs = stmt.executeQuery();
+	        
+	        if (rs.next()) {
+	            id = rs.getInt("NextID");
+	        }
+	    } catch (SQLException e) {
+	        System.out.println("Error en la consulta de la BD");
+	        e.printStackTrace();
+	    }
+	    
+	    return id;
 	}
-	
+
+	/**
+	 * Registra una nueva sesion en la base de datos.
+	 * 
+	 * Este metodo establece una conexión con la base de datos y registra una nueva sesión utilizando los parametros
+	 * proporcionados. La fecha se formatea según el patron "yyyy-MM-dd HH:mm" antes de ser insertada en la base de datos.
+	 * Si se produce un error durante la ejecución de la consulta SQL, se imprime un mensaje de error en la consola y 
+	 * se muestra la traza de la excepcion. Finalmente, se cierra la conexion con la base de datos.
+	 * 
+	 * @param id El ID de la sesión.
+	 * @param precio El precio de la sesión.
+	 * @param fecha La fecha y hora de la sesión.
+	 * @param idSala El ID de la sala asociada a la sesion.
+	 * @param idPeli El ID de la pelicula asociada a la sesion.
+	 */
 	@Override
 	public void registrarSesion(String id, int precio, LocalDateTime fecha, String idSala, String idPeli) {
 		
@@ -142,9 +183,17 @@ public class Controller implements IController {
 				e.printStackTrace();
 			}
 		}
-
 	}
 	
+	/**
+	 * Devuelve el proximo ID de sesion para almacenar en la base de datos.
+	 * 
+	 * Este metodo establece una conexión con la base de datos, ejecuta un procedimiento para obtener el ultimo ID de sesion mas 1,
+	 * y devuelve el valor obtenido. Si no se puede realizar la consulta debido a un error de SQL, se imprime un mensaje de 
+	 * error en la consola y se muestra la traza de la excepción.
+	 * 
+	 * @return El proximo ID de sesion para almacenar en la base de datos.
+	 */
 	@Override
 	public String getUltimoIdSesion() {
 		this.openConnection();
@@ -166,6 +215,15 @@ public class Controller implements IController {
 		return id;
 	}
 	
+	/**
+	 * Devuelve el proximo ID de sala para almacenar en la base de datos.
+	 * 
+	 * Este metodo establece una conexión con la base de datos, ejecuta un procedimiento para obtener el ultimo ID de sala mas 1,
+	 * y devuelve el valor obtenido. Si no se puede realizar la consulta debido a un error de SQL, se imprime un mensaje de 
+	 * error en la consola y se muestra la traza de la excepción.
+	 * 
+	 * @return El proximo ID de sala para almacenar en la base de datos.
+	 */
 	@Override
 	public String getUltimoIdSala() {
 		this.openConnection();
@@ -186,6 +244,23 @@ public class Controller implements IController {
 		return id;
 	}
 	
+	/**
+	 * Modifica una sesion existente en la base de datos con nuevos valores proporcionados.
+	 * 
+	 * Este metodo establece una conexión con la base de datos y modifica la sesion especificada con los nuevos valores 
+	 * proporcionados. Si la modificación se realiza con exito, los valores de la sesión se actualizan con los nuevos 
+	 * valores proporcionados. Si se produce un error durante la ejecucion de la consulta SQL, se imprime un mensaje de 
+	 * error en la consola y se muestra la traza de la excepcion. Finalmente, se cierra la conexion con la base de datos.
+	 * 
+	 * @param sesion La sesion a modificar.
+	 * @param newId El nuevo ID de la sesion.
+	 * @param precio El nuevo precio de la sesion.
+	 * @param fecha La nueva fecha y hora de la sesion.
+	 * @param idSala El nuevo ID de la sala asociada a la sesion.
+	 * @param idPeli El nuevo ID de la pelicula asociada a la sesion.
+	 * @param id El ID original de la sesión que se desea modificar.
+	 * @return La sesion modificada con los nuevos valores, o la sesion original si la modificación no se pudo realizar.
+	 */
 	@Override
 	public Sesion modificarSesion(Sesion sesion, String newId, double precio, LocalDateTime fecha, String idSala, String idPeli, String id) {
 		this.openConnection();
@@ -228,6 +303,16 @@ public class Controller implements IController {
 		return sesion;
 	}
 	
+	/**
+	 * Registra una nueva sala en la base de datos.
+	 * 
+	 * Este metodo establece una conexion con la base de datos y registra una nueva sala utilizando los parametros
+	 * proporcionados. Si se produce un error durante la ejecución de la consulta SQL, se imprime un mensaje de error 
+	 * en la consola y se muestra la traza de la excepcion. Finalmente, se cierra la conexion con la base de datos.
+	 * 
+	 * @param id El ID de la sala a registrar.
+	 * @param aforo El aforo maximo de la sala.
+	 */
 	@Override
 	public void registrarSala(String id, int aforo) {
 		
@@ -254,9 +339,18 @@ public class Controller implements IController {
 				e.printStackTrace();
 			}
 		}
-
 	}
 	
+	/**
+	 * Obtiene una lista de todas las salas almacenadas en la base de datos.
+	 * 
+	 * Este metodo establece una conexion con la base de datos y obtiene todas las salas almacenadas. 
+	 * Luego, crea objetos Sala para cada registro recuperado de la base de datos y los agrega a una lista.
+	 * Si se produce un error durante la ejecucion de la consulta SQL, se imprime un mensaje de error 
+	 * en la consola y se muestra la traza de la excepcion. Finalmente, se cierra la conexion con la base de datos.
+	 * 
+	 * @return Una lista de todas las salas almacenadas en la base de datos.
+	 */
 	@Override
 	public ArrayList<Sala> getSalasM() {
 		ArrayList<Sala> salas = new ArrayList<Sala>();
@@ -283,6 +377,16 @@ public class Controller implements IController {
 		return salas;
 	}
 
+	/**
+	 * Obtiene un mapeo de los titulos de peliculas y sus respectivos IDs almacenados en la base de datos.
+	 * 
+	 * Este metodo establece una conexion con la base de datos y obtiene todos los titulos de peliculas y sus IDs 
+	 * almacenados. Luego, crea un HashMap donde las claves son los títulos de las peliculas y los valores son los IDs 
+	 * correspondientes. Si se produce un error durante la ejecucion de la consulta SQL, se imprime un mensaje de error 
+	 * en la consola y se muestra la traza de la excepcion. Finalmente, se cierra la conexion con la base de datos.
+	 * 
+	 * @return Un HashMap que mapea los titulos de peliculas con sus respectivos IDs almacenados en la base de datos.
+	 */
 	@Override
 	public HashMap<String, String> getTituloIdPelis() {
 		HashMap<String, String> pelis = new HashMap<String, String>();
@@ -304,18 +408,26 @@ public class Controller implements IController {
 		return pelis;
 	}
 	
+	/**
+	 * Obtiene una lista de todas las sesiones almacenadas en la base de datos.
+	 * 
+	 * Este metodo establece una conexión con la base de datos y obtiene todas las sesiones almacenadas. 
+	 * Luego, crea objetos Sesion para cada registro recuperado de la base de datos y los agrega a una lista.
+	 * Si se produce un error durante la ejecucion de la consulta SQL, se imprime un mensaje de error 
+	 * en la consola y se muestra la traza de la excepcion. Finalmente, se cierra la conexion con la base de datos.
+	 * 
+	 * @return Una lista de todas las sesiones almacenadas en la base de datos.
+	 */
 	@Override
 	public ArrayList<Sesion> geTSesiones() {
 		ArrayList<Sesion> horas = new ArrayList<Sesion>();
 		openConnection();
 		ResultSet rs = null;
 		
-		
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime dateTime = null;
 		try {
 			stmt = con.prepareStatement(getSesion);
-			
 								
 			rs = stmt.executeQuery();
 						
@@ -329,8 +441,7 @@ public class Controller implements IController {
 				dateTime = LocalDateTime.parse(rs.getString("fecha"), formatter);
 				sesion.setFecha(dateTime);
 				
-				horas.add(sesion);
-				
+				horas.add(sesion);	
 			}
 			
 		}catch (SQLException e) {
@@ -338,18 +449,25 @@ public class Controller implements IController {
 			e.printStackTrace();
 		}
 		
-		
-		
-		
 		return horas;
 	}
 	
+	/**
+	 * Obtiene una lista de sesiones asociadas a una pelicula especifica identificada por su ID.
+	 * 
+	 * Este metodo establece una conexion con la base de datos y obtiene todas las sesiones asociadas a una pelicula 
+	 * especifica identificada por su ID. Luego, crea objetos Sesion para cada registro recuperado de la base de datos 
+	 * y los agrega a una lista. Si se produce un error durante la ejecución de la consulta SQL, se imprime un mensaje 
+	 * de error en la consola y se muestra la traza de la excepcion. Finalmente, se cierra la conexión con la base de datos.
+	 * 
+	 * @param id El ID de la pelicula para la cual se desean obtener las sesiones.
+	 * @return Una lista de sesiones asociadas a la película especifica identificada por su ID.
+	 */
 	@Override
 	public ArrayList<Sesion> getHoraSesion(String id) {
 		ArrayList<Sesion> horas = new ArrayList<Sesion>();
 		openConnection();
 		ResultSet rs = null;
-		
 		
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime dateTime = null;
@@ -370,21 +488,26 @@ public class Controller implements IController {
 				sesion.setFecha(dateTime);
 				
 				horas.add(sesion);
-				
 			}
 			
 		}catch (SQLException e) {
 			System.out.println("Error en el cierre de la BD");
 			e.printStackTrace();
 		}
-		
-		
-		
-		
+
 		return horas;
 	}
 
-	
+	/**
+	 * Obtiene una lista de IDs de sesiones almacenadas en la base de datos.
+	 * 
+	 * Este metodo establece una conexion con la base de datos y obtiene todos los IDs de sesiones almacenados. 
+	 * Luego, los agrega a una lista. Si se produce un error durante la ejecucion de la consulta SQL, se imprime 
+	 * un mensaje de error en la consola y se muestra la traza de la excepcion. Finalmente, se cierra la conexion 
+	 * con la base de datos.
+	 * 
+	 * @return Una lista de todos los IDs de sesiones almacenados en la base de datos.
+	 */
 	@Override
 	public ArrayList<String> getSesionId() {
 		ArrayList<String> ids = new ArrayList<String>();
@@ -406,13 +529,32 @@ public class Controller implements IController {
 		return ids;
 	}
 
+	/**
+	 * Modifica los detalles de una sesion en la base de datos.
+	 * 
+	 * Este metodo modifica los detalles de una sesion especifica en la base de datos, incluyendo su ID, precio, fecha, 
+	 * ID de sala, ID de película y numero de tickets restantes. Para ello, establece una conexion con la base de datos, 
+	 * ejecuta una consulta SQL para actualizar los detalles de la sesión y actualiza el objeto Sesion proporcionado con 
+	 * los nuevos detalles si la modificación tiene exito. Si se produce un error durante la ejecución de la consulta SQL, 
+	 * se imprime un mensaje de error en la consola y se muestra la traza de la excepción. Finalmente, se cierra la conexion 
+	 * con la base de datos.
+	 * 
+	 * @param sesion El objeto Sesion que se va a modificar.
+	 * @param newId El nuevo ID de la sesion.
+	 * @param precio El nuevo precio de la sesion.
+	 * @param fecha La nueva fecha y hora de la sesion.
+	 * @param idSala El nuevo ID de la sala asociada a la sesion.
+	 * @param idPelicula El nuevo ID de la pelicula asociada a la sesion.
+	 * @param id El ID actual de la sesion que se va a modificar.
+	 * @param tickets El nuevo numero de tickets restantes para la sesion.
+	 * @return El objeto Sesion modificado.
+	 */
 	@Override
 	public Sesion modificarSesion(Sesion sesion, String newId, double precio, LocalDateTime fecha, String idSala,String idPelicula,String id,int tickets) {
 		this.openConnection();
 		DateTimeFormatter formateador = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String wfecha = fecha.format(formateador);
 
-       
 		try {
 			stmt = con.prepareStatement(ModificarSesion);
 
@@ -424,12 +566,10 @@ public class Controller implements IController {
 			stmt.setInt(6, tickets);
 			stmt.setString(7, id);
 			
-
 			if (stmt.executeUpdate()==1) {
 				sesion.setId(newId);
 				sesion.setFecha(fecha);
-				sesion.setPrecio(precio);
-								
+				sesion.setPrecio(precio);				
 			}
 			
 		} catch (SQLException e) {
@@ -448,6 +588,16 @@ public class Controller implements IController {
 		return sesion;
 	}
 	
+	/**
+	 * Obtiene una lista de IDs de peliculas almacenadas en la base de datos.
+	 * 
+	 * Este metodo establece una conexion con la base de datos y obtiene todos los IDs de peliculas almacenadas. 
+	 * Luego, los agrega a una lista. Si se produce un error durante la ejecucion de la consulta SQL, se imprime 
+	 * un mensaje de error en la consola y se muestra la traza de la excepcion. Finalmente, se cierra la conexion 
+	 * con la base de datos.
+	 * 
+	 * @return Una lista de todos los IDs de peliculas almacenadas en la base de datos.
+	 */
 	@Override
 	public ArrayList<String> getPelisId() {
 		ArrayList<String> ids = new ArrayList<String>();
@@ -467,9 +617,28 @@ public class Controller implements IController {
 		}
 		
 		return ids;
-		
 	}
-
+	
+	/**
+	 * Modifica los detalles de una pelicula en la base de datos.
+	 * 
+	 * Este metodo modifica los detalles de una pelicula especifica en la base de datos, incluyendo su ID, genero, titulo, 
+	 * clasificacion por edad (PEGI), duracion y sinopsis. Para ello, establece una conexion con la base de datos, ejecuta 
+	 * una consulta SQL para actualizar los detalles de la pelicula y actualiza el objeto Pelicula proporcionado con los 
+	 * nuevos detalles si la modificacion tiene exito. Si se produce un error durante la ejecución de la consulta SQL, se 
+	 * imprime un mensaje de error en la consola y se muestra la traza de la excepcion. Finalmente, se cierra la conexión 
+	 * con la base de datos.
+	 * 
+	 * @param peli El objeto Pelicula que se va a modificar.
+	 * @param newId El nuevo ID de la pelicula.
+	 * @param genero El nuevo genero de la pelicula.
+	 * @param titulo El nuevo titulo de la pelicula.
+	 * @param pegi La nueva clasificación por edad (PEGI) de la pelicula.
+	 * @param duracion La nueva duracion de la pelicula.
+	 * @param sinopsis La nueva sinopsis de la pelicula.
+	 * @param id El ID actual de la pelicula que se va a modificar.
+	 * @return El objeto Pelicula modificado.
+	 */
 	@Override
 	public Pelicula modificarPeli(Pelicula peli, String newId, Genero genero, String titulo, int pegi, int duracion, String sinopsis, String id) {
 		this.openConnection();
@@ -510,12 +679,20 @@ public class Controller implements IController {
 		return peli;
 	}
 
-	
-	
+	/**
+	 * Obtiene una lista de IDs de salas almacenadas en la base de datos.
+	 * 
+	 * Este metodo establece una conexión con la base de datos y obtiene todos los IDs de salas almacenadas. 
+	 * Luego, los agrega a una lista. Si se produce un error durante la ejecucion de la consulta SQL, se imprime 
+	 * un mensaje de error en la consola y se muestra la traza de la excepcion. Finalmente, se cierra la conexión 
+	 * con la base de datos.
+	 * 
+	 * @return Una lista de todos los IDs de salas almacenadas en la base de datos.
+	 */
 	@Override
 	public ArrayList<String> getSalasId() {
 		ArrayList<String> ids = new ArrayList<String>();
-		openConnection();
+		this.openConnection();
 		ResultSet rs = null;
 		try {
 			stmt = con.prepareStatement(GetSalaId);
@@ -528,15 +705,35 @@ public class Controller implements IController {
 		}catch (SQLException e) {
 			System.out.println("Error en el cierre de la BD");
 			e.printStackTrace();
+		} finally {
+			try {
+				this.closeConnection();
+			} catch (SQLException e) {
+				System.out.println("Error en el cierre de la BD");
+				e.printStackTrace();
+			}
 		}
 		
 		return ids;
-		
 	}
 
+	/**
+	 * Modifica los detalles de una sala en la base de datos.
+	 * 
+	 * Este metodo modifica los detalles de una sala especifica en la base de datos, incluyendo su ID y aforo. Para ello, 
+	 * establece una conexion con la base de datos, ejecuta una consulta SQL para actualizar los detalles de la sala y 
+	 * actualiza el objeto Sala proporcionado con los nuevos detalles si la modificación tiene exito. Si se produce un 
+	 * error durante la ejecucion de la consulta SQL, se imprime un mensaje de error en la consola y se muestra la traza 
+	 * de la excepcion. Finalmente, se cierra la conexion con la base de datos.
+	 * 
+	 * @param sala El objeto Sala que se va a modificar.
+	 * @param newid El nuevo ID de la sala.
+	 * @param aforo El nuevo aforo de la sala.
+	 * @param id El ID actual de la sala que se va a modificar.
+	 * @return El objeto Sala modificado.
+	 */
 	@Override
 	public Sala modificarSala(Sala sala,String newid, int aforo, String id) {
-		
 		this.openConnection();
 		
 		try {
@@ -555,7 +752,6 @@ public class Controller implements IController {
 			System.out.println("Error de SQL");
 			e.printStackTrace();
 		} finally {
-			
 			try {
 				this.closeConnection();
 			} catch (SQLException e) {
@@ -565,9 +761,21 @@ public class Controller implements IController {
 		}
 
 		return sala;
-		
 	}
 	
+	/**
+	 * Obtiene la informacion de una pelicula dado su ID.
+	 * 
+	 * Este metodo busca la informacion de una pelicula en la base de datos utilizando su ID. Establece una conexion 
+	 * con la base de datos, ejecuta una consulta SQL para obtener los detalles de la pelicula y los asigna al objeto 
+	 * Pelicula correspondiente. Si se encuentra una coincidencia, se asignan los valores de las columnas de la tabla 
+	 * a los atributos del objeto Pelicula. Finalmente, se cierra la conexión con la base de datos. Si se produce un 
+	 * error durante la ejecucion de la consulta SQL, se imprime la traza de la excepcion.
+	 * 
+	 * @param id El ID de la pelicula que se desea obtener.
+	 * @return El objeto Pelicula con la información correspondiente al ID proporcionado. Si no se encuentra ninguna 
+	 * coincidencia en la base de datos, se devuelve un objeto Pelicula vacío.
+	 */
 	@Override
 	public Pelicula getPeliInfo(String id) {
 		Pelicula pelicula = new Pelicula();
@@ -597,6 +805,18 @@ public class Controller implements IController {
 		return pelicula;
 	}
 
+	/**
+	 * Obtiene una matriz de String que contiene informacion resumida sobre todas las peliculas almacenadas en la base de datos.
+	 * 
+	 * Este metodo establece una conexion con la base de datos y ejecuta una consulta SQL para obtener informacion 
+	 * resumida sobre todas las peliculas almacenadas. La información resumida incluye el titulo de la pelicula y su clasificacion 
+	 * por edad (PEGI). Los resultados se almacenan en una matriz de String bidimensional. Si se produce un error durante 
+	 * la ejecucion de la consulta SQL, se imprime la traza de la excepcion. Finalmente, se cierra la conexion con la base de datos.
+	 * 
+	 * @return Una matriz de String bidimensional que contiene informacion resumida sobre todas las peliculas almacenadas. 
+	 * Cada fila de la matriz representa una pelicula, donde el primer elemento de la fila es el titulo de la película y 
+	 * el segundo elemento es su clasificacion por edad (PEGI).
+	 */
 	@Override
 	public String[][] getPelis() {
 		int rowNum = 0, i = 0;
@@ -630,6 +850,19 @@ public class Controller implements IController {
 		return peliculas;
 	}
 	
+	/**
+	 * Obtiene la información de una pelicula dado su titulo.
+	 * 
+	 * Este metodo busca la informacion de una pelicula en la base de datos utilizando su titulo. Establece una conexión 
+	 * con la base de datos, ejecuta una consulta SQL para obtener los detalles de la pelicula y los asigna al objeto 
+	 * Pelicula correspondiente. Si se encuentra una coincidencia, se asignan los valores de las columnas de la tabla 
+	 * a los atributos del objeto Pelicula. Finalmente, se cierra la conexión con la base de datos. Si se produce un 
+	 * error durante la ejecucion de la consulta SQL, se imprime la traza de la excepcion.
+	 * 
+	 * @param titulo El título de la pelicula que se desea obtener.
+	 * @return El objeto Pelicula con la información correspondiente al título proporcionado. Si no se encuentra ninguna 
+	 * coincidencia en la base de datos, se devuelve null.
+	 */
 	@Override
 	public Pelicula getPeliPorTitulo(String titulo) {
 		Pelicula pelicula = null;
@@ -662,6 +895,18 @@ public class Controller implements IController {
 		return pelicula;
 	}
 	
+	/**
+	 * Obtiene una matriz de String que contiene informacion sobre todos los usuarios almacenados en la base de datos.
+	 * 
+	 * Este metodo establece una conexion con la base de datos y ejecuta una consulta SQL para obtener informacion 
+	 * sobre todos los usuarios almacenados. La informacion incluye el DNI, nombre, apellido y estado de administrador 
+	 * (Si/No) de cada usuario. Los resultados se almacenan en una matriz de String bidimensional. Si se produce un error durante 
+	 * la ejecucion de la consulta SQL, se imprime la traza de la excepcion. Finalmente, se cierra la conexion con la base de datos.
+	 * 
+	 * @return Una matriz de String bidimensional que contiene informacion sobre todos los usuarios almacenados. 
+	 * Cada fila de la matriz representa un usuario, donde el primer elemento de la fila es el DNI del usuario, 
+	 * el segundo elemento es su nombre, el tercer elemento es su apellido y el cuarto elemento indica si el usuario es administrador (Si/No).
+	 */
 	@Override
 	public String[][] getUsuarios() {
 		int rowNum = 0, i = 0;
@@ -701,6 +946,20 @@ public class Controller implements IController {
 		return usuarios;
 	}
 	
+	/**
+	 * Obtiene la informacion de un usuario por su numero de DNI.
+	 * 
+	 * Este metodo establece una conexion con la base de datos y ejecuta una consulta SQL para obtener la informacion 
+	 * del usuario correspondiente al numero de DNI especificado. Si se encuentra un usuario con el DNI proporcionado, 
+	 * se crea un objeto Usuario y se asignan sus atributos con los valores obtenidos de la base de datos. 
+	 * Si no se encuentra ningún usuario con el DNI proporcionado, se devuelve null. 
+	 * Si se produce un error durante la ejecución de la consulta SQL, se imprime la traza de la excepcion. 
+	 * Finalmente, se cierra la conexión con la base de datos.
+	 * 
+	 * @param dni El número de DNI del usuario del cual se desea obtener la informacion.
+	 * @return Un objeto Usuario que contiene la informacion del usuario correspondiente al número de DNI especificado. 
+	 * Si no se encuentra ningun usuario con el DNI proporcionado, se devuelve null.
+	 */
 	@Override
 	public Usuario getUsuarioPorDni(String dni) {
 		Usuario usuario = null;
@@ -716,7 +975,7 @@ public class Controller implements IController {
 			if (rs.next()) {
 				usuario = new Usuario();
 				usuario.setDni(rs.getString("dni"));
-				usuario.setContraseña(rs.getString("contraseña"));
+				usuario.setPassword(rs.getString("contraseña"));
 				usuario.setNombre(rs.getString("nombre"));
 				usuario.setApellido(rs.getString("apellido"));
 				usuario.setEmail(rs.getString("email"));
@@ -738,6 +997,18 @@ public class Controller implements IController {
 		return usuario;
 	}
 	
+	/**
+	 * Obtiene la informacion de todas las salas del cine.
+	 * 
+	 * Este metodo establece una conexion con la base de datos y ejecuta una consulta SQL para obtener la informacion 
+	 * de todas las salas del cine. Los datos obtenidos se almacenan en un arreglo bidimensional de cadenas, donde cada fila 
+	 * representa una sala y cada columna contiene informacion sobre el ID de la sala y su aforo respectivamente. 
+	 * Si se produce un error durante la ejecucion de la consulta SQL, se imprime la traza de la excepcion. 
+	 * Finalmente, se cierra la conexion con la base de datos.
+	 * 
+	 * @return Una matriz bidimensional que contiene la informacion de todas las salas del cine. 
+	 * Cada fila representa una sala y cada columna contiene informacion sobre el ID de la sala y su aforo respectivamente.
+	 */
 	@Override
 	public String[][] getSalas() {
 		int rowNum = 0, i = 0;
@@ -771,6 +1042,20 @@ public class Controller implements IController {
 		return salas;
 	}
 	
+	/**
+	 * Obtiene la informacion de una sala del cine mediante su ID.
+	 * 
+	 * Este metodo establece una conexion con la base de datos y ejecuta una consulta SQL para obtener la informacion 
+	 * de una sala del cine identificada por su ID. Los datos recuperados incluyen el ID de la sala y su aforo. 
+	 * Si se encuentra una sala con el ID proporcionado, se crea un objeto Sala y se asignan los valores correspondientes. 
+	 * Si no se encuentra ninguna sala con el ID especificado, se devuelve null.
+	 * Si se produce un error durante la ejecucion de la consulta SQL, se imprime la traza de la excepcion. 
+	 * Finalmente, se cierra la conexion con la base de datos.
+	 * 
+	 * @param id El ID de la sala cuya informacion se desea obtener.
+	 * @return Un objeto Sala que contiene la informacion de la sala identificada por el ID especificado, 
+	 * o null si no se encuentra ninguna sala con ese ID.
+	 */
 	@Override
 	public Sala getSalaPorId(String id) {
 		Sala sala = null;
@@ -799,6 +1084,20 @@ public class Controller implements IController {
 		return sala;
 	}
 	
+	/**
+	 * Obtiene la informacion de todas las sesiones de peliculas disponibles en el cine.
+	 * 
+	 * Este metodo establece una conexion con la base de datos y ejecuta una consulta SQL para obtener la informacion 
+	 * de todas las sesiones de peliculas disponibles en el cine. Los datos recuperados incluyen el ID de la sesion, el precio de la entrada, 
+	 * la fecha y hora de la sesion, el titulo de la pelicula, el ID de la sala y el numero de entradas restantes. 
+	 * Los resultados se almacenan en una matriz bidimensional de cadenas. 
+	 * Si se produce un error durante la ejecucion de la consulta SQL, se imprime la traza de la excepcion. 
+	 * Finalmente, se cierra la conexion con la base de datos.
+	 * 
+	 * @return Una matriz bidimensional que contiene la información de todas las sesiones de películas disponibles en el cine. 
+	 * Cada fila representa una sesión, y las columnas incluyen el ID de la sesión, el precio de la entrada, la fecha, la hora, el titulo de la película, 
+	 * el ID de la sala y el número de entradas restantes.
+	 */
 	@Override
 	public String[][] getSesiones() {
 		int rowNum = 0, i = 0;
@@ -850,6 +1149,21 @@ public class Controller implements IController {
 		return sesiones;
 	}
 	
+	/**
+	 * Obtiene la informacion de una sesion de pelicula especifica por su ID.
+	 * 
+	 * Este metodo establece una conexion con la base de datos y ejecuta una consulta SQL para obtener la informacion 
+	 * de una sesion de pelicula especifica por su ID. Los datos recuperados incluyen el ID de la sesion, el precio de la entrada, 
+	 * la fecha y hora de la sesion, el ID de la pelicula asociada, el ID de la sala y el numero de entradas restantes. 
+	 * Si se encuentra una sesion con el ID proporcionado, se crea un objeto de sesion y se asignan los valores correspondientes. 
+	 * Si no se encuentra ninguna sesion con el ID proporcionado, se devuelve null. 
+	 * Si se produce un error durante la ejecucion de la consulta SQL, se imprime la traza de la excepcion. 
+	 * Finalmente, se cierra la conexion con la base de datos.
+	 * 
+	 * @param id El ID de la sesion de pelicula que se desea obtener.
+	 * @return Un objeto de sesion que contiene la informacion de la sesion de pelicula especifica, si se encuentra; 
+	 * de lo contrario, devuelve null si no se encuentra ninguna sesion con el ID proporcionado.
+	 */
 	@Override
 	public Sesion getSesionPorId(String id) {
 		Sesion sesion = null;
@@ -883,18 +1197,23 @@ public class Controller implements IController {
 	}
 
 	/**
-	 * Método de entrar a la app con usuario y contraseña.
+	 * Realiza la autenticacion de un usuario mediante su DNI y contraseña.
 	 * 
-	 * @param dni      es el dni que reconoce como usuario.
-	 * @param password es la contraseña que reconoce como contraseña del usuario.
-	 * @return El usuario que ha logeado.
+	 * Este metodo establece una conexion con la base de datos y ejecuta una consulta SQL para verificar las credenciales de inicio de sesion.
+	 * Se pasan el DNI y la contraseña como parámetros para la consulta. Si se encuentra un usuario con las credenciales proporcionadas,
+	 * se crea un objeto de usuario y se asignan los valores correspondientes, incluyendo el nombre, apellido, correo electronico, metodo de pago
+	 * y si es administrador o no. Si no se encuentra ningun usuario con las credenciales proporcionadas, se devuelve null.
+	 * Si se produce un error durante la ejecucion de la consulta SQL, se imprime la traza de la excepcion. Finalmente, se cierra la conexion con la base de datos.
+	 * 
+	 * @param dni El DNI del usuario que intenta iniciar sesion.
+	 * @param password La contraseña del usuario que intenta iniciar sesion.
+	 * @return Un objeto de usuario si las credenciales son validas; de lo contrario, devuelve null si las credenciales son incorrectas.
 	 */
 	@Override
 	public Usuario logIn(String dni, String password) {
 		ResultSet rs = null;
 		Usuario us = new Usuario();
 
-		// Abrimos la conexión
 		this.openConnection();
 
 		try {
@@ -907,7 +1226,7 @@ public class Controller implements IController {
 
 			if (rs.next()) {
 				us.setDni(dni);
-				us.setContraseña(password);
+				us.setPassword(password);
 				us.setNombre(rs.getString("nombre"));
 				us.setApellido(rs.getString("apellido"));
 				us.setEmail(rs.getString("email"));
@@ -922,7 +1241,6 @@ public class Controller implements IController {
 			System.out.println("Error de SQL");
 			e.printStackTrace();
 		} finally {
-			// Cerramos ResultSet
 			if (rs != null) {
 				try {
 					rs.close();
@@ -940,6 +1258,24 @@ public class Controller implements IController {
 		return us;
 	}
 
+	/**
+	 * Modifica los datos de un usuario en la base de datos.
+	 * 
+	 * Este metodo establece una conexion con la base de datos y ejecuta una consulta SQL para actualizar los datos del usuario.
+	 * Se pasan como parametros el objeto de usuario a modificar y los nuevos valores para el DNI, nombre, apellido, contraseña y correo electronico.
+	 * Se prepara y ejecuta una consulta SQL para actualizar los datos del usuario en la base de datos.
+	 * Si la ejecución de la consulta es exitosa (es decir, si se actualiza un solo registro), se actualizan los valores del objeto de usuario con los nuevos valores.
+	 * Si se produce un error durante la ejecucion de la consulta SQL, se imprime la traza de la excepcion. Finalmente, se cierra la conexion con la base de datos.
+	 * 
+	 * @param us El objeto de usuario que se va a modificar.
+	 * @param dni El DNI actual del usuario.
+	 * @param newDni El nuevo DNI del usuario.
+	 * @param nombre El nuevo nombre del usuario.
+	 * @param apellido El nuevo apellido del usuario.
+	 * @param passwd1 La nueva contraseña del usuario.
+	 * @param email El nuevo correo electrónico del usuario.
+	 * @return El objeto de usuario modificado con los nuevos datos si la actualizacion es exitosa; de lo contrario, devuelve el objeto de usuario sin modificar.
+	 */
 	@Override
 	public Usuario modificarDatosUsuario(Usuario us, String dni, String newDni, String nombre, String apellido, String passwd1, String email) {
 		// Abrimos la conexión
@@ -959,7 +1295,7 @@ public class Controller implements IController {
 				us.setNombre(nombre);
 				us.setApellido(apellido);
 				us.setEmail(email);
-				us.setContraseña(passwd1);
+				us.setPassword(passwd1);
 				us.setDni(newDni);
 			}
 
@@ -979,6 +1315,26 @@ public class Controller implements IController {
 		return us;
 	}
 
+	/**
+	 * Modifica los datos de un usuario si tiene metodo de pago en la base de datos.
+	 * 
+	 * Este metodo establece una conexion con la base de datos y ejecuta una consulta SQL para actualizar los datos del usuario si tiene metodo de pago.
+	 * Se pasan como parametros el objeto de usuario a modificar y los nuevos valores para el DNI, nombre, apellido, contraseña, correo electronico, metodo de pago y fecha de caducidad de la tarjeta.
+	 * Se prepara y ejecuta una consulta SQL para actualizar los datos de pago del usuario en la base de datos.
+	 * Si la ejecución de la consulta es exitosa (es decir, si se actualiza un solo registro), se actualizan los valores del objeto de usuario con los nuevos valores.
+	 * Si se produce un error durante la ejecucion de la consulta SQL, se imprime la traza de la excepcion. Finalmente, se cierra la conexion con la base de datos.
+	 * 
+	 * @param us El objeto de usuario que se va a modificar.
+	 * @param dni El DNI actual del usuario.
+	 * @param newDni El nuevo DNI del usuario.
+	 * @param nombre El nuevo nombre del usuario.
+	 * @param apellido El nuevo apellido del usuario.
+	 * @param passwd1 La nueva contraseña del usuario.
+	 * @param email El nuevo correo electronico del usuario.
+	 * @param tarjeta El nuevo metodo de pago del usuario.
+	 * @param fechaCaducidad La nueva fecha de caducidad de la tarjeta del usuario.
+	 * @return El objeto de usuario modificado con los nuevos datos si la actualizacion es exitosa; de lo contrario, devuelve el objeto de usuario sin modificar.
+	 */
 	@Override
 	public Usuario modificarDatosUsuarioPago(Usuario us, String dni, String newDni, String nombre, String apellido, String passwd1, String email, String tarjeta, YearMonth fechaCaducidad) {
 		// Abrimos la conexión
@@ -1000,7 +1356,7 @@ public class Controller implements IController {
 				us.setNombre(nombre);
 				us.setApellido(apellido);
 				us.setEmail(email);
-				us.setContraseña(passwd1);
+				us.setPassword(passwd1);
 				us.setMetodoPago(tarjeta);
 				us.setFechaCaducidadTarjeta(fechaCaducidad);
 				us.setDni(newDni);
@@ -1022,6 +1378,21 @@ public class Controller implements IController {
 		return us;
 	}
 
+	/**
+	 * Registra un nuevo usuario en la base de datos.
+	 * 
+	 * Este metodo establece una conexion con la base de datos y ejecuta una consulta SQL para insertar los datos del nuevo usuario.
+	 * Se pasan como parametros el DNI, nombre, apellido, contraseña y correo electrónico del nuevo usuario.
+	 * Se prepara y ejecuta una consulta SQL para insertar los datos del nuevo usuario en la base de datos.
+	 * Si la ejecucion de la consulta es exitosa, se registra el nuevo usuario en la base de datos.
+	 * Si se produce un error durante la ejecución de la consulta SQL, se imprime la traza de la excepcion. Finalmente, se cierra la conexion con la base de datos.
+	 * 
+	 * @param dni El DNI del nuevo usuario.
+	 * @param nombre El nombre del nuevo usuario.
+	 * @param apellido El apellido del nuevo usuario.
+	 * @param passwd1 La contraseña del nuevo usuario.
+	 * @param email El correo electrónico del nuevo usuario.
+	 */
 	@Override
 	public void registrarUsuario(String dni, String nombre, String apellido, String passwd1, String email) {
 
@@ -1051,9 +1422,16 @@ public class Controller implements IController {
 				e.printStackTrace();
 			}
 		}
-
 	}
 
+	/**
+	 * Abre una conexion con la base de datos.
+	 * 
+	 * Este metodo establece una conexión con la base de datos utilizando JDBC.
+	 * Se configura la URL de conexion, el nombre de usuario y la contraseña para acceder a la base de datos.
+	 * Si la conexión se establece correctamente, la variable de conexión `con` se inicializa con la conexión establecida.
+	 * Si se produce un error durante la apertura de la conexion, se imprime un mensaje de error en la consola.
+	 */
 	private void openConnection() {
 		try {
 			String url = "jdbc:mysql://localhost:3306/cines_g2?serverTimezone=Europe/Madrid&useSSL=false";
@@ -1064,6 +1442,14 @@ public class Controller implements IController {
 		}
 	}
 
+	/**
+	 * Cierra la conexion con la base de datos.
+	 * 
+	 * Este metodo cierra la conexion establecida con la base de datos, asi como cualquier declaracion asociada con la conexion.
+	 * Si se produce un error al cerrar la declaracion o la conexion, se lanzara una excepcion SQLException.
+	 * 
+	 * @throws SQLException Si ocurre un error al cerrar la declaracion o la conexion con la base de datos.
+	 */
 	private void closeConnection() throws SQLException {
 		System.out.println("Conexion Cerrada.");
 		if (stmt != null)
@@ -1073,7 +1459,16 @@ public class Controller implements IController {
 		System.out.println("------------------------");
 	}
 
-
+	/**
+	 * Obtiene una lista de todos los DNI almacenados en la base de datos.
+	 * 
+	 * Este metodo abre una conexion con la base de datos y ejecuta una consulta para obtener todos los DNI almacenados.
+	 * Luego, crea y devuelve una lista de cadenas que contienen los DNI obtenidos de la base de datos.
+	 * Si se produce un error durante la ejecucion de la consulta o al cerrar la conexion con la base de datos,
+	 * se imprimira un mensaje de error y se mostrara la traza de la excepcion.
+	 * 
+	 * @return Una lista de cadenas que representan los DNI almacenados en la base de datos.
+	 */
 	@Override
 	public ArrayList<String> getDni() {
 		ArrayList<String> dnis = new ArrayList<String>();
@@ -1093,16 +1488,5 @@ public class Controller implements IController {
 		}
 		
 		return dnis;
-	}
-
-	
-
-	
-
-	
-	
-
-	
-	
-	
+	}	
 }

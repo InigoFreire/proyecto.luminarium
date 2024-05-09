@@ -12,6 +12,7 @@ import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
 
 import controller.Controller;
+import excepciones.IllegalEntryData;
 import model.Genero;
 import model.Usuario;
 import javax.swing.JLabel;
@@ -20,6 +21,10 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import java.awt.Color;
 
+/**
+ * Esta clase representa la interfaz gráfica para añadir una nueva película al sistema.
+ * Extiende la clase JFrame e implementa ActionListener para manejar eventos de botones.
+ */
 public class APeli extends JFrame implements ActionListener{
 
 	private static final long serialVersionUID = 1L;
@@ -205,44 +210,59 @@ public class APeli extends JFrame implements ActionListener{
 		}
 
 		if (o==btnModificar) {
-			
-			lblGeneroError.setText("");
-			lblTituloError.setText("");
-			lblPegiError.setText("");
-			lblDuracionError.setText("");
-			lblSinopsisError.setText("");
-			
-			boolean correcto=true;
-			
-			//Controlar longitud del titulo
-			if(textTitulo.getText().length()>60) {
-				lblTituloError.setText("El titulo tiene que contener menos de 60 caracteres");
-				correcto=false;
+			try {
+				verificarDatos();
+			} catch (IllegalEntryData error) {
+				 System.out.println("ERROR: "+error.getMessage());
 			}
-			
-			//Controlar Edad Pegi
-			int pegi = Integer.parseInt(textPegi.getText());
-			if(pegi<0 || pegi>18) {
-				lblPegiError.setText("PEGI tiene que ser una edad entre \"0\" y \"18\"");
-				correcto=false;
-			}
-			
-			//Controlar duracion de la peli
-			if(textDuracion.getText().length()>3) {
-				lblDuracionError.setText("El numero introducido no puede tener mas de 3 cifras");
-				correcto=false;
-			}
-			
-			//Controlar longitud del String de sinopsis
-			if(textAreaSinopsis.getText().length()>150) {
-				lblSinopsisError.setText("La longitud de la sinopsis no puede ser mas de 150 caracteres");
-				correcto=false;
-			}
-					
-			if(correcto){
-				controlador.registrarPeli(textId.getText(), Genero.valueOf((String)comboBoxGenero.getSelectedItem()), textTitulo.getText(), Integer.parseInt(textPegi.getText()), Integer.parseInt(textDuracion.getText()), textAreaSinopsis.getText());
-				JOptionPane.showMessageDialog(this,(String)"Pelicula añadida correctamente","",JOptionPane.INFORMATION_MESSAGE,null);	
-			}
+		}
+	}
+	
+	/**
+	 * Verifica los datos ingresados por el usuario en un formulario de registro de película.
+	 * Realiza varias validaciones, incluyendo la longitud del título, la edad PEGI, la duración de la película
+	 * y la longitud de la sinopsis. Si todas las validaciones son exitosas, se llama al método registrarPeli()
+	 * del controlador para añadir la película a la base de datos.
+	 * 
+	 * @throws IllegalEntryData Si los datos ingresados por el usuario son incorrectos.
+	 */
+	public void verificarDatos() throws IllegalEntryData {
+		lblGeneroError.setText("");
+		lblTituloError.setText("");
+		lblPegiError.setText("");
+		lblDuracionError.setText("");
+		lblSinopsisError.setText("");
+		
+		boolean correcto=true;
+		
+		//Controlar longitud del titulo
+		if(textTitulo.getText().length()>60) {
+			lblTituloError.setText("El titulo tiene que contener menos de 60 caracteres");
+			correcto=false;
+		}
+		
+		//Controlar Edad Pegi
+		int pegi = Integer.parseInt(textPegi.getText());
+		if(pegi<0 || pegi>18) {
+			lblPegiError.setText("PEGI tiene que ser una edad entre \"0\" y \"18\"");
+			correcto=false;
+		}
+		
+		//Controlar duracion de la peli
+		if(textDuracion.getText().length()>3) {
+			lblDuracionError.setText("El numero introducido no puede tener mas de 3 cifras");
+			correcto=false;
+		}
+		
+		//Controlar longitud del String de sinopsis
+		if(textAreaSinopsis.getText().length()>150) {
+			lblSinopsisError.setText("La longitud de la sinopsis no puede ser mas de 150 caracteres");
+			correcto=false;
+		}
+				
+		if(correcto){
+			controlador.registrarPeli(textId.getText(), Genero.valueOf((String)comboBoxGenero.getSelectedItem()), textTitulo.getText(), Integer.parseInt(textPegi.getText()), Integer.parseInt(textDuracion.getText()), textAreaSinopsis.getText());
+			JOptionPane.showMessageDialog(this,(String)"Pelicula añadida correctamente","",JOptionPane.INFORMATION_MESSAGE,null);	
 		}
 	}
 }

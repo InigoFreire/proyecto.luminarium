@@ -23,6 +23,12 @@ import javax.swing.JPasswordField;
 import javax.swing.JButton;
 import java.awt.Color;
 
+/**
+ * La clase LogIn representa una ventana de inicio de sesión (login) en una interfaz
+ * gráfica (GUI), donde los usuarios pueden ingresar su DNI y contraseña para acceder
+ * al sistema. Esta clase extiende JFrame e implementa ActionListener para manejar
+ * las interacciones del usuario con los componentes de la interfaz.
+ */
 public class LogIn extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;

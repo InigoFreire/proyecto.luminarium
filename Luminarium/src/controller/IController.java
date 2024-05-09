@@ -11,6 +11,10 @@ import model.Sala;
 import model.Sesion;
 import model.Usuario;
 
+/**
+ * Interfaz que define los métodos que deben implementar los controladores en la aplicación.
+ * Estos métodos proporcionan la funcionalidad necesaria para la gestión de usuarios, películas, salas, sesiones, etc.
+ */
 public interface IController {
 
 	public Usuario logIn(String usuario, String password);

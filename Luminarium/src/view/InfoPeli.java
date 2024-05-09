@@ -22,6 +22,13 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import javax.swing.JComboBox;
 
+/**
+ * La clase InfoPeli representa una ventana de interfaz gráfica (GUI) para
+ * mostrar información sobre una película, incluyendo su título, género,
+ * clasificación por edad, duración, sinopsis y horarios de sesiones para la
+ * compra de entradas. Esta clase extiende JFrame e implementa ActionListener
+ * para manejar las interacciones del usuario con varios componentes.
+ */
 public class InfoPeli extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;

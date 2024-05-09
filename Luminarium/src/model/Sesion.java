@@ -1,9 +1,13 @@
 package model;
 
-
-
 import java.time.LocalDateTime;
 
+/**
+ * Representa una sesión en el sistema.
+ * Cada sesión tiene un identificador único, un precio, una fecha y hora de proyección, 
+ * el identificador de la película que se proyectará, el identificador de la sala en la que se proyectará
+ * y el número de tickets restantes para la sesión.
+ */
 public class Sesion {
 	private String id;
 	private double precio;

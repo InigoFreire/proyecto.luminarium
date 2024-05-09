@@ -12,7 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import controller.Controller;
-
+import excepciones.IllegalEntryData;
 import model.Genero;
 import model.Pelicula;
 import model.Usuario;
@@ -25,6 +25,10 @@ import java.awt.Color;
 import javax.swing.JTextArea;
 import javax.swing.JComboBox;
 
+/**
+ * Esta clase representa la interfaz gráfica para modificar una película existente en el sistema.
+ * Extiende la clase JFrame e implementa ActionListener para manejar eventos de botones y campos de texto.
+ */
 public class EPeli extends JFrame implements ActionListener{
 
 	private static final long serialVersionUID = 1L;
@@ -218,52 +222,67 @@ public class EPeli extends JFrame implements ActionListener{
 		}
 		
 		if (o==btnModificar) {
-			
-			lblGeneroError.setText("");
-			lblTituloError.setText("");
-			lblPegiError.setText("");
-			lblDuracionError.setText("");
-			lblSinopsisError.setText("");
-			
-			boolean correcto=true;
+			try {
+				verificarDatos();
+			} catch (IllegalEntryData error) {
+				 System.out.println("ERROR: "+error.getMessage());
+			}
+		}
+	}
+	
+	/**
+	 * Verifica los datos ingresados por el usuario en un formulario de modificación de pelicula.
+	 * Realiza varias validaciones, incluyendo la longitud del titulo, la edad PEGI, la duracion de la pelicula
+	 * y la longitud de la sinopsis. Si todas las validaciones son exitosas, se llama al metodo modificarPeli()
+	 * del controlador para aplicar los cambios en la película.
+	 * 
+	 * @throws IllegalEntryData Si los datos ingresados por el usuario son incorrectos.
+	 */
+public void verificarDatos() throws IllegalEntryData {
+		lblGeneroError.setText("");
+		lblTituloError.setText("");
+		lblPegiError.setText("");
+		lblDuracionError.setText("");
+		lblSinopsisError.setText("");
+		
+		boolean correcto=true;
 
-			ArrayList<String> ids = controlador.getPelisId();
-			for(String id:ids) {
-				if(id.equalsIgnoreCase(textId.getText())&&!id.equalsIgnoreCase(peli.getId())) {
-					lblIdError.setText("Ya existe otra peli con ese ID");
-					correcto=false;
-				}
-			}
-			
-			//Controlar longitud del titulo
-			if(textTitulo.getText().length()>60) {
-				lblTituloError.setText("El titulo tiene que contener menos de 60 caracteres");
+		ArrayList<String> ids = controlador.getPelisId();
+		for(String id:ids) {
+			if(id.equalsIgnoreCase(textId.getText())&&!id.equalsIgnoreCase(peli.getId())) {
+				lblIdError.setText("Ya existe otra peli con ese ID");
 				correcto=false;
 			}
-			
-			//Controlar Edad Pegi
-			int pegi = Integer.parseInt(textPegi.getText());
-			if(pegi<0 || pegi>18) {
-				lblPegiError.setText("PEGI tiene que ser una edad entre \"0\" y \"18\"");
-				correcto=false;
-			}
-			
-			//Controlar duracion de la peli
-			if(textDuracion.getText().length()>3) {
-				lblDuracionError.setText("El numero introducido no puede tener mas de 3 cifras");
-				correcto=false;
-			}
-			
-			//Controlar longitud del String de sinopsis
-			if(textAreaSinopsis.getText().length()>150) {
-				lblSinopsisError.setText("La longitud de la sinopsis no puede ser mas de 150 caracteres");
-				correcto=false;
-			}
-					
-			if(correcto){
-				controlador.modificarPeli(peli, textId.getText(), Genero.valueOf((String)comboBoxGenero.getSelectedItem()), textTitulo.getText(), Integer.parseInt(textPegi.getText()), Integer.parseInt(textDuracion.getText()), textAreaSinopsis.getText(), peli.getId());
-				JOptionPane.showMessageDialog(this,(String)"Pelicula modificada correctamente","",JOptionPane.INFORMATION_MESSAGE,null);	
-			}
+		}
+		
+		//Controlar longitud del titulo
+		if(textTitulo.getText().length()>60) {
+			lblTituloError.setText("El titulo tiene que contener menos de 60 caracteres");
+			correcto=false;
+		}
+		
+		//Controlar Edad Pegi
+		int pegi = Integer.parseInt(textPegi.getText());
+		if(pegi<0 || pegi>18) {
+			lblPegiError.setText("PEGI tiene que ser una edad entre \"0\" y \"18\"");
+			correcto=false;
+		}
+		
+		//Controlar duracion de la peli
+		if(textDuracion.getText().length()>3) {
+			lblDuracionError.setText("El numero introducido no puede tener mas de 3 cifras");
+			correcto=false;
+		}
+		
+		//Controlar longitud del String de sinopsis
+		if(textAreaSinopsis.getText().length()>150) {
+			lblSinopsisError.setText("La longitud de la sinopsis no puede ser mas de 150 caracteres");
+			correcto=false;
+		}
+				
+		if(correcto){
+			controlador.modificarPeli(peli, textId.getText(), Genero.valueOf((String)comboBoxGenero.getSelectedItem()), textTitulo.getText(), Integer.parseInt(textPegi.getText()), Integer.parseInt(textDuracion.getText()), textAreaSinopsis.getText(), peli.getId());
+			JOptionPane.showMessageDialog(this,(String)"Pelicula modificada correctamente","",JOptionPane.INFORMATION_MESSAGE,null);	
 		}
 	}
 }

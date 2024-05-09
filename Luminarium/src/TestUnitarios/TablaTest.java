@@ -5,8 +5,14 @@ import model.Tabla;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Esta clase contiene pruebas unitarias para la clase Tabla.
+ */
 public class TablaTest {
 
+    /**
+     * Prueba el método getRowCount de la clase Tabla.
+     */
     @Test
     void testGetRowCount() {
         String[][] data = {{"1", "Titanic"}, {"2", "Superbad"}};
@@ -16,6 +22,9 @@ public class TablaTest {
         assertEquals(2, tabla.getRowCount());
     }
 
+    /**
+     * Prueba el método getColumnCount de la clase Tabla.
+     */
     @Test
     void testGetColumnCount() {
         String[][] data = {{"1", "Titanic"}, {"2", "Superbad"}};
@@ -25,6 +34,9 @@ public class TablaTest {
         assertEquals(2, tabla.getColumnCount());
     }
 
+    /**
+     * Prueba el método getValueAt de la clase Tabla.
+     */
     @Test
     void testGetValueAt() {
         String[][] data = {{"1", "Titanic"}, {"2", "Superbad"}};
@@ -37,6 +49,9 @@ public class TablaTest {
         assertEquals("Superbad", tabla.getValueAt(1, 1));
     }
 
+    /**
+     * Prueba el método isCellEditable de la clase Tabla.
+     */
     @Test
     void testIsCellEditable() {
         String[][] data = {{"1", "Titanic"}, {"2", "Superbad"}};
@@ -47,6 +62,9 @@ public class TablaTest {
         assertFalse(tabla.isCellEditable(1, 1));
     }
 
+    /**
+     * Prueba el método getColumnName de la clase Tabla.
+     */
     @Test
     void testGetColumnName() {
         String[][] data = {{"1", "Titanic"}, {"2", "Superbad"}};
@@ -57,4 +75,5 @@ public class TablaTest {
         assertEquals("Título", tabla.getColumnName(1));
     }
 }
+
 

@@ -13,12 +13,17 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import controller.Controller;
+import excepciones.IllegalEntryData;
 import model.Usuario;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import java.awt.Color;
 
+/**
+ * Clase que representa la ventana de registro de una nueva sala en el sistema.
+ * Permite a los administradores del sistema registrar salas con un ID y un aforo específicos.
+ */
 public class ASala extends JFrame implements ActionListener{
 
 	private static final long serialVersionUID = 1L;
@@ -94,12 +99,28 @@ public class ASala extends JFrame implements ActionListener{
 			menuA.setVisible(true);
 			dispose();
 		} else if (e.getSource()==btnRegistrar) {
-	        if (!textAforo.equals("")) {
+			try {
+				verificarDatos();
+			}catch (IllegalEntryData error) {
+				 System.out.println("ERROR: "+error.getMessage());
+			}
+		}
+	} 
+	
+	/**
+	 * Verifica los datos ingresados por el usuario en un formulario de registro de sala.
+	 * Realiza una validación para asegurarse de que se ha ingresado un valor para el aforo.
+	 * Si se ha ingresado un valor, se llama al método registrarSala() del controlador para añadir la sala a la base de datos.
+	 * Si no se ha ingresado un valor para el aforo, se muestra un mensaje de error en el JLabel correspondiente.
+	 * 
+	 * @throws IllegalEntryData Si los datos ingresados por el usuario son incorrectos.
+	 */
+	public void verificarDatos() throws IllegalEntryData {
+	if (!textAforo.equals("")) {
 	        	controlador.registrarSala(textId.getText(), Integer.parseInt(textAforo.getText()));
 	        } else if (textAforo.equals("")) {
 	        	lblAforoError.setText("Introduce aforo");
 	        }
-		}
 	}
 }
 

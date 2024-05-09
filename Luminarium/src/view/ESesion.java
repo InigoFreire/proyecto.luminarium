@@ -19,7 +19,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import controller.Controller;
-
+import excepciones.IllegalEntryData;
 import model.Sala;
 import model.Sesion;
 import model.Usuario;
@@ -30,6 +30,10 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import java.awt.Color;
 
+/**
+ * Esta clase representa la interfaz gráfica para modificar una sesión existente en el sistema.
+ * Extiende la clase JFrame e implementa ActionListener para manejar eventos de botones y campos de texto.
+ */
 public class ESesion extends JFrame implements ActionListener{
 
 	private static final long serialVersionUID = 1L;
@@ -225,45 +229,60 @@ public class ESesion extends JFrame implements ActionListener{
 		}
 		
 		if(o==btnModificar) {
-			
-			lblPrecioError.setText("");
-			lblFechaError.setText("");
-			lblTicketsError.setText("");
-			
-			ArrayList<Sala> salas = controlador.getSalasM();
-			boolean correcto=true;
-			
-			
-			//Controlar que precio no sea negativo
-			if(Double.parseDouble(textPrecio.getText())<0) {
-				lblPrecioError.setText("El precio no puede ser negativo");
-				correcto=false;
-			}
-			//Comprobar LocalDateTime tiene formato correcto
 			try {
-			    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
-			    LocalDateTime dateTime = LocalDateTime.parse(textFecha.getText(), formatter);
-			}catch (DateTimeParseException error) {
-				lblFechaError.setText("formato \"yyyy-MM-dd'T'HH:mm\" incorrecto o fecha incorrecta");
-				correcto=false;
+				verificarDatos();
+			}catch (IllegalEntryData error) {
+				 System.out.println("ERROR: "+error.getMessage());
 			}
-			//Comprobar que el numero de tickets no supera el aforo de la sala en el combo box
-			for(Sala sala:salas) {
-				if(sala.getId().equals((String)comboBoxSala.getSelectedItem())) {
-					int maxTickets = sala.getAforo();
-					if(maxTickets<Integer.parseInt(textTickets.getText()) || Integer.parseInt(textTickets.getText())<0) {
-						correcto=false;
-						lblTicketsError.setText("Aforo maximo: "+ maxTickets);
-					}
+		}
+	}
+			
+	/**
+	 * Verifica los datos ingresados por el usuario en un formulario de modificación de sesión.
+	 * Realiza varias validaciones para asegurarse de que los datos ingresados son correctos.
+	 * Si los datos son válidos, se llama al método modificarSesion() del controlador para actualizar la sesión en la base de datos.
+	 * Si los datos no son válidos, se muestra un mensaje de error en los JLabel correspondientes.
+	 * 
+	 * @throws IllegalEntryData Si los datos ingresados por el usuario son incorrectos.
+	 */
+	public void verificarDatos() throws IllegalEntryData {
+		lblPrecioError.setText("");
+		lblFechaError.setText("");
+		lblTicketsError.setText("");
+		
+		ArrayList<Sala> salas = controlador.getSalasM();
+		boolean correcto=true;
+		
+		
+		//Controlar que precio no sea negativo
+		if(Double.parseDouble(textPrecio.getText())<0) {
+			lblPrecioError.setText("El precio no puede ser negativo");
+			correcto=false;
+		}
+		//Comprobar LocalDateTime tiene formato correcto
+		try {
+		    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+		    LocalDateTime dateTime = LocalDateTime.parse(textFecha.getText(), formatter);
+		}catch (DateTimeParseException error) {
+			lblFechaError.setText("formato \"yyyy-MM-dd'T'HH:mm\" incorrecto o fecha incorrecta");
+			correcto=false;
+		}
+		//Comprobar que el numero de tickets no supera el aforo de la sala en el combo box
+		for(Sala sala:salas) {
+			if(sala.getId().equals((String)comboBoxSala.getSelectedItem())) {
+				int maxTickets = sala.getAforo();
+				if(maxTickets<Integer.parseInt(textTickets.getText()) || Integer.parseInt(textTickets.getText())<0) {
+					correcto=false;
+					lblTicketsError.setText("Aforo maximo: "+ maxTickets);
 				}
 			}
-			
-			if(correcto){
-				String idPeli = (String)comboBoxPelicula.getSelectedItem();
-				idPeli = pelis.get(idPeli); 
-				controlador.modificarSesion(sesion, textSesionId.getText(), Double.parseDouble(textPrecio.getText()), LocalDateTime.parse(textFecha.getText()), (String)comboBoxSala.getSelectedItem(),idPeli,sesion.getId(),Integer.parseInt(textTickets.getText()));
-				JOptionPane.showMessageDialog(this,(String)"Sesion modificada correctamente","",JOptionPane.INFORMATION_MESSAGE,null);	
-			}
+		}
+		
+		if(correcto){
+			String idPeli = (String)comboBoxPelicula.getSelectedItem();
+			idPeli = pelis.get(idPeli); 
+			controlador.modificarSesion(sesion, textSesionId.getText(), Double.parseDouble(textPrecio.getText()), LocalDateTime.parse(textFecha.getText()), (String)comboBoxSala.getSelectedItem(),idPeli,sesion.getId(),Integer.parseInt(textTickets.getText()));
+			JOptionPane.showMessageDialog(this,(String)"Sesion modificada correctamente","",JOptionPane.INFORMATION_MESSAGE,null);	
 		}
 	}
 }

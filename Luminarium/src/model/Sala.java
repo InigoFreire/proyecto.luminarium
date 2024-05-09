@@ -1,5 +1,9 @@
 package model;
 
+/**
+ * Representa una sala en el sistema.
+ * Cada sala tiene un identificador único y un aforo máximo que indica la capacidad de la sala.
+ */
 public class Sala {
 	private String id;
 	private int aforo;

@@ -2,9 +2,12 @@ package model;
 
 import java.time.YearMonth;
 
+/**
+ * Clase que representa un usuario en el sistema.
+ */
 public class Usuario {
 	private String dni;
-	private String contraseña;
+	private String password;
 	private String nombre;
 	private String apellido;
 	private String email;
@@ -14,17 +17,17 @@ public class Usuario {
     
     public Usuario() {
     	this.dni="";
-    	this.contraseña="";
+    	this.password="";
     	this.nombre="";
     	this.apellido="";
     	this.email="";
     	this.adminCheck=false;
     }
     
-    public Usuario(String dni, String contraseña, String nombre, String apellido, String email, String metodoPago, YearMonth fechaCaducidadTarjeta, boolean adminCheck) {
+    public Usuario(String dni, String passwd, String nombre, String apellido, String email, String metodoPago, YearMonth fechaCaducidadTarjeta, boolean adminCheck) {
     	//constructor de usuario desde admin
     	this.dni=dni;
-    	this.contraseña=contraseña;
+    	this.password=passwd;
     	this.nombre=nombre;
     	this.apellido=apellido;
     	this.email=email;
@@ -32,10 +35,10 @@ public class Usuario {
     	this.fechaCaducidadTarjeta=fechaCaducidadTarjeta;
     	this.adminCheck=adminCheck;
     }
-    public Usuario(String dni, String contraseña, String nombre, String apellido, String email) {
+    public Usuario(String dni, String passwd, String nombre, String apellido, String email) {
     	//constructor de cliente desde login
     	this.dni=dni;
-    	this.contraseña=contraseña;
+    	this.password=passwd;
     	this.nombre=nombre;
     	this.apellido=apellido;
     	this.email=email;
@@ -52,12 +55,12 @@ public class Usuario {
 		this.dni = dni;
 	}
 
-	public String getContraseña() {
-		return contraseña;
+	public String getPassword() {
+		return password;
 	}
 
-	public void setContraseña(String contraseña) {
-		this.contraseña = contraseña;
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	public String getNombre() {
@@ -110,7 +113,7 @@ public class Usuario {
 
 	@Override
 	public String toString() {
-		return "Usuario [dni=" + dni + ", contraseña=" + contraseña + ", nombre=" + nombre + ", apellido=" + apellido
+		return "Usuario [dni=" + dni + ", password=" + password + ", nombre=" + nombre + ", apellido=" + apellido
 				+ ", email=" + email + ", metodoPago=" + metodoPago + ", fechaCaducidadTarjeta=" + fechaCaducidadTarjeta
 				+ ", adminCheck=" + adminCheck + "]";
 	}    

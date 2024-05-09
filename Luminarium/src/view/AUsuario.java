@@ -21,6 +21,10 @@ import javax.swing.SwingConstants;
 import java.awt.Color;
 import javax.swing.JPasswordField;
 
+/**
+ * Esta clase representa la interfaz gráfica para el registro de un nuevo usuario en el sistema.
+ * Extiende la clase JFrame e implementa ActionListener para manejar eventos de botones y campos de texto.
+ */
 public class AUsuario extends JFrame implements ActionListener { 
 
 	private static final long serialVersionUID = 1L;
@@ -205,6 +209,13 @@ public class AUsuario extends JFrame implements ActionListener {
 		}
 	}
 	
+	/**
+	 * Verifica los datos ingresados por el usuario en un formulario de registro de usuario.
+	 * Realiza varias validaciones, incluyendo la coincidencia de contraseñas, el formato de un DNI,
+	 * la validez de una dirección de correo electrónico y el formato de una fecha de caducidad.
+	 * 
+	 * @throws IllegalEntryData Si los datos ingresados son incorrectos.
+	 */
 	public void verificarDatos() throws IllegalEntryData {
 		
 		lblDniIncorrecto.setText("");

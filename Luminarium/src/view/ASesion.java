@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import controller.Controller;
+import excepciones.IllegalEntryData;
 import model.Usuario;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -24,6 +25,10 @@ import java.awt.Color;
 
 import javax.swing.JComboBox;
 
+/**
+ * Esta clase representa la interfaz gráfica para añadir una nueva sesión al sistema.
+ * Extiende la clase JFrame e implementa ActionListener para manejar eventos de botones y selección de elementos.
+ */
 public class ASesion extends JFrame implements ActionListener{
 
 	private static final long serialVersionUID = 1L;
@@ -180,7 +185,6 @@ public class ASesion extends JFrame implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Object o=e.getSource();	
-		LocalDateTime fecha = null;
 		
 		if (o==btnVolver) {
 			MenuAdmin menuA = new MenuAdmin(controlador, user);
@@ -189,36 +193,54 @@ public class ASesion extends JFrame implements ActionListener{
 		}
 		
 		if(o==btnModificar) {
-			boolean correcto = true;
-			lblFechaError.setText("");
-			lblPeliError.setText("");
-			lblPrecioError.setText("");
-			lblSalaError.setText("");
-			
-			if (textPrecio.equals("")) {
-				lblPrecioError.setText("Introduce precio");
-				correcto = false;
-			} else if (textFecha.equals("")) {
-				lblFechaError.setText("Introduce fecha");
-				correcto = false;
-			} else if (comboBoxSala.getSelectedItem()==null) {
-				lblSalaError.setText("Selelcciona sala");
-				correcto = false;
-			} else if (comboBoxPelicula.getSelectedItem()==null) {
-				lblPeliError.setText("Selecciona pelicula");
-				correcto = false;
-			} else if (!textFecha.equals("")) {
-				try {
-					fecha = LocalDateTime.parse(textFecha.getText(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
-				} catch (DateTimeParseException a) {
-					correcto = false;
-					lblFechaError.setText("Formato: yyyy-MM-dd HH:mm");
-				}
+			try {
+				verificarDatos();
+			}catch (IllegalEntryData error) {
+				 System.out.println("ERROR: "+error.getMessage());
 			}
-			if (correcto) {
-				controlador.registrarSesion(textSesionId.getText(), Integer.parseInt(textPrecio.getText()), fecha, (String) comboBoxSala.getSelectedItem(), pelis.get(comboBoxPelicula.getSelectedItem()));
-				JOptionPane.showMessageDialog(this,(String)"Sesion añadida correctamente","",JOptionPane.INFORMATION_MESSAGE,null);	
+		}
+	}
+	
+	/**
+	 * Verifica los datos ingresados por el usuario en un formulario de registro de sesión.
+	 * Realiza varias validaciones para asegurarse de que los datos ingresados son correctos.
+	 * Si los datos son válidos, se llama al método registrarSesion() del controlador para agregar la sesión a la base de datos.
+	 * Si los datos no son válidos, se muestra un mensaje de error en los JLabel correspondientes.
+	 * 
+	 * @throws IllegalEntryData Si los datos ingresados por el usuario son incorrectos.
+	 */
+	public void verificarDatos() throws IllegalEntryData {		
+		LocalDateTime fecha = null;
+		boolean correcto = true;
+		lblFechaError.setText("");
+		lblPeliError.setText("");
+		lblPrecioError.setText("");
+		lblSalaError.setText("");
+		
+		if (textPrecio.equals("")) {
+			lblPrecioError.setText("Introduce precio");
+			correcto = false;
+		} else if (textFecha.equals("")) {
+			lblFechaError.setText("Introduce fecha");
+			correcto = false;
+		} else if (comboBoxSala.getSelectedItem()==null) {
+			lblSalaError.setText("Selelcciona sala");
+			correcto = false;
+		} else if (comboBoxPelicula.getSelectedItem()==null) {
+			lblPeliError.setText("Selecciona pelicula");
+			correcto = false;
+		} else if (!textFecha.equals("")) {
+			try {
+				fecha = LocalDateTime.parse(textFecha.getText(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+			} catch (DateTimeParseException a) {
+				correcto = false;
+				lblFechaError.setText("Formato: yyyy-MM-dd HH:mm");
 			}
+		}
+		
+		if (correcto) {
+			controlador.registrarSesion(textSesionId.getText(), Integer.parseInt(textPrecio.getText()), fecha, (String) comboBoxSala.getSelectedItem(), pelis.get(comboBoxPelicula.getSelectedItem()));
+			JOptionPane.showMessageDialog(this,(String)"Sesion añadida correctamente","",JOptionPane.INFORMATION_MESSAGE,null);	
 		}
 	}
 }

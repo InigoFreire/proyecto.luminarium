@@ -20,6 +20,12 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
+/**
+ * La clase MenuAdmin representa una ventana de menú para un usuario administrador en una interfaz
+ * gráfica (GUI), donde puede acceder a diferentes opciones relacionadas con la administración del sistema,
+ * como gestionar películas, sesiones, salas y usuarios. Esta clase extiende JFrame e implementa ActionListener
+ * para manejar las interacciones del usuario con los distintos componentes del menú.
+ */
 public class MenuAdmin extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;

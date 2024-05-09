@@ -7,8 +7,14 @@ import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Esta clase contiene pruebas unitarias para la clase Sesion.
+ */
 public class SesionTest {
 
+    /**
+     * Prueba el constructor de la clase Sesion y los métodos getters.
+     */
     @Test
     void testConstructorAndGetters() {
         Sesion sesion = new Sesion();
@@ -27,6 +33,9 @@ public class SesionTest {
         assertEquals(50, sesion.getTicketRestante());
     }
 
+    /**
+     * Prueba los métodos setters de la clase Sesion.
+     */
     @Test
     void testSetters() {
         Sesion sesion = new Sesion();
@@ -45,4 +54,5 @@ public class SesionTest {
         assertEquals(100, sesion.getTicketRestante());
     }
 }
+
 

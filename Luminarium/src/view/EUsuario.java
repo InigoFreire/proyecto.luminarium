@@ -29,7 +29,10 @@ import controller.Controller;
 import excepciones.IllegalEntryData;
 import model.Usuario;
 
-
+/**
+ * Esta clase representa la interfaz gráfica para modificar un usuario existente en el sistema.
+ * Extiende la clase JFrame e implementa ActionListener para manejar eventos de botones y campos de texto.
+ */
 public class EUsuario extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
@@ -273,7 +276,7 @@ public class EUsuario extends JFrame implements ActionListener {
 		if(e.getSource()==btnModificar) {
 			try {
 				verificarDatos();
-			}catch (IllegalEntryData error) {
+			} catch (IllegalEntryData error) {
 				 System.out.println("ERROR: "+error.getMessage());
 			}
 		}
@@ -292,6 +295,14 @@ public class EUsuario extends JFrame implements ActionListener {
 		}
 		
 	}
+	
+	/**
+	 * Verifica los datos ingresados por el usuario en un formulario de modificación de usuario.
+	 * Realiza varias validaciones, incluyendo la coincidencia de contraseñas, el formato de un DNI,
+	 * la validez de una dirección de correo electrónico y el formato de una fecha de caducidad.
+	 * 
+	 * @throws IllegalEntryData Si los datos ingresados son incorrectos.
+	 */
 	public void verificarDatos() throws IllegalEntryData {
 		
 		boolean correcto=true;

@@ -6,8 +6,14 @@ import model.Pelicula;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Esta clase contiene pruebas unitarias para la clase Pelicula.
+ */
 public class PeliculaTest {
 
+    /**
+     * Prueba el constructor de la clase Pelicula y los métodos getters.
+     */
     @Test
     void testConstructorAndGetters() {
         Genero genero = Genero.valueOf("Accion");
@@ -21,6 +27,9 @@ public class PeliculaTest {
         assertEquals("Una gran historia de amor", pelicula.getSinopsis());
     }
 
+    /**
+     * Prueba los métodos setters de la clase Pelicula.
+     */
     @Test
     void testSetters() {
         Pelicula pelicula = new Pelicula();

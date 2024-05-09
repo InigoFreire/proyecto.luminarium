@@ -1,5 +1,9 @@
 package model;
 
+/**
+ * Representa una película en el sistema.
+ * Cada película tiene un identificador único, género, título, clasificación PEGI, duración en minutos y una sinopsis.
+ */
 public class Pelicula {
 	private String id;
 	private Genero genero;

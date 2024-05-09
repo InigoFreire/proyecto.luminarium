@@ -28,6 +28,10 @@ import model.Pelicula;
 import model.Tabla;
 import model.Usuario;
 
+/**
+ * La clase VPelicula es una ventana de interfaz gráfica de usuario (GUI) que muestra información sobre las películas en el sistema.
+ * Extiende la clase JFrame e implementa la interfaz ActionListener para manejar eventos de acción.
+ */
 public class VPelicula extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
@@ -41,7 +45,7 @@ public class VPelicula extends JFrame implements ActionListener {
 	private JMenuItem mntmModificar, mntmExit;
 	private JMenuBar menuBar;
 	private String[][] peliculas;
-	private JButton btnVolver, btnAñadir, btnEditar, btnBorrar;
+	private JButton btnVolver, btnAniadir, btnEditar, btnBorrar;
 
 	public VPelicula(Controller c, Usuario u) {
 		this.controlador = c;
@@ -87,10 +91,10 @@ public class VPelicula extends JFrame implements ActionListener {
 
 		if (user.isAdminCheck()) {
 
-			btnAñadir = new JButton("Añadir");
-			btnAñadir.setBounds(925, 90, 127, 31);
-			contentPane.add(btnAñadir);
-			btnAñadir.addActionListener(this);
+			btnAniadir = new JButton("Aniadir");
+			btnAniadir.setBounds(925, 90, 127, 31);
+			contentPane.add(btnAniadir);
+			btnAniadir.addActionListener(this);
 
 			btnEditar = new JButton("Editar");
 			btnEditar.setBounds(925, 140, 127, 31);
@@ -114,7 +118,7 @@ public class VPelicula extends JFrame implements ActionListener {
 				@Override
 				public void valueChanged(ListSelectionEvent e) {
 					int nFilasSeleccionadas = tablaPeliculas.getSelectedRowCount();
-					btnAñadir.setEnabled(nFilasSeleccionadas < 1);
+					btnAniadir.setEnabled(nFilasSeleccionadas < 1);
 					btnEditar.setEnabled(nFilasSeleccionadas == 1);
 					btnBorrar.setEnabled(nFilasSeleccionadas > 0);
 
@@ -161,7 +165,7 @@ public class VPelicula extends JFrame implements ActionListener {
 			frame.setVisible(true);
 			dispose();
 
-		} else if (e.getSource() == btnAñadir) {
+		} else if (e.getSource() == btnAniadir) {
 			APeli frame = new APeli(controlador, user);
 			frame.setVisible(true);
 			dispose();

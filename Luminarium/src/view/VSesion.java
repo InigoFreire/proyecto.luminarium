@@ -27,6 +27,10 @@ import javax.swing.JOptionPane;
 import java.awt.Font;
 import javax.swing.JButton;
 
+/**
+ * La clase VSesion es una ventana de interfaz gráfica de usuario (GUI) que muestra información sobre las sesiones en el sistema.
+ * Extiende la clase JFrame e implementa la interfaz ActionListener para manejar eventos de acción.
+ */
 public class VSesion extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
@@ -34,7 +38,7 @@ public class VSesion extends JFrame implements ActionListener {
 	private Controller controlador;
 	private Usuario user;
 	private JLabel lblSesiones;
-	private JButton btnVolver, btnAñadir, btnEditar, btnBorrar;
+	private JButton btnVolver, btnAniadir, btnEditar, btnBorrar;
 	private String[][] sesiones;
 	private JTable tablaSesiones;
 	private JScrollPane scrollPane;
@@ -84,10 +88,10 @@ public class VSesion extends JFrame implements ActionListener {
 		mnUsuario.add(mntmExit);
 		mntmExit.addActionListener(this);
 
-		btnAñadir = new JButton("Añadir");
-		btnAñadir.setBounds(925, 90, 127, 31);
-		contentPane.add(btnAñadir);
-		btnAñadir.addActionListener(this);
+		btnAniadir = new JButton("Aniadir");
+		btnAniadir.setBounds(925, 90, 127, 31);
+		contentPane.add(btnAniadir);
+		btnAniadir.addActionListener(this);
 
 		btnEditar = new JButton("Editar");
 		btnEditar.setBounds(925, 140, 127, 31);
@@ -111,7 +115,7 @@ public class VSesion extends JFrame implements ActionListener {
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
 				int nFilasSeleccionadas = tablaSesiones.getSelectedRowCount();
-				btnAñadir.setEnabled(nFilasSeleccionadas < 1);
+				btnAniadir.setEnabled(nFilasSeleccionadas < 1);
 				btnEditar.setEnabled(nFilasSeleccionadas == 1);
 				btnBorrar.setEnabled(nFilasSeleccionadas > 0);
 
@@ -134,7 +138,7 @@ public class VSesion extends JFrame implements ActionListener {
 			LogIn logIn = new LogIn(controlador);
 			logIn.setVisible(true);
 			dispose();
-		} else if (e.getSource() == btnAñadir) {
+		} else if (e.getSource() == btnAniadir) {
 			ASesion frame = new ASesion(controlador, user);
 			frame.setVisible(true);
 			dispose();
