@@ -14,14 +14,19 @@ import model.Usuario;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import javax.swing.JPasswordField;
 import javax.swing.JButton;
 import java.awt.Color;
+import javax.swing.JToggleButton;
+import javax.swing.ImageIcon;
 
 /**
  * La clase LogIn representa una ventana de inicio de sesión (login) en una interfaz
@@ -42,6 +47,7 @@ public class LogIn extends JFrame implements ActionListener {
 	private JLabel lblError;
 	private Controller c;
 	private JButton btnRegistrar;
+	private JToggleButton tglbtnVer;
 
 	public LogIn(Controller cont) {
 		this.c=cont;
@@ -95,13 +101,25 @@ public class LogIn extends JFrame implements ActionListener {
 		btnRegistrar.setBounds(903, 26, 154, 40);
 		contentPane.add(btnRegistrar);
 		
+		tglbtnVer = new JToggleButton("Ver");
+		tglbtnVer.setFont(new Font("Tahoma", Font.PLAIN, 45));
+		tglbtnVer.setBounds(871, 277, 111, 59);
+		contentPane.add(tglbtnVer);
+		char c = passwordField.getEchoChar();
+		
 		btnEntrar.addActionListener(this);
 		btnInvitado.addActionListener(this);
 		btnRegistrar.addActionListener(this);
-		
-		
-		
-		
+		tglbtnVer.addMouseListener(new MouseAdapter() {
+		    @Override
+		    public void mouseClicked(MouseEvent e) {
+		    	if (tglbtnVer.isSelected()) {
+		            passwordField.setEchoChar((char) 0);
+		        } else {
+		            passwordField.setEchoChar(c);
+		        }
+		    }
+		});
 		
 	}
 
@@ -137,5 +155,4 @@ public class LogIn extends JFrame implements ActionListener {
 		
 		
 	}
-	
 }
