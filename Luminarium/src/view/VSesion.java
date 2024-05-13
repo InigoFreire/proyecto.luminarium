@@ -88,7 +88,7 @@ public class VSesion extends JFrame implements ActionListener {
 		mnUsuario.add(mntmExit);
 		mntmExit.addActionListener(this);
 
-		btnAniadir = new JButton("Aniadir");
+		btnAniadir = new JButton("Añadir");
 		btnAniadir.setBounds(925, 90, 127, 31);
 		contentPane.add(btnAniadir);
 		btnAniadir.addActionListener(this);
@@ -154,7 +154,7 @@ public class VSesion extends JFrame implements ActionListener {
 			}
 
 		} else if (e.getSource() == btnBorrar) {
-
+			boolean correcto = false;
 			int confirmacion = JOptionPane.showOptionDialog(this, "¿Eliminar la selección?", "Borrado",
 					JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[] { "Sí", "No" }, -1);
 
@@ -168,9 +168,15 @@ public class VSesion extends JFrame implements ActionListener {
 					Sesion sesion = controlador.getSesionPorId(id);
 					sesionesABorrar.add(sesion);
 				}
-				BSesion frame = new BSesion(controlador, user, sesionesABorrar);
-				frame.setVisible(true);
-				dispose();
+				correcto = controlador.BorrarSesion(sesionesABorrar);
+				
+				if(correcto) {
+					JOptionPane.showMessageDialog(this,(String)"Eliminado correctamente","",JOptionPane.INFORMATION_MESSAGE,null);
+					VSesion vsesion = new VSesion(controlador, user);
+					this.dispose();
+					vsesion.setVisible(true);
+					
+				}
 			}
 		}
 	}

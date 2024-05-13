@@ -63,6 +63,157 @@ public class Controller implements IController {
 	final String GETUsuarios = "SELECT dni, nombre, apellido, adminCheck FROM usuarios";
 	final String GETUsuarioPorDni = "SELECT * FROM usuarios WHERE dni = ?";
 	final String GetSesionIds = "select id from sesiones";
+	final String BorrarSala ="DELETE FROM salas where id=?";
+	final String BorrarPelicula ="DELETE FROM peliculas where id=?";
+	final String BorrarSesion ="DELETE FROM sesiones where id=?";
+	final String BorrarUsuario ="DELETE FROM usuarios where dni=?";
+	
+	@Override
+	public boolean BorrarSalas(ArrayList<Sala> salas) {
+		this.openConnection();
+		
+		boolean correcto = true;
+		
+		try {
+			for (Sala sala: salas) {
+				stmt = con.prepareStatement(BorrarSala);
+				
+				stmt.setString(1, sala.getId());
+				
+				stmt.executeUpdate();
+			}
+		} catch (SQLException e) {
+			System.out.println("Error de SQL");
+			e.printStackTrace();
+			correcto= false;
+		} finally {
+			
+			try {
+				this.closeConnection();
+			} catch (SQLException e) {
+				System.out.println("Error en el cierre de la BD");
+				e.printStackTrace();
+				correcto= false;
+			}
+		
+			
+
+		}
+		
+		
+		return correcto;
+	}
+
+	@Override
+	public boolean BorrarPeliculas(ArrayList<Pelicula> peliculas) {
+		this.openConnection();
+		
+		boolean correcto = true;
+		
+		try {
+			for (Pelicula peli: peliculas) {
+				stmt = con.prepareStatement(BorrarPelicula);
+				
+				stmt.setString(1, peli.getId());
+				
+				stmt.executeUpdate();
+			}
+		} catch (SQLException e) {
+			System.out.println("Error de SQL");
+			e.printStackTrace();
+			correcto= false;
+		} finally {
+			
+			try {
+				this.closeConnection();
+			} catch (SQLException e) {
+				System.out.println("Error en el cierre de la BD");
+				e.printStackTrace();
+				correcto= false;
+			}
+		
+			
+
+		}
+		
+		
+		return correcto;
+	}
+	
+
+	@Override
+	public boolean BorrarSesion(ArrayList<Sesion> sesiones) {
+this.openConnection();
+		
+		boolean correcto = true;
+		
+		try {
+			for (Sesion sesion: sesiones) {
+				stmt = con.prepareStatement(BorrarSesion);
+				
+				stmt.setString(1, sesion.getId());
+				
+				stmt.executeUpdate();
+			}
+		} catch (SQLException e) {
+			System.out.println("Error de SQL");
+			e.printStackTrace();
+			correcto= false;
+		} finally {
+			
+			try {
+				this.closeConnection();
+			} catch (SQLException e) {
+				System.out.println("Error en el cierre de la BD");
+				e.printStackTrace();
+				correcto= false;
+			}
+		
+			
+
+		}
+		
+		
+		return correcto;
+	}
+
+	@Override
+	public boolean BorrarUsuarios(ArrayList<String> usuarios) {
+this.openConnection();
+		
+		boolean correcto = true;
+		
+		try {
+			for (String usuario: usuarios) {
+				stmt = con.prepareStatement(BorrarUsuario);
+				
+				stmt.setString(1, usuario);
+				
+				stmt.executeUpdate();
+			}
+		} catch (SQLException e) {
+			System.out.println("Error de SQL");
+			e.printStackTrace();
+			correcto= false;
+		} finally {
+			
+			try {
+				this.closeConnection();
+			} catch (SQLException e) {
+				System.out.println("Error en el cierre de la BD");
+				e.printStackTrace();
+				correcto= false;
+			}
+		
+			
+
+		}
+		
+		
+		return correcto;
+	}
+	
+	
 	
 	/**
 	 * Registra una película en la base de datos.
@@ -1434,7 +1585,7 @@ public class Controller implements IController {
 	 */
 	private void openConnection() {
 		try {
-			String url = "jdbc:mysql://localhost:3306/cines_g2?serverTimezone=Europe/Madrid&useSSL=false";
+			String url = "jdbc:mysql://localhost:3306/cinesG2?serverTimezone=Europe/Madrid&useSSL=false";
 			con = DriverManager.getConnection(url, "root", "abcd*1234");
 
 		} catch (SQLException e) {
@@ -1488,5 +1639,7 @@ public class Controller implements IController {
 		}
 		
 		return dnis;
-	}	
+	}
+
+	
 }

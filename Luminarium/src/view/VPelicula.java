@@ -91,7 +91,7 @@ public class VPelicula extends JFrame implements ActionListener {
 
 		if (user.isAdminCheck()) {
 
-			btnAniadir = new JButton("Aniadir");
+			btnAniadir = new JButton("Añadir");
 			btnAniadir.setBounds(925, 90, 127, 31);
 			contentPane.add(btnAniadir);
 			btnAniadir.addActionListener(this);
@@ -181,7 +181,7 @@ public class VPelicula extends JFrame implements ActionListener {
 			}
 
 		} else if (e.getSource() == btnBorrar) {
-
+			boolean correcto = false;
 			int confirmacion = JOptionPane.showOptionDialog(this, "¿Eliminar la selección?", "Borrado",
 					JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[] { "Sí", "No" }, -1);
 
@@ -194,9 +194,15 @@ public class VPelicula extends JFrame implements ActionListener {
 					Pelicula pelicula = controlador.getPeliPorTitulo(titulo);
 					peliculasABorrar.add(pelicula);
 				}
-				BPeli frame = new BPeli(controlador, user, peliculasABorrar);
-				frame.setVisible(true);
-				dispose();
+				correcto = controlador.BorrarPeliculas(peliculasABorrar);
+				
+				if(correcto) {
+					JOptionPane.showMessageDialog(this,(String)"Eliminado correctamente","",JOptionPane.INFORMATION_MESSAGE,null);
+					VPelicula pelicula = new VPelicula(controlador, user);
+					this.dispose();
+					pelicula.setVisible(true);
+					
+				}
 			}
 		}
 	}

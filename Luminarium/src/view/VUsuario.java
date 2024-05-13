@@ -86,7 +86,7 @@ public class VUsuario extends JFrame implements ActionListener {
 		mnUsuario.add(mntmExit);
 		mntmExit.addActionListener(this);
 
-		btnAniadir = new JButton("Aniadir");
+		btnAniadir = new JButton("Añadir");
 		btnAniadir.setBounds(925, 90, 127, 31);
 		contentPane.add(btnAniadir);
 		btnAniadir.addActionListener(this);
@@ -123,7 +123,7 @@ public class VUsuario extends JFrame implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-
+		boolean correcto = false;
 		if (e.getSource() == btnVolver) {
 			MenuAdmin menuA = new MenuAdmin(controlador, user);
 			menuA.setVisible(true);
@@ -157,18 +157,24 @@ public class VUsuario extends JFrame implements ActionListener {
 					JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[] { "Sí", "No" }, -1);
 
 			if (confirmacion == JOptionPane.YES_OPTION) {
-				ArrayList<Usuario> usuariosABorrar = new ArrayList<>();
+				ArrayList<String> usuariosABorrar = new ArrayList<>();
 				int[] filasSeleccionadas = tablaUsuarios.getSelectedRows();
 
 				for (int filaSeleccionada : filasSeleccionadas) {
 					String dni = (String) tablaUsuarios.getValueAt(filaSeleccionada, 0);
 					Usuario usuario = controlador.getUsuarioPorDni(dni);
-					usuariosABorrar.add(usuario);
+					usuariosABorrar.add(usuario.getDni());
 				}
-
-				BUsuario frame = new BUsuario(controlador, user, usuariosABorrar);
-				frame.setVisible(true);
-				dispose();
+				correcto = controlador.BorrarUsuarios(usuariosABorrar);
+				
+				if(correcto) {
+					JOptionPane.showMessageDialog(this,(String)"Eliminado correctamente","",JOptionPane.INFORMATION_MESSAGE,null);
+					VUsuario vusuario = new VUsuario(controlador, user);
+					this.dispose();
+					vusuario.setVisible(true);
+					
+				}
+				
 			}
 		}
 	}

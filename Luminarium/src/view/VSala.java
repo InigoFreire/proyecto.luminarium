@@ -88,7 +88,7 @@ public class VSala extends JFrame implements ActionListener {
 		mnUsuario.add(mntmExit);
 		mntmExit.addActionListener(this);
 
-		btnAniadir = new JButton("Aniadir");
+		btnAniadir = new JButton("Añadir");
 		btnAniadir.setBounds(925, 90, 127, 31);
 		contentPane.add(btnAniadir);
 		btnAniadir.addActionListener(this);
@@ -154,7 +154,7 @@ public class VSala extends JFrame implements ActionListener {
 			}
 
 		} else if (e.getSource() == btnBorrar) {
-
+			boolean correcto = false;
 			int confirmacion = JOptionPane.showOptionDialog(this, "¿Eliminar la selección?", "Borrado",
 					JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[] { "Sí", "No" }, -1);
 
@@ -168,10 +168,15 @@ public class VSala extends JFrame implements ActionListener {
 					Sala sala = controlador.getSalaPorId(id);
 					salasABorrar.add(sala);
 				}
-
-				BSala frame = new BSala(controlador, user, salasABorrar);
-				frame.setVisible(true);
-				dispose();
+				correcto = controlador.BorrarSalas(salasABorrar);
+				
+				if(correcto) {
+					JOptionPane.showMessageDialog(this,(String)"Eliminado correctamente","",JOptionPane.INFORMATION_MESSAGE,null);
+					VSala vsala = new VSala(controlador, user);
+					this.dispose();
+					vsala.setVisible(true);
+					
+				}
 			}
 		}
 	}

@@ -79,4 +79,12 @@ public interface IController {
 
 	public ArrayList<String> getSesionId();
 	
+	public boolean BorrarSalas(ArrayList<Sala> salas);
+	
+	public boolean BorrarPeliculas(ArrayList<Pelicula> peliculas);
+	
+	public boolean BorrarSesion(ArrayList<Sesion> sesiones);
+	
+	public boolean BorrarUsuarios(ArrayList<String> Usuarios);
+	
 }
