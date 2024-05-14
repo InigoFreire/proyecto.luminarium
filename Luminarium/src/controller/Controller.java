@@ -67,9 +67,46 @@ public class Controller implements IController {
 	final String BorrarPelicula ="DELETE FROM peliculas where id=?";
 	final String BorrarSesion ="DELETE FROM sesiones where id=?";
 	final String BorrarUsuario ="DELETE FROM usuarios where dni=?";
+	final String actulizarEntradas ="select CalcularEntradasRestantes(?,?)";
 	
 	@Override
-	public boolean BorrarSalas(ArrayList<Sala> salas) {
+	public Sesion actualizarEntradas(Sesion sesion, int entradas) {
+		this.openConnection();
+			
+		try {
+			stmt = con.prepareStatement(actulizarEntradas);
+			
+			stmt.setInt(1, entradas);
+			stmt.setString(2, sesion.getId());
+			
+			stmt.executeQuery();
+			
+			sesion.setTicketRestante(sesion.getTicketRestante()-entradas);	
+					
+			
+		} catch (SQLException e) {
+			System.out.println("Error de SQL");
+			e.printStackTrace();
+			
+		} finally {
+			
+			try {
+				this.closeConnection();
+			} catch (SQLException e) {
+				System.out.println("Error en el cierre de la BD");
+				e.printStackTrace();
+				
+			}
+		}
+		
+		
+		return sesion;
+	}
+
+	
+	
+	@Override
+	public boolean borrarSalas(ArrayList<Sala> salas) {
 		this.openConnection();
 		
 		boolean correcto = true;
@@ -105,7 +142,7 @@ public class Controller implements IController {
 	}
 
 	@Override
-	public boolean BorrarPeliculas(ArrayList<Pelicula> peliculas) {
+	public boolean borrarPeliculas(ArrayList<Pelicula> peliculas) {
 		this.openConnection();
 		
 		boolean correcto = true;
@@ -142,7 +179,7 @@ public class Controller implements IController {
 	
 
 	@Override
-	public boolean BorrarSesion(ArrayList<Sesion> sesiones) {
+	public boolean borrarSesion(ArrayList<Sesion> sesiones) {
 this.openConnection();
 		
 		boolean correcto = true;
@@ -178,7 +215,7 @@ this.openConnection();
 	}
 
 	@Override
-	public boolean BorrarUsuarios(ArrayList<String> usuarios) {
+	public boolean borrarUsuarios(ArrayList<String> usuarios) {
 this.openConnection();
 		
 		boolean correcto = true;
@@ -1640,6 +1677,7 @@ this.openConnection();
 		
 		return dnis;
 	}
+
 
 	
 }

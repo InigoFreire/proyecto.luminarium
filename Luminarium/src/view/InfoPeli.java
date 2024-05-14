@@ -122,6 +122,7 @@ public class InfoPeli extends JFrame implements ActionListener {
 
 		if(horas.isEmpty()) {
 			comboBoxSesion.addItem("No hay sesiones disponibles");
+			btnComprar.setEnabled(false);
 		} else {
 			for(Sesion sesion:horas) {
 				hora = sesion.getFecha().toString();
