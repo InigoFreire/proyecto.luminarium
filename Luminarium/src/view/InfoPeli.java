@@ -89,6 +89,7 @@ public class InfoPeli extends JFrame implements ActionListener {
 		lblSinopsis.setText(peli.getSinopsis());
 
 		btnComprar = new JButton("Comprar entradas");
+
 		btnComprar.setBounds(823, 614, 236, 37);
 		btnComprar.setFont(new Font("Tahoma", Font.PLAIN, 25));
 
@@ -118,6 +119,7 @@ public class InfoPeli extends JFrame implements ActionListener {
 		comboBoxSesion.setBounds(391, 489, 293, 37);
 		contentPane.add(comboBoxSesion);
 
+
 		if(horas.isEmpty()) {
 			comboBoxSesion.addItem("No hay sesiones disponibles");
 		} else {
@@ -131,6 +133,7 @@ public class InfoPeli extends JFrame implements ActionListener {
 			}
 		}
 		
+
 		btnComprar.addActionListener(this);
 
 		mntmModificar.addActionListener(this);
