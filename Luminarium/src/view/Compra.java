@@ -139,7 +139,7 @@ public class Compra extends JFrame implements ActionListener{
 		contentPane.add(btnAtras);
 		
 		lblTitulo= new JLabel("");
-		lblTitulo.setText(pelicula.getTitulo());
+		lblTitulo.setText(peli.getTitulo());
 		lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTitulo.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		lblTitulo.setBounds(616, 153, 108, 46);

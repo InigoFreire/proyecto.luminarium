@@ -77,7 +77,7 @@ public class VPelicula extends JFrame implements ActionListener {
 		menuBar.setBounds(882, 10, 177, 36);
 		contentPane.add(menuBar);
 
-		mnUsuario = new JMenu("Usuario");
+		mnUsuario = new JMenu(user.getNombre());
 		menuBar.add(mnUsuario);
 		mnUsuario.setFont(new Font("Segoe UI", Font.PLAIN, 15));
 

@@ -242,10 +242,16 @@ public class APeli extends JFrame implements ActionListener{
 		}
 		
 		//Controlar Edad Pegi
-		int pegi = Integer.parseInt(textPegi.getText());
-		if(pegi<0 || pegi>18) {
-			lblPegiError.setText("PEGI tiene que ser una edad entre \"0\" y \"18\"");
-			correcto=false;
+		try {
+			int pegi = Integer.parseInt(textPegi.getText());
+			if (pegi < 0 || pegi > 18) {
+				lblPegiError.setText("PEGI tiene que ser una edad entre \"0\" y \"18\"");
+				correcto = false;
+			}
+		} catch (NumberFormatException error) {
+			System.out.println(error);
+			lblPegiError.setText("PEGI tienen que ser digitos");
+			correcto = false;
 		}
 		
 		//Controlar duracion de la peli
@@ -253,7 +259,13 @@ public class APeli extends JFrame implements ActionListener{
 			lblDuracionError.setText("El numero introducido no puede tener mas de 3 cifras");
 			correcto=false;
 		}
-		
+		try {
+			Integer.parseInt(textDuracion.getText());
+		}catch (NumberFormatException error) {
+			System.out.println(error);
+			lblDuracionError.setText("La duracion no puede contener cifras");
+			correcto=false;
+		}
 		//Controlar longitud del String de sinopsis
 		if(textAreaSinopsis.getText().length()>150) {
 			lblSinopsisError.setText("La longitud de la sinopsis no puede ser mas de 150 caracteres");

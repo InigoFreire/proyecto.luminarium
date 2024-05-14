@@ -1585,7 +1585,7 @@ this.openConnection();
 	 */
 	private void openConnection() {
 		try {
-			String url = "jdbc:mysql://localhost:3306/cinesG2?serverTimezone=Europe/Madrid&useSSL=false";
+			String url = "jdbc:mysql://localhost:3306/cines_G2?serverTimezone=Europe/Madrid&useSSL=false";
 			con = DriverManager.getConnection(url, "root", "abcd*1234");
 
 		} catch (SQLException e) {

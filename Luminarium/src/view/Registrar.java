@@ -260,7 +260,7 @@ public class Registrar extends JFrame implements ActionListener {
         if(correcto) {
         	       	
 			c.registrarUsuario(textDni.getText(), textNombre.getText(), textApellido.getText(), passwd, textEmail.getText());
-			JOptionPane.showMessageDialog(this,(String)"Usuario registrado correctamente","",JOptionPane.INFORMATION_MESSAGE,null);
+			JOptionPane.showMessageDialog(this,(String)"Usuario registrado","",JOptionPane.INFORMATION_MESSAGE,null);	
 			LogIn login = new LogIn(c);
 			login.setVisible(true);
 			this.dispose();
