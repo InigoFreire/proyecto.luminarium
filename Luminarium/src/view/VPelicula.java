@@ -194,7 +194,7 @@ public class VPelicula extends JFrame implements ActionListener {
 					Pelicula pelicula = controlador.getPeliPorTitulo(titulo);
 					peliculasABorrar.add(pelicula);
 				}
-				correcto = controlador.BorrarPeliculas(peliculasABorrar);
+				correcto = controlador.borrarPeliculas(peliculasABorrar);
 				
 				if(correcto) {
 					JOptionPane.showMessageDialog(this,(String)"Eliminado correctamente","",JOptionPane.INFORMATION_MESSAGE,null);

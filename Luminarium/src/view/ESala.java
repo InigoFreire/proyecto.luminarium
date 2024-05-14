@@ -119,7 +119,7 @@ public class ESala extends JFrame implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
+		
 		Object o=e.getSource();	
 		
 		if (o==btnVolver) {

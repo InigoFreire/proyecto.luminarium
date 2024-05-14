@@ -168,7 +168,7 @@ public class VSesion extends JFrame implements ActionListener {
 					Sesion sesion = controlador.getSesionPorId(id);
 					sesionesABorrar.add(sesion);
 				}
-				correcto = controlador.BorrarSesion(sesionesABorrar);
+				correcto = controlador.borrarSesion(sesionesABorrar);
 				
 				if(correcto) {
 					JOptionPane.showMessageDialog(this,(String)"Eliminado correctamente","",JOptionPane.INFORMATION_MESSAGE,null);
