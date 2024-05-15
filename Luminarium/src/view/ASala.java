@@ -116,11 +116,16 @@ public class ASala extends JFrame implements ActionListener{
 	 * @throws IllegalEntryData Si los datos ingresados por el usuario son incorrectos.
 	 */
 	public void verificarDatos() throws IllegalEntryData {
-	if (!textAforo.equals("")) {
-	        	controlador.registrarSala(textId.getText(), Integer.parseInt(textAforo.getText()));
-	        } else if (textAforo.equals("")) {
-	        	lblAforoError.setText("Introduce aforo");
-	        }
+		if (!textAforo.equals("")) {
+			try {
+				controlador.registrarSala(textId.getText(), Integer.parseInt(textAforo.getText()));
+			} catch (NumberFormatException error) {
+				lblAforoError.setText("Introduce numeros");
+			}
+		} else if (textAforo.equals("")) {
+			lblAforoError.setText("Introduce aforo");
+		}
+
 	}
 }
 

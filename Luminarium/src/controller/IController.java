@@ -55,7 +55,7 @@ public interface IController {
 
 	public String getUltimoIdSesion();
 
-	public void registrarSesion(String id, int precio, LocalDateTime fecha, String idSala, String idPeli);
+	public void registrarSesion(String id, double precio, LocalDateTime fecha, String idSala, String idPeli, int tickets);
 
 	public int getUltimoIdPeli();
 

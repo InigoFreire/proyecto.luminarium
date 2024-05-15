@@ -48,7 +48,7 @@ public class Controller implements IController {
 	final String GetUltimoIdSala = "call GetNextIDFromSalas()";
 	final String GetUltimoIdSesion = "call GetNextIDFromSesiones()";
 	final String GetUltimoIdPeli = "call GetNextIDFromPeliculas()";
-	final String INSERTARsesion = "INSERT INTO sesiones VALUES (?,?,?,?,?)";
+	final String INSERTARsesion = " INSERT INTO sesiones (id, precio, fecha, idSala, idPelicula, ticketRestante) VALUES (?,?,?,?,?,?)";
 	final String INSERTARpeli = "INSERT INTO peliculas VALUES (?,?,?,?,?,?)";
 	final String GetPelisIdTitulo = "SELECT titulo, id FROM peliculas";
 	final String ModificarSesion = "update sesiones set id=?, precio=?, fecha=?, idSala=?, idPelicula=?, ticketRestante=? where id=?";
@@ -343,7 +343,7 @@ this.openConnection();
 	 * @param idPeli El ID de la pelicula asociada a la sesion.
 	 */
 	@Override
-	public void registrarSesion(String id, int precio, LocalDateTime fecha, String idSala, String idPeli) {
+	public void registrarSesion(String id, double precio, LocalDateTime fecha, String idSala, String idPeli, int tickets) {
 		
 		// Abrimos la conexión
 		this.openConnection();
@@ -352,10 +352,11 @@ this.openConnection();
 			stmt = con.prepareStatement(INSERTARsesion);
 			
 			stmt.setString(1, id);
-			stmt.setInt(2, precio);
+			stmt.setDouble(2, precio);
 			stmt.setString(3, fecha.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
 			stmt.setString(4, idSala);
 			stmt.setString(5, idPeli);
+			stmt.setInt(6, tickets);
 			
 			stmt.executeUpdate();
 			

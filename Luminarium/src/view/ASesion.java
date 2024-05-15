@@ -212,6 +212,8 @@ public class ASesion extends JFrame implements ActionListener{
 	public void verificarDatos() throws IllegalEntryData {		
 		LocalDateTime fecha = null;
 		boolean correcto = true;
+		Double precio=0.0;
+		
 		lblFechaError.setText("");
 		lblPeliError.setText("");
 		lblPrecioError.setText("");
@@ -237,9 +239,18 @@ public class ASesion extends JFrame implements ActionListener{
 				lblFechaError.setText("Formato: yyyy-MM-dd HH:mm");
 			}
 		}
+		try {
+			precio = Double.parseDouble(textPrecio.getText());
+		}catch (NumberFormatException error) {
+			System.out.println(error);
+			correcto= false;
+			lblPrecioError.setText("Introduce numeros");
+		}
+		
 		
 		if (correcto) {
-			controlador.registrarSesion(textSesionId.getText(), Integer.parseInt(textPrecio.getText()), fecha, (String) comboBoxSala.getSelectedItem(), pelis.get(comboBoxPelicula.getSelectedItem()));
+			int entradas = controlador.getSalaPorId((String)comboBoxSala.getSelectedItem()).getAforo();
+			controlador.registrarSesion(textSesionId.getText(), precio, fecha, (String) comboBoxSala.getSelectedItem(), pelis.get((String)comboBoxPelicula.getSelectedItem()),entradas);
 			JOptionPane.showMessageDialog(this,(String)"Sesion añadida correctamente","",JOptionPane.INFORMATION_MESSAGE,null);	
 		}
 	}

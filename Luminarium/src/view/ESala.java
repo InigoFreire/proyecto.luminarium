@@ -154,8 +154,17 @@ public class ESala extends JFrame implements ActionListener{
 			correcto=false;
 		}
 		if(correcto) {
-			controlador.modificarSala(sala, textSalaId.getText(),Integer.parseInt(textSalaAforo.getText()),sala.getId());
-			JOptionPane.showMessageDialog(this,(String)"Sala modificada correctamente","",JOptionPane.INFORMATION_MESSAGE,null);	
+			if (!textSalaAforo.equals("")) {
+				try {
+					controlador.modificarSala(sala, textSalaId.getText(),Integer.parseInt(textSalaAforo.getText()),sala.getId());
+					JOptionPane.showMessageDialog(this,(String)"Sala modificada correctamente","",JOptionPane.INFORMATION_MESSAGE,null);
+				} catch (NumberFormatException error) {
+					lblAforoError.setText("Introduce numeros");
+				}
+			} else if (textSalaAforo.equals("")) {
+				lblAforoError.setText("Introduce aforo");
+			}
+				
 		}
 	}
 }
