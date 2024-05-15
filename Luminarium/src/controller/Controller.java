@@ -69,6 +69,18 @@ public class Controller implements IController {
 	final String BorrarUsuario ="DELETE FROM usuarios where dni=?";
 	final String actulizarEntradas ="select CalcularEntradasRestantes(?,?)";
 	
+	/**
+	 * Actualiza el número de entradas disponibles para una sesión específica.
+	 * 
+	 * Este método establece una conexión con la base de datos, actualiza la cantidad
+	 * de entradas disponibles para la sesión especificada y luego cierra la conexión.
+	 * 
+	 * @param sesion   La sesión cuya cantidad de entradas se va a actualizar. Debe tener
+	 *                 un ID válido y la cantidad actual de entradas restantes.
+	 * @param entradas La cantidad de entradas a disminuir de las entradas disponibles.
+	 * @return         La sesión actualizada con la nueva cantidad de entradas restantes.
+	 * @throws SQLException Si ocurre un error durante la operación de la base de datos.
+	 */
 	@Override
 	public Sesion actualizarEntradas(Sesion sesion, int entradas) {
 		this.openConnection();
@@ -89,168 +101,90 @@ public class Controller implements IController {
 			e.printStackTrace();
 			
 		} finally {
-			
 			try {
 				this.closeConnection();
 			} catch (SQLException e) {
 				System.out.println("Error en el cierre de la BD");
 				e.printStackTrace();
-				
 			}
+			
 		}
-		
 		
 		return sesion;
 	}
-
 	
-	
+	/**
+	 * Elimina una lista de elementos de la base de datos.
+	 * 
+	 * Este método establece una conexión con la base de datos, elimina los elementos especificados
+	 * en la lista proporcionada y luego cierra la conexión. Si ocurre un error durante la
+	 * eliminación de algún elemento o el cierre de la conexión, el método retornará false.
+	 * 
+	 * @param elementos La lista de elementos a eliminar de la base de datos.
+	 * @param tipo      El tipo de elementos a eliminar ("sala", "pelicula", "sesion" o "usuario").
+	 * @return          true si todos los elementos fueron eliminados correctamente, false si ocurrió un error.
+	 * @throws SQLException Si ocurre un error durante la operación de la base de datos.
+	 */
 	@Override
-	public boolean borrarSalas(ArrayList<Sala> salas) {
-		this.openConnection();
-		
-		boolean correcto = true;
-		
-		try {
-			for (Sala sala: salas) {
-				stmt = con.prepareStatement(BorrarSala);
-				
-				stmt.setString(1, sala.getId());
-				
-				stmt.executeUpdate();
-			}
-		} catch (SQLException e) {
-			System.out.println("Error de SQL");
-			e.printStackTrace();
-			correcto= false;
-		} finally {
-			
-			try {
-				this.closeConnection();
-			} catch (SQLException e) {
-				System.out.println("Error en el cierre de la BD");
-				e.printStackTrace();
-				correcto= false;
-			}
-		
-			
-
-		}
-		
-		
-		return correcto;
+	public boolean borrarElementos(ArrayList<?> elementos, String tipo) {
+	    this.openConnection();
+	    
+	    boolean correcto = true;
+	    String query = "";
+	    
+	    switch (tipo) {
+	        case "sala":
+	            query = BorrarSala;
+	            break;
+	        case "pelicula":
+	            query = BorrarPelicula;
+	            break;
+	        case "sesion":
+	            query = BorrarSesion;
+	            break;
+	        case "usuario":
+	            query = BorrarUsuario;
+	            break;
+	        default:
+	            System.out.println("Tipo de elemento no válido.");
+	            return false;
+	    }
+	    
+	    try {
+	        for (Object elemento : elementos) {
+	            PreparedStatement stmt = con.prepareStatement(query);
+	            
+	            if (elemento instanceof Sala) {
+	                stmt.setString(1, ((Sala) elemento).getId());
+	            } else if (elemento instanceof Pelicula) {
+	                stmt.setString(1, ((Pelicula) elemento).getId());
+	            } else if (elemento instanceof Sesion) {
+	                stmt.setString(1, ((Sesion) elemento).getId());
+	            } else if (elemento instanceof String) {
+	                stmt.setString(1, (String) elemento);
+	            } else {
+	                System.out.println("Tipo de elemento no válido.");
+	                return false;
+	            }
+	            
+	            stmt.executeUpdate();
+	        }
+	    } catch (SQLException e) {
+	        System.out.println("Error de SQL");
+	        e.printStackTrace();
+	        correcto = false;
+	    } finally {
+	        try {
+	            this.closeConnection();
+	        } catch (SQLException e) {
+	            System.out.println("Error en el cierre de la BD");
+	            e.printStackTrace();
+	            correcto = false;
+	        }
+	    }
+	    
+	    return correcto;
 	}
-
-	@Override
-	public boolean borrarPeliculas(ArrayList<Pelicula> peliculas) {
-		this.openConnection();
-		
-		boolean correcto = true;
-		
-		try {
-			for (Pelicula peli: peliculas) {
-				stmt = con.prepareStatement(BorrarPelicula);
-				
-				stmt.setString(1, peli.getId());
-				
-				stmt.executeUpdate();
-			}
-		} catch (SQLException e) {
-			System.out.println("Error de SQL");
-			e.printStackTrace();
-			correcto= false;
-		} finally {
-			
-			try {
-				this.closeConnection();
-			} catch (SQLException e) {
-				System.out.println("Error en el cierre de la BD");
-				e.printStackTrace();
-				correcto= false;
-			}
-		
-			
-
-		}
-		
-		
-		return correcto;
-	}
-	
-
-	@Override
-	public boolean borrarSesion(ArrayList<Sesion> sesiones) {
-this.openConnection();
-		
-		boolean correcto = true;
-		
-		try {
-			for (Sesion sesion: sesiones) {
-				stmt = con.prepareStatement(BorrarSesion);
-				
-				stmt.setString(1, sesion.getId());
-				
-				stmt.executeUpdate();
-			}
-		} catch (SQLException e) {
-			System.out.println("Error de SQL");
-			e.printStackTrace();
-			correcto= false;
-		} finally {
-			
-			try {
-				this.closeConnection();
-			} catch (SQLException e) {
-				System.out.println("Error en el cierre de la BD");
-				e.printStackTrace();
-				correcto= false;
-			}
-		
-			
-
-		}
-		
-		
-		return correcto;
-	}
-
-	@Override
-	public boolean borrarUsuarios(ArrayList<String> usuarios) {
-this.openConnection();
-		
-		boolean correcto = true;
-		
-		try {
-			for (String usuario: usuarios) {
-				stmt = con.prepareStatement(BorrarUsuario);
-				
-				stmt.setString(1, usuario);
-				
-				stmt.executeUpdate();
-			}
-		} catch (SQLException e) {
-			System.out.println("Error de SQL");
-			e.printStackTrace();
-			correcto= false;
-		} finally {
-			
-			try {
-				this.closeConnection();
-			} catch (SQLException e) {
-				System.out.println("Error en el cierre de la BD");
-				e.printStackTrace();
-				correcto= false;
-			}
-		
-			
-
-		}
-		
-		
-		return correcto;
-	}
-	
-	
 	
 	/**
 	 * Registra una película en la base de datos.
@@ -336,11 +270,12 @@ this.openConnection();
 	 * Si se produce un error durante la ejecución de la consulta SQL, se imprime un mensaje de error en la consola y 
 	 * se muestra la traza de la excepcion. Finalmente, se cierra la conexion con la base de datos.
 	 * 
-	 * @param id El ID de la sesión.
-	 * @param precio El precio de la sesión.
-	 * @param fecha La fecha y hora de la sesión.
+	 * @param id El ID de la sesion.
+	 * @param precio El precio de la sesion.
+	 * @param fecha La fecha y hora de la sesion.
 	 * @param idSala El ID de la sala asociada a la sesion.
 	 * @param idPeli El ID de la pelicula asociada a la sesion.
+	 * @param tickets El aforo de la sala asociada a la sesion.
 	 */
 	@Override
 	public void registrarSesion(String id, double precio, LocalDateTime fecha, String idSala, String idPeli, int tickets) {
@@ -431,65 +366,6 @@ this.openConnection();
 		}
 		
 		return id;
-	}
-	
-	/**
-	 * Modifica una sesion existente en la base de datos con nuevos valores proporcionados.
-	 * 
-	 * Este metodo establece una conexión con la base de datos y modifica la sesion especificada con los nuevos valores 
-	 * proporcionados. Si la modificación se realiza con exito, los valores de la sesión se actualizan con los nuevos 
-	 * valores proporcionados. Si se produce un error durante la ejecucion de la consulta SQL, se imprime un mensaje de 
-	 * error en la consola y se muestra la traza de la excepcion. Finalmente, se cierra la conexion con la base de datos.
-	 * 
-	 * @param sesion La sesion a modificar.
-	 * @param newId El nuevo ID de la sesion.
-	 * @param precio El nuevo precio de la sesion.
-	 * @param fecha La nueva fecha y hora de la sesion.
-	 * @param idSala El nuevo ID de la sala asociada a la sesion.
-	 * @param idPeli El nuevo ID de la pelicula asociada a la sesion.
-	 * @param id El ID original de la sesión que se desea modificar.
-	 * @return La sesion modificada con los nuevos valores, o la sesion original si la modificación no se pudo realizar.
-	 */
-	@Override
-	public Sesion modificarSesion(Sesion sesion, String newId, double precio, LocalDateTime fecha, String idSala, String idPeli, String id) {
-		this.openConnection();
-		DateTimeFormatter formateador = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        String wfecha;
-
-        wfecha = fecha.format(formateador);
-		try {
-			stmt = con.prepareStatement(ModificarPeli);
-
-			stmt.setString(1, newId);
-			stmt.setDouble(2, precio);
-			stmt.setString(3, wfecha);
-			stmt.setString(4, idSala);
-			stmt.setString(5, idPeli);
-			stmt.setString(4, id);
-			
-
-			if (stmt.executeUpdate()==1) {
-				sesion.setId(newId);
-				sesion.setFecha(fecha);
-				sesion.setPrecio(precio);
-				sesion.setIdPelicula(idPeli);
-				sesion.setIdSala(idSala);
-			}
-			
-		} catch (SQLException e) {
-			System.out.println("Error de SQL");
-			e.printStackTrace();
-		} finally {
-			
-			try {
-				this.closeConnection();
-			} catch (SQLException e) {
-				System.out.println("Error en el cierre de la BD");
-				e.printStackTrace();
-			}
-		}
-
-		return sesion;
 	}
 	
 	/**
@@ -1450,11 +1326,11 @@ this.openConnection();
 	/**
 	 * Modifica los datos de un usuario en la base de datos.
 	 * 
-	 * Este metodo establece una conexion con la base de datos y ejecuta una consulta SQL para actualizar los datos del usuario.
-	 * Se pasan como parametros el objeto de usuario a modificar y los nuevos valores para el DNI, nombre, apellido, contraseña y correo electronico.
+	 * Este método establece una conexión con la base de datos y ejecuta una consulta SQL para actualizar los datos del usuario.
+	 * Se pasan como parámetros el objeto de usuario a modificar y los nuevos valores para el DNI, nombre, apellido, contraseña, correo electrónico, método de pago y fecha de caducidad de la tarjeta (si corresponde).
 	 * Se prepara y ejecuta una consulta SQL para actualizar los datos del usuario en la base de datos.
 	 * Si la ejecución de la consulta es exitosa (es decir, si se actualiza un solo registro), se actualizan los valores del objeto de usuario con los nuevos valores.
-	 * Si se produce un error durante la ejecucion de la consulta SQL, se imprime la traza de la excepcion. Finalmente, se cierra la conexion con la base de datos.
+	 * Si se produce un error durante la ejecución de la consulta SQL, se imprime la traza de la excepción. Finalmente, se cierra la conexión con la base de datos.
 	 * 
 	 * @param us El objeto de usuario que se va a modificar.
 	 * @param dni El DNI actual del usuario.
@@ -1463,108 +1339,65 @@ this.openConnection();
 	 * @param apellido El nuevo apellido del usuario.
 	 * @param passwd1 La nueva contraseña del usuario.
 	 * @param email El nuevo correo electrónico del usuario.
-	 * @return El objeto de usuario modificado con los nuevos datos si la actualizacion es exitosa; de lo contrario, devuelve el objeto de usuario sin modificar.
-	 */
-	@Override
-	public Usuario modificarDatosUsuario(Usuario us, String dni, String newDni, String nombre, String apellido, String passwd1, String email) {
-		// Abrimos la conexión
-		this.openConnection();
-
-		try {
-			stmt = con.prepareStatement(MODIFICARusuario);
-
-			stmt.setString(1, nombre);
-			stmt.setString(2, apellido);
-			stmt.setString(3, email);
-			stmt.setString(4, passwd1);
-			stmt.setString(5, newDni);
-			stmt.setString(6, dni);
-
-			if (stmt.executeUpdate() == 1) {
-				us.setNombre(nombre);
-				us.setApellido(apellido);
-				us.setEmail(email);
-				us.setPassword(passwd1);
-				us.setDni(newDni);
-			}
-
-		} catch (SQLException e) {
-			System.out.println("Error de SQL");
-			e.printStackTrace();
-		} finally {
-
-			try {
-				this.closeConnection();
-			} catch (SQLException e) {
-				System.out.println("Error en el cierre de la BD");
-				e.printStackTrace();
-			}
-		}
-
-		return us;
-	}
-
-	/**
-	 * Modifica los datos de un usuario si tiene metodo de pago en la base de datos.
-	 * 
-	 * Este metodo establece una conexion con la base de datos y ejecuta una consulta SQL para actualizar los datos del usuario si tiene metodo de pago.
-	 * Se pasan como parametros el objeto de usuario a modificar y los nuevos valores para el DNI, nombre, apellido, contraseña, correo electronico, metodo de pago y fecha de caducidad de la tarjeta.
-	 * Se prepara y ejecuta una consulta SQL para actualizar los datos de pago del usuario en la base de datos.
-	 * Si la ejecución de la consulta es exitosa (es decir, si se actualiza un solo registro), se actualizan los valores del objeto de usuario con los nuevos valores.
-	 * Si se produce un error durante la ejecucion de la consulta SQL, se imprime la traza de la excepcion. Finalmente, se cierra la conexion con la base de datos.
-	 * 
-	 * @param us El objeto de usuario que se va a modificar.
-	 * @param dni El DNI actual del usuario.
-	 * @param newDni El nuevo DNI del usuario.
-	 * @param nombre El nuevo nombre del usuario.
-	 * @param apellido El nuevo apellido del usuario.
-	 * @param passwd1 La nueva contraseña del usuario.
-	 * @param email El nuevo correo electronico del usuario.
-	 * @param tarjeta El nuevo metodo de pago del usuario.
+	 * @param tarjeta El nuevo método de pago del usuario.
 	 * @param fechaCaducidad La nueva fecha de caducidad de la tarjeta del usuario.
-	 * @return El objeto de usuario modificado con los nuevos datos si la actualizacion es exitosa; de lo contrario, devuelve el objeto de usuario sin modificar.
+	 * @return El objeto de usuario modificado con los nuevos datos si la actualización es exitosa; de lo contrario, devuelve el objeto de usuario sin modificar.
 	 */
 	@Override
-	public Usuario modificarDatosUsuarioPago(Usuario us, String dni, String newDni, String nombre, String apellido, String passwd1, String email, String tarjeta, YearMonth fechaCaducidad) {
-		// Abrimos la conexión
-		this.openConnection();
+	public Usuario modificarDatosUsuario(Usuario us, String dni, String newDni, String nombre, String apellido, String passwd1, String email, String tarjeta, YearMonth fechaCaducidad) {
+	    // Abrimos la conexión
+	    this.openConnection();
 
-		try {
-			stmt = con.prepareStatement(MODIFICARusuarioPago);
+	    try {
+	        PreparedStatement stmt;
+	        if (tarjeta != null && fechaCaducidad != null) {
+	            // Si hay método de pago, actualizamos todos los campos, incluyendo el método de pago y la fecha de caducidad de la tarjeta
+	            stmt = con.prepareStatement(MODIFICARusuarioPago);
+	            stmt.setString(1, nombre);
+	            stmt.setString(2, apellido);
+	            stmt.setString(3, email);
+	            stmt.setString(4, passwd1);
+	            stmt.setString(5, tarjeta);
+	            stmt.setString(6, String.format("%02d/%02d", fechaCaducidad.getMonthValue(), fechaCaducidad.getYear() % 100));
+	            stmt.setString(7, newDni);
+	            stmt.setString(8, dni);
+	        } else {
+	            // Si no hay método de pago, actualizamos solo los campos básicos
+	            stmt = con.prepareStatement(MODIFICARusuario);
+	            stmt.setString(1, nombre);
+	            stmt.setString(2, apellido);
+	            stmt.setString(3, email);
+	            stmt.setString(4, passwd1);
+	            stmt.setString(5, newDni);
+	            stmt.setString(6, dni);
+	        }
 
-			stmt.setString(1, nombre);
-			stmt.setString(2, apellido);
-			stmt.setString(3, email);
-			stmt.setString(4, passwd1);
-			stmt.setString(5, tarjeta);
-			stmt.setString(6, String.format("%02d/%02d", fechaCaducidad.getMonthValue(), fechaCaducidad.getYear() % 100));
-			stmt.setString(7, newDni);
-			stmt.setString(8, dni);
+	        if (stmt.executeUpdate() == 1) {
+	            // Actualizamos los valores del objeto de usuario con los nuevos valores
+	            us.setNombre(nombre);
+	            us.setApellido(apellido);
+	            us.setEmail(email);
+	            us.setPassword(passwd1);
+	            us.setDni(newDni);
+	            if (tarjeta != null && fechaCaducidad != null) {
+	                us.setMetodoPago(tarjeta);
+	                us.setFechaCaducidadTarjeta(fechaCaducidad);
+	            }
+	        }
 
-			if (stmt.executeUpdate() == 1) {
-				us.setNombre(nombre);
-				us.setApellido(apellido);
-				us.setEmail(email);
-				us.setPassword(passwd1);
-				us.setMetodoPago(tarjeta);
-				us.setFechaCaducidadTarjeta(fechaCaducidad);
-				us.setDni(newDni);
-			}
+	    } catch (SQLException e) {
+	        System.out.println("Error de SQL");
+	        e.printStackTrace();
+	    } finally {
+	        try {
+	            this.closeConnection();
+	        } catch (SQLException e) {
+	            System.out.println("Error en el cierre de la BD");
+	            e.printStackTrace();
+	        }
+	    }
 
-		} catch (SQLException e) {
-			System.out.println("Error de SQL");
-			e.printStackTrace();
-		} finally {
-
-			try {
-				this.closeConnection();
-			} catch (SQLException e) {
-				System.out.println("Error en el cierre de la BD");
-				e.printStackTrace();
-			}
-		}
-
-		return us;
+	    return us;
 	}
 
 	/**

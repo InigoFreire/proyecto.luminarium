@@ -52,12 +52,14 @@ public class ASesion extends JFrame implements ActionListener{
 	private JLabel lblSala;
 	private JComboBox<String> comboBoxSala;
 	private JComboBox<String> comboBoxPelicula;
-	private ArrayList<String> idSalas = controlador.getSalasId();
-	private HashMap<String, String> pelis = controlador.getTituloIdPelis();
+	private ArrayList<String> idSalas;
+	private HashMap<String, String> pelis;
 
 	public ASesion(Controller c, Usuario u) {
-		this.controlador=c;
-		this.user=u;
+		this.controlador = c;
+		this.user = u;
+		this.idSalas = controlador.getSalasId();
+		this.pelis = controlador.getTituloIdPelis();
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1083, 698);
@@ -187,7 +189,7 @@ public class ASesion extends JFrame implements ActionListener{
 		Object o=e.getSource();	
 		
 		if (o==btnVolver) {
-			MenuAdmin menuA = new MenuAdmin(controlador, user);
+			VSesion menuA = new VSesion(controlador, user);
 			menuA.setVisible(true);
 			dispose();
 		}
@@ -212,7 +214,7 @@ public class ASesion extends JFrame implements ActionListener{
 	public void verificarDatos() throws IllegalEntryData {		
 		LocalDateTime fecha = null;
 		boolean correcto = true;
-		Double precio=0.0;
+		Double precio = 0.0;
 		
 		lblFechaError.setText("");
 		lblPeliError.setText("");
@@ -222,16 +224,19 @@ public class ASesion extends JFrame implements ActionListener{
 		if (textPrecio.equals("")) {
 			lblPrecioError.setText("Introduce precio");
 			correcto = false;
-		} else if (textFecha.equals("")) {
+		} else {
+			try {
+				precio = Double.parseDouble(textPrecio.getText());
+			} catch (NumberFormatException error) {
+				System.out.println(error);
+				correcto= false;
+				lblPrecioError.setText("Introduce numeros");
+			}
+		}
+		if (textFecha.equals("")) {
 			lblFechaError.setText("Introduce fecha");
 			correcto = false;
-		} else if (comboBoxSala.getSelectedItem()==null) {
-			lblSalaError.setText("Selelcciona sala");
-			correcto = false;
-		} else if (comboBoxPelicula.getSelectedItem()==null) {
-			lblPeliError.setText("Selecciona pelicula");
-			correcto = false;
-		} else if (!textFecha.equals("")) {
+		} else {
 			try {
 				fecha = LocalDateTime.parse(textFecha.getText(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
 			} catch (DateTimeParseException a) {
@@ -239,19 +244,24 @@ public class ASesion extends JFrame implements ActionListener{
 				lblFechaError.setText("Formato: yyyy-MM-dd HH:mm");
 			}
 		}
-		try {
-			precio = Double.parseDouble(textPrecio.getText());
-		}catch (NumberFormatException error) {
-			System.out.println(error);
-			correcto= false;
-			lblPrecioError.setText("Introduce numeros");
+		if (comboBoxSala.getSelectedItem()==null) {
+			lblSalaError.setText("Selelcciona sala");
+			correcto = false;
+		} 
+		if (comboBoxPelicula.getSelectedItem()==null) {
+			lblPeliError.setText("Selecciona pelicula");
+			correcto = false;
 		}
-		
 		
 		if (correcto) {
 			int entradas = controlador.getSalaPorId((String)comboBoxSala.getSelectedItem()).getAforo();
-			controlador.registrarSesion(textSesionId.getText(), precio, fecha, (String) comboBoxSala.getSelectedItem(), pelis.get((String)comboBoxPelicula.getSelectedItem()),entradas);
-			JOptionPane.showMessageDialog(this,(String)"Sesion añadida correctamente","",JOptionPane.INFORMATION_MESSAGE,null);	
+			controlador.registrarSesion(textSesionId.getText(), precio, fecha, (String) comboBoxSala.getSelectedItem(), pelis.get((String)comboBoxPelicula.getSelectedItem()), entradas);
+			JOptionPane.showMessageDialog(this,(String)"Sesion añadida correctamente","",JOptionPane.INFORMATION_MESSAGE,null);
+			textFecha.setText("");
+			textPrecio.setText("");
+			textSesionId.setText(controlador.getUltimoIdSesion());
+			comboBoxSala.setSelectedIndex(-1);
+			comboBoxPelicula.setSelectedIndex(-1);
 		}
 	}
 }

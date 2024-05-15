@@ -31,7 +31,6 @@ public class MenuAdmin extends JFrame implements ActionListener {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JButton btnPeli, btnSesion, btnSala, btnUsuario;
-	private JLabel lblBienvenida;
 	private JFrame ventana;
 	private Controller controlador;
 	private Usuario user;
@@ -50,30 +49,28 @@ public class MenuAdmin extends JFrame implements ActionListener {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		lblBienvenida = new JLabel("Bienvenida "+user.getNombre()+" "+user.getApellido());
-		lblBienvenida.setFont(new Font("Tahoma", Font.BOLD, 17));
-		lblBienvenida.setHorizontalAlignment(SwingConstants.LEFT);
-		lblBienvenida.setBounds(456, 7, 500, 39);
-		contentPane.add(lblBienvenida);
-		
-		btnPeli = new JButton("Pelicula");
+		btnPeli = new JButton("Peliculas");
+		btnPeli.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		contentPane.add(btnPeli);
-		btnPeli.setBounds(98, 104, 85, 21);
+		btnPeli.setBounds(171, 179, 262, 63);
 		contentPane.add(btnPeli);
 		btnPeli.addActionListener(this);
 
-		btnSesion = new JButton("Sesion");
-		btnSesion.setBounds(241, 104, 85, 21);
+		btnSesion = new JButton("Sesiones");
+		btnSesion.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		btnSesion.setBounds(585, 179, 262, 63);
 		contentPane.add(btnSesion);
 		btnSesion.addActionListener(this);
 
-		btnSala = new JButton("Sala");
-		btnSala.setBounds(98, 173, 85, 21);
+		btnSala = new JButton("Salas");
+		btnSala.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		btnSala.setBounds(171, 434, 262, 63);
 		contentPane.add(btnSala);
 		btnSala.addActionListener(this);
 
-		btnUsuario = new JButton("Usuario");
-		btnUsuario.setBounds(241, 173, 85, 21);
+		btnUsuario = new JButton("Usuarios");
+		btnUsuario.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		btnUsuario.setBounds(585, 434, 262, 63);
 		contentPane.add(btnUsuario);
 		btnUsuario.addActionListener(this);
 		
@@ -82,6 +79,7 @@ public class MenuAdmin extends JFrame implements ActionListener {
 		contentPane.add(menuBar);
 
 		mnUsuario = new JMenu(user.getNombre());
+		mnUsuario.setBounds(882, 10, 177, 36);
 		menuBar.add(mnUsuario);
 		mnUsuario.setFont(new Font("Segoe UI", Font.PLAIN, 15));
 
@@ -100,7 +98,15 @@ public class MenuAdmin extends JFrame implements ActionListener {
 		// TODO Auto-generated method stub
 		Object o = e.getSource();
 		if (o == btnPeli || o == btnSesion || o == btnSala || o == btnUsuario) {
-			String nombreVentana = "view.V" + ((JButton) o).getText();
+			String botonEnSingular = null;
+			
+			if (((JButton) o).getText().endsWith("es")) {
+				botonEnSingular = ((JButton) o).getText().substring(0, ((JButton) o).getText().length() - 2);
+	        } else if (((JButton) o).getText().endsWith("s")) {
+	        	botonEnSingular = ((JButton) o).getText().substring(0, ((JButton) o).getText().length() - 1);
+	        }
+ 
+			String nombreVentana = "view.V" + botonEnSingular;
 
 			Class<?> ClaseVentana;
 			try {

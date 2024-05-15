@@ -37,7 +37,6 @@ public class APeli extends JFrame implements ActionListener{
 	private JLabel lblId;
 	private JTextField textId;
 	private JLabel lblGenero;
-	private JLabel lblGeneroError;
 	private JLabel lblTitulo;
 	private JTextField textTitulo;
 	private JLabel lblTituloError;
@@ -49,7 +48,6 @@ public class APeli extends JFrame implements ActionListener{
 	private JLabel lblDuracionError;
 	private JLabel lblSinopsis;
 	private JLabel lblSinopsisError;
-	private JLabel lblIdError;
 	private JTextArea textAreaSinopsis;
 	private JComboBox<String> comboBoxGenero;
 
@@ -94,23 +92,11 @@ public class APeli extends JFrame implements ActionListener{
 		contentPane.add(textId);
 		textId.setColumns(10);
 		
-		lblIdError = new JLabel("");
-		lblIdError.setForeground(new Color(255, 0, 0));
-		lblIdError.setFont(new Font("Tahoma", Font.BOLD, 20));
-		lblIdError.setBounds(593, 124, 241, 56);
-		contentPane.add(lblIdError);
-		
 		lblGenero = new JLabel("GENERO");
 		lblGenero.setHorizontalAlignment(SwingConstants.CENTER);
 		lblGenero.setFont(new Font("Tahoma", Font.BOLD, 20));
 		lblGenero.setBounds(56, 194, 241, 56);
 		contentPane.add(lblGenero);
-		
-		lblGeneroError = new JLabel("");
-		lblGeneroError.setForeground(Color.RED);
-		lblGeneroError.setFont(new Font("Tahoma", Font.BOLD, 20));
-		lblGeneroError.setBounds(593, 194, 241, 56);
-		contentPane.add(lblGeneroError);
 		
 		lblTitulo = new JLabel("TITULO");
 		lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
@@ -127,7 +113,7 @@ public class APeli extends JFrame implements ActionListener{
 		lblTituloError = new JLabel("");
 		lblTituloError.setForeground(Color.RED);
 		lblTituloError.setFont(new Font("Tahoma", Font.BOLD, 20));
-		lblTituloError.setBounds(593, 264, 241, 56);
+		lblTituloError.setBounds(615, 264, 444, 56);
 		contentPane.add(lblTituloError);
 		
 		lblPegi = new JLabel("PEGI");
@@ -145,7 +131,7 @@ public class APeli extends JFrame implements ActionListener{
 		lblPegiError = new JLabel("");
 		lblPegiError.setForeground(Color.RED);
 		lblPegiError.setFont(new Font("Tahoma", Font.BOLD, 20));
-		lblPegiError.setBounds(593, 334, 241, 56);
+		lblPegiError.setBounds(615, 334, 444, 56);
 		contentPane.add(lblPegiError);
 		
 		lblDuracion = new JLabel("DURACION");
@@ -163,7 +149,7 @@ public class APeli extends JFrame implements ActionListener{
 		lblDuracionError = new JLabel("");
 		lblDuracionError.setForeground(Color.RED);
 		lblDuracionError.setFont(new Font("Tahoma", Font.BOLD, 20));
-		lblDuracionError.setBounds(593, 401, 241, 56);
+		lblDuracionError.setBounds(615, 401, 444, 56);
 		contentPane.add(lblDuracionError);
 		
 		lblSinopsis = new JLabel("SINOPSIS");
@@ -175,7 +161,7 @@ public class APeli extends JFrame implements ActionListener{
 		lblSinopsisError = new JLabel("");
 		lblSinopsisError.setForeground(Color.RED);
 		lblSinopsisError.setFont(new Font("Tahoma", Font.BOLD, 20));
-		lblSinopsisError.setBounds(593, 471, 241, 56);
+		lblSinopsisError.setBounds(615, 471, 444, 56);
 		contentPane.add(lblSinopsisError);
 		
 		textAreaSinopsis = new JTextArea();
@@ -204,7 +190,7 @@ public class APeli extends JFrame implements ActionListener{
 		Object o=e.getSource();	
 		
 		if (o==btnVolver) {
-			MenuAdmin menuA = new MenuAdmin(controlador, user);
+			VPelicula menuA = new VPelicula(controlador, user);
 			menuA.setVisible(true);
 			dispose();
 		}
@@ -227,7 +213,6 @@ public class APeli extends JFrame implements ActionListener{
 	 * @throws IllegalEntryData Si los datos ingresados por el usuario son incorrectos.
 	 */
 	public void verificarDatos() throws IllegalEntryData {
-		lblGeneroError.setText("");
 		lblTituloError.setText("");
 		lblPegiError.setText("");
 		lblDuracionError.setText("");
@@ -239,18 +224,20 @@ public class APeli extends JFrame implements ActionListener{
 		if(textTitulo.getText().length()>60) {
 			lblTituloError.setText("El titulo tiene que contener menos de 60 caracteres");
 			correcto=false;
+		} else if (textTitulo.getText().equals("")) {
+			lblTituloError.setText("Introduce título");
 		}
 		
 		//Controlar Edad Pegi
 		try {
 			int pegi = Integer.parseInt(textPegi.getText());
 			if (pegi < 0 || pegi > 18) {
-				lblPegiError.setText("PEGI tiene que ser una edad entre \"0\" y \"18\"");
+				lblPegiError.setText("PEGI entre \"0\" y \"18\"");
 				correcto = false;
 			}
 		} catch (NumberFormatException error) {
 			System.out.println(error);
-			lblPegiError.setText("PEGI tienen que ser digitos");
+			lblPegiError.setText("El PEGI debe ser digitos");
 			correcto = false;
 		}
 		
@@ -258,14 +245,16 @@ public class APeli extends JFrame implements ActionListener{
 		if(textDuracion.getText().length()>3) {
 			lblDuracionError.setText("El numero introducido no puede tener mas de 3 cifras");
 			correcto=false;
+		} else {
+			try {
+				Integer.parseInt(textDuracion.getText());
+			}catch (NumberFormatException error) {
+				System.out.println(error);
+				lblDuracionError.setText("La duracion debe ser digitos");
+				correcto=false;
+			}
 		}
-		try {
-			Integer.parseInt(textDuracion.getText());
-		}catch (NumberFormatException error) {
-			System.out.println(error);
-			lblDuracionError.setText("La duracion no puede contener cifras");
-			correcto=false;
-		}
+		
 		//Controlar longitud del String de sinopsis
 		if(textAreaSinopsis.getText().length()>150) {
 			lblSinopsisError.setText("La longitud de la sinopsis no puede ser mas de 150 caracteres");
@@ -274,7 +263,12 @@ public class APeli extends JFrame implements ActionListener{
 				
 		if(correcto){
 			controlador.registrarPeli(textId.getText(), Genero.valueOf((String)comboBoxGenero.getSelectedItem()), textTitulo.getText(), Integer.parseInt(textPegi.getText()), Integer.parseInt(textDuracion.getText()), textAreaSinopsis.getText());
-			JOptionPane.showMessageDialog(this,(String)"Pelicula añadida correctamente","",JOptionPane.INFORMATION_MESSAGE,null);	
+			JOptionPane.showMessageDialog(this,(String)"Pelicula añadida correctamente","",JOptionPane.INFORMATION_MESSAGE,null);
+			textTitulo.setText("");
+			textPegi.setText("");
+			textDuracion.setText("");
+			textAreaSinopsis.setText("");
+			textId.setText(String.valueOf(controlador.getUltimoIdPeli()));
 		}
 	}
 }

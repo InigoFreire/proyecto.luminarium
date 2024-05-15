@@ -165,7 +165,7 @@ public class VUsuario extends JFrame implements ActionListener {
 					Usuario usuario = controlador.getUsuarioPorDni(dni);
 					usuariosABorrar.add(usuario.getDni());
 				}
-				correcto = controlador.borrarUsuarios(usuariosABorrar);
+				correcto = controlador.borrarElementos(usuariosABorrar, "usuario");
 				
 				if(correcto) {
 					JOptionPane.showMessageDialog(this,(String)"Eliminado correctamente","",JOptionPane.INFORMATION_MESSAGE,null);

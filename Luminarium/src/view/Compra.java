@@ -8,8 +8,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.ParseException;
 
-import java.util.Stack;
-
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFormattedTextField;
@@ -39,15 +37,14 @@ import javax.swing.JCheckBox;
 public class Compra extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
-	private static Stack<VPelicula> stack = new Stack<>();
 	private JPanel contentPane;
 	private JMenuBar menuBar;
 	private JMenu mnUsuario;
 	private JMenuItem mntmModificar, mntmExit;
 	private JButton btnAtras, btnCompra, btnSumarEntrada, btnRestarEntrada, btnCheckout;
-	private JLabel lblTitulo, lblCantidad, lblCantidadEntradas, lblPrecioTotalEntradas, lblCheckout, lblCheckoutError,
-			lblFechaCaducidad, lblCvc;
-	private JFileChooser fileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+	private JLabel lblTitulo, lblCantidad, lblCantidadEntradas, lblPrecioTotalEntradas, lblCheckout, lblTarjetaError,
+			lblFechaCaducidad, lblCvc, lblFechaError, lblCVCError;
+	private JFileChooser fileChooser ;
 	private JInternalFrame checkoutFrame;
 	private JFormattedTextField cardNumField, fechaCaducidadField, cvcField;
 	private JCheckBox checkboxSaveCard;
@@ -62,10 +59,11 @@ public class Compra extends JFrame implements ActionListener {
 		this.controlador = controllerInput;
 		this.pelicula = peliInput;
 		this.sesion = sesionInput;
-		numEntradas = 0;
+		this.numEntradas = 0;
+		this.fileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1360, 768);
+		setBounds(100, 100, 1083, 698);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -77,7 +75,7 @@ public class Compra extends JFrame implements ActionListener {
 
 		checkoutFrame = new JInternalFrame("Ventana de pago");
 		checkoutFrame.setEnabled(false);
-		checkoutFrame.setBounds(70, 10, 550, 450);
+		checkoutFrame.setBounds(242, 99, 550, 450);
 		contentPane.add(checkoutFrame);
 		checkoutFrame.getContentPane().setLayout(null);
 
@@ -138,61 +136,73 @@ public class Compra extends JFrame implements ActionListener {
 		checkoutFrame.getContentPane().add(btnCheckout);
 
 		checkboxSaveCard = new JCheckBox("Guardar este método de pago para futuras compras");
-		checkboxSaveCard.setBounds(135, 385, 265, 21);
+		checkboxSaveCard.setBounds(120, 385, 357, 21);
 		checkoutFrame.getContentPane().add(checkboxSaveCard);
 
-		lblCheckoutError = new JLabel("");
-		lblCheckoutError.setEnabled(false);
-		lblCheckoutError.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblCheckoutError.setBounds(80, 238, 350, 30);
-		checkoutFrame.getContentPane().add(lblCheckoutError);
+		lblTarjetaError = new JLabel("");
+		lblTarjetaError.setEnabled(false);
+		lblTarjetaError.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblTarjetaError.setBounds(80, 203, 350, 30);
+		checkoutFrame.getContentPane().add(lblTarjetaError);
+		
+		lblFechaError = new JLabel("");
+		lblFechaError.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblFechaError.setEnabled(false);
+		lblFechaError.setBounds(80, 249, 350, 30);
+		checkoutFrame.getContentPane().add(lblFechaError);
+		
+		lblCVCError = new JLabel("");
+		lblCVCError.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblCVCError.setEnabled(false);
+		lblCVCError.setBounds(80, 289, 350, 30);
+		checkoutFrame.getContentPane().add(lblCVCError);
 		checkoutFrame.setVisible(false);
 
-		btnAtras = new JButton("Pag. anterior");
+		btnAtras = new JButton("Volver");
 		btnAtras.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnAtras.setBounds(10, 626, 177, 23);
+		btnAtras.setBounds(10, 617, 177, 34);
 		contentPane.add(btnAtras);
 		lblTitulo = new JLabel("");
 		lblTitulo.setText(pelicula.getTitulo());
 		lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTitulo.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblTitulo.setBounds(616, 153, 108, 46);
+		lblTitulo.setBounds(475, 120, 108, 46);
 		contentPane.add(lblTitulo);
 
 		lblCantidad = new JLabel("Cantidad:");
 		lblCantidad.setHorizontalAlignment(SwingConstants.CENTER);
 		lblCantidad.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblCantidad.setBounds(471, 334, 108, 46);
+		lblCantidad.setBounds(330, 301, 108, 46);
 		contentPane.add(lblCantidad);
 
 		lblCantidadEntradas = new JLabel(Integer.toString(numEntradas));
 		lblCantidadEntradas.setHorizontalAlignment(SwingConstants.CENTER);
 		lblCantidadEntradas.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblCantidadEntradas.setBounds(645, 334, 61, 46);
+		lblCantidadEntradas.setBounds(504, 301, 61, 46);
 		contentPane.add(lblCantidadEntradas);
 
 		lblPrecioTotalEntradas = new JLabel("0 €");
 		lblPrecioTotalEntradas.setHorizontalAlignment(SwingConstants.CENTER);
 		lblPrecioTotalEntradas.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblPrecioTotalEntradas.setBounds(645, 480, 61, 46);
+		lblPrecioTotalEntradas.setBounds(504, 447, 61, 46);
 		contentPane.add(lblPrecioTotalEntradas);
 
 		btnSumarEntrada = new JButton("+");
-		btnSumarEntrada.setBackground(new Color(113, 184, 255));
+		btnSumarEntrada.setBackground(new Color(255, 255, 255));
 		btnSumarEntrada.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnSumarEntrada.setBounds(716, 334, 61, 46);
+		btnSumarEntrada.setBounds(575, 301, 61, 46);
 		contentPane.add(btnSumarEntrada);
 
 		btnRestarEntrada = new JButton("-");
-		btnRestarEntrada.setBackground(new Color(113, 184, 255));
+		btnRestarEntrada.setBackground(new Color(255, 255, 255));
 		btnRestarEntrada.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnRestarEntrada.setBounds(574, 334, 61, 46);
+		btnRestarEntrada.setBounds(433, 301, 61, 46);
 		contentPane.add(btnRestarEntrada);
 
 		btnCompra = new JButton("Comprar entradas");
 		btnCompra.setBackground(new Color(255, 255, 255));
 		btnCompra.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnCompra.setBounds(600, 614, 177, 46);
+		btnCompra.setBounds(454, 605, 177, 46);
 		contentPane.add(btnCompra);
 		btnCompra.setEnabled(false);
 
@@ -253,7 +263,7 @@ public class Compra extends JFrame implements ActionListener {
 			// Pop-up para confirmar datos de tarjeta
 			checkoutFrame.setVisible(true);
 			checkoutFrame.setEnabled(true);
-
+			
 			
 			// Comprobar formato de tarjeta
 			try {
@@ -262,38 +272,42 @@ public class Compra extends JFrame implements ActionListener {
 				cardFormatter.install(cardNumField);
 
 			} catch (ParseException ex) {
-				lblCheckoutError.setText("Error en el número de tarjeta. Introduzca solo números.");
-				lblCheckoutError.setForeground(Color.RED);
+				lblTarjetaError.setText("Solo números en el Nº de tarjeta.");
+				lblTarjetaError.setForeground(Color.RED);
 				return;
 			}
+			
 			// Comprobar formato de fecha de caducidad
 			try {
 				MaskFormatter fechaCaducidadFormatter = new MaskFormatter("##/##");
 				fechaCaducidadFormatter.setValidCharacters("0123456789");
 				fechaCaducidadFormatter.install(fechaCaducidadField);
 			} catch (ParseException ex) {
-				lblCheckoutError.setText("Error en la fecha de caducidad. Introduzca solo números.");
-				lblCheckoutError.setForeground(Color.RED);
+				lblFechaError.setText("Introduzca solo números en la fecha.");
+				lblFechaError.setForeground(Color.RED);
 				return;
 			}
+			
 			// Comprobar formato de CVC
 			try {
 				MaskFormatter cvcFormatter = new MaskFormatter("###");
 				cvcFormatter.setValidCharacters("0123456789");
 				cvcFormatter.install(cvcField);
 			} catch (ParseException ex) {
-				lblCheckoutError.setText("Error en el CVC. Introduzca solo números.");
-				lblCheckoutError.setForeground(Color.RED);
+				lblCVCError.setText("Error en el CVC. Introduzca solo números.");
+				lblCVCError.setForeground(Color.RED);
 				return;
 			}
+			
 			if (user.getMetodoPago() != null) {
 				cardNumField.setForeground(new Color(0, 0, 0));
 				cardNumField.setText(user.getMetodoPago());
 				fechaCaducidadField.setForeground(new Color(0, 0, 0));
 				String fecha;
-				fecha=String.format("%02d/%02d", user.getFechaCaducidadTarjeta().getMonthValue(), user.getFechaCaducidadTarjeta().getYear() % 100);
+				fecha = String.format("%02d/%02d", user.getFechaCaducidadTarjeta().getMonthValue(), user.getFechaCaducidadTarjeta().getYear() % 100);
 				fechaCaducidadField.setText(fecha);
 			}
+			
 			if (cardNumField.hasFocus()) {
 				cardNumField.setText("");
 				cardNumField.setForeground(new Color(0, 0, 0));
@@ -303,48 +317,61 @@ public class Compra extends JFrame implements ActionListener {
 			} else if (cvcField.hasFocus()) {
 				cvcField.setForeground(new Color(0, 0, 0));
 				cvcField.setText("");
-				;
 			}
+			
 		}
+		
 		if (e.getSource() == btnCheckout) {
 			int month=0,year=0;
+			
+			lblTarjetaError.setText("");
+			lblFechaError.setText("");
+			lblCVCError.setText("");
+			
 			try {
 				String fechaCaducidad = fechaCaducidadField.getText();
 			String[] parts = fechaCaducidad.split("/");
 			month = Integer.parseInt(parts[0]);
 			year = Integer.parseInt(parts[1]);
 
-			}catch (NumberFormatException error) {
+			} catch (NumberFormatException error) {
 				System.out.println(error);
-				lblCheckoutError.setText("La fecha de la tarjeta a de tener 4 digitos");
+				lblFechaError.setText("La fecha de la tarjeta a de tener 4 digitos");
 			}
 			
 			// Check if month and year are valid
 			if (month < 1 || month > 12 || year < 24 || year > 50) {
-				lblCheckoutError.setText("Fecha de caducidad no valida");
+				lblFechaError.setText("Fecha de caducidad no valida");
 				correcto = false;
 			}
+			
 			//verificar que los campos no estan vacios
-			if(cardNumField.getText().trim().isEmpty()||cvcField.getText().trim().isEmpty()||fechaCaducidadField.getText().trim().isEmpty()) {
+			if(cardNumField.getText().trim().isEmpty() && cvcField.getText().trim().isEmpty() && fechaCaducidadField.getText().trim().isEmpty()) {
 				correcto=false;
-				lblCheckoutError.setText("Todos los los campos son obligatorios");
+				lblTarjetaError.setText("Todos los los campos son obligatorios");
 			}
+			
 			//comprobar que el numero de tarjeta esta completo
 			if(cardNumField.getText().trim().length()!=19) {
 				
-				lblCheckoutError.setText("El numero de la tarjeta a de contener 16 numeros");
+				lblTarjetaError.setText("El numero de la tarjeta a de contener 16 numeros");
 				correcto=false;
 			}
+			
 			if(cvcField.getText().trim().length()!=3) {
 				
-				lblCheckoutError.setText("El CVC de la tarjeta a de contener 3 numeros");
+				lblCVCError.setText("El CVC de la tarjeta a de contener 3 numeros");
 				correcto=false;
 			}
 			
 			String regex = "^(0[1-9]|1[0-2])/(\\d{2})$";
 
 			if (!fechaCaducidadField.getText().matches(regex)) {
-			    lblCheckoutError.setText("La fecha de la tarjeta no es correcta");;
+			    lblFechaError.setText("La fecha de la tarjeta no es correcta");;
+			}
+			
+			if (checkboxSaveCard.isSelected()) {
+				//controlador.guardarTarjeta();
 			}
 			
 			// Configurar el filtro para archivos de texto

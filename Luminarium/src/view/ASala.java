@@ -17,6 +17,7 @@ import excepciones.IllegalEntryData;
 import model.Usuario;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import java.awt.Color;
 
@@ -33,7 +34,7 @@ public class ASala extends JFrame implements ActionListener{
 	private JButton btnVolver, btnRegistrar;
 	private JTextField textId;
 	private JTextField textAforo;
-	private JLabel lblId, lblAforo;
+	private JLabel lblId, lblAforo, lblEditarSala;
 	private JLabel lblAforoError;
 
 	public ASala(Controller c, Usuario u) {
@@ -47,12 +48,20 @@ public class ASala extends JFrame implements ActionListener{
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
+		lblEditarSala = new JLabel("Añadir Sala");
+		lblEditarSala.setFont(new Font("Tahoma", Font.BOLD, 18));
+		lblEditarSala.setHorizontalAlignment(SwingConstants.CENTER);
+		lblEditarSala.setBounds(247, 28, 540, 56);
+		contentPane.add(lblEditarSala);
+		
 		btnVolver = new JButton("Volver");
 		btnVolver.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btnVolver.setBounds(10, 619, 134, 32);
 		contentPane.add(btnVolver);
 		
 		textId = new JTextField();
+		textId.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		textId.setHorizontalAlignment(SwingConstants.CENTER);
 		textId.setEditable(false);
 		textId.setBounds(138, 246, 325, 54);
 		contentPane.add(textId);
@@ -60,6 +69,8 @@ public class ASala extends JFrame implements ActionListener{
 		textId.setText(controlador.getUltimoIdSala());
 		
 		textAforo = new JTextField();
+		textAforo.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		textAforo.setHorizontalAlignment(SwingConstants.CENTER);
 		textAforo.setBounds(558, 246, 325, 54);
 		contentPane.add(textAforo);
 		textAforo.setColumns(10);
@@ -95,13 +106,13 @@ public class ASala extends JFrame implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource()==btnVolver) {
-			MenuAdmin menuA = new MenuAdmin(controlador, user);
+			VSala menuA = new VSala(controlador, user);
 			menuA.setVisible(true);
 			dispose();
 		} else if (e.getSource()==btnRegistrar) {
 			try {
 				verificarDatos();
-			}catch (IllegalEntryData error) {
+			} catch (IllegalEntryData error) {
 				 System.out.println("ERROR: "+error.getMessage());
 			}
 		}
@@ -119,6 +130,7 @@ public class ASala extends JFrame implements ActionListener{
 		if (!textAforo.equals("")) {
 			try {
 				controlador.registrarSala(textId.getText(), Integer.parseInt(textAforo.getText()));
+				JOptionPane.showMessageDialog(this,(String)"Sala añadida correctamente","",JOptionPane.INFORMATION_MESSAGE,null);
 			} catch (NumberFormatException error) {
 				lblAforoError.setText("Introduce numeros");
 			}

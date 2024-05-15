@@ -216,7 +216,7 @@ public class EPeli extends JFrame implements ActionListener{
 		
 
 		if (o==btnVolver) {
-			MenuAdmin menuA = new MenuAdmin(controlador, user);
+			VPelicula menuA = new VPelicula(controlador, user);
 			menuA.setVisible(true);
 			dispose();
 		}
@@ -246,14 +246,6 @@ public void verificarDatos() throws IllegalEntryData {
 		lblSinopsisError.setText("");
 		
 		boolean correcto=true;
-
-		ArrayList<String> ids = controlador.getPelisId();
-		for(String id:ids) {
-			if(id.equalsIgnoreCase(textId.getText())&&!id.equalsIgnoreCase(peli.getId())) {
-				lblIdError.setText("Ya existe otra peli con ese ID");
-				correcto=false;
-			}
-		}
 		
 		//Controlar longitud del titulo
 		if(textTitulo.getText().length()>60) {
@@ -296,7 +288,10 @@ public void verificarDatos() throws IllegalEntryData {
 				
 		if(correcto){
 			controlador.modificarPeli(peli, textId.getText(), Genero.valueOf((String)comboBoxGenero.getSelectedItem()), textTitulo.getText(), Integer.parseInt(textPegi.getText()), Integer.parseInt(textDuracion.getText()), textAreaSinopsis.getText(), peli.getId());
-			JOptionPane.showMessageDialog(this,(String)"Pelicula modificada correctamente","",JOptionPane.INFORMATION_MESSAGE,null);	
+			JOptionPane.showMessageDialog(this,(String)"Pelicula modificada correctamente","",JOptionPane.INFORMATION_MESSAGE,null);
+			VPelicula vpeli = new VPelicula(controlador, user);
+			vpeli.setVisible(true);
+			this.dispose();
 		}
 	}
 }

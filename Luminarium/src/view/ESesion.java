@@ -53,8 +53,6 @@ public class ESesion extends JFrame implements ActionListener{
 	private JLabel lblFecha;
 	private JLabel lblFechaError;
 	private Sesion sesion;
-	private JLabel lblSalaError;
-	private JLabel lblPeliError;
 	private JLabel lblPelicula;
 	private JLabel lblSala;
 	private JComboBox<String> comboBoxSala;
@@ -223,7 +221,7 @@ public class ESesion extends JFrame implements ActionListener{
 		
 
 		if (o==btnVolver) {
-			MenuAdmin menuA = new MenuAdmin(controlador, user);
+			VSesion menuA = new VSesion(controlador, user);
 			menuA.setVisible(true);
 			dispose();
 		}
@@ -282,7 +280,10 @@ public class ESesion extends JFrame implements ActionListener{
 			String idPeli = (String)comboBoxPelicula.getSelectedItem();
 			idPeli = pelis.get(idPeli); 
 			controlador.modificarSesion(sesion, textSesionId.getText(), Double.parseDouble(textPrecio.getText()), LocalDateTime.parse(textFecha.getText()), (String)comboBoxSala.getSelectedItem(),idPeli,sesion.getId(),Integer.parseInt(textTickets.getText()));
-			JOptionPane.showMessageDialog(this,(String)"Sesion modificada correctamente","",JOptionPane.INFORMATION_MESSAGE,null);	
+			JOptionPane.showMessageDialog(this,(String)"Sesion modificada correctamente","",JOptionPane.INFORMATION_MESSAGE,null);
+			VSesion vsesion = new VSesion(controlador, user);
+			vsesion.setVisible(true);
+			this.dispose();
 		}
 	}
 }

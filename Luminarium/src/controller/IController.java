@@ -19,9 +19,7 @@ public interface IController {
 
 	public Usuario logIn(String usuario, String password);
 	
-	public Usuario modificarDatosUsuario(Usuario us, String dni, String newDni, String nombre, String apellido, String passwd1, String email);
-	
-	public Usuario modificarDatosUsuarioPago(Usuario us, String dni, String newDni, String nombre, String apellido, String passwd1, String email, String tarjeta, YearMonth fechaCaducidad);
+	public Usuario modificarDatosUsuario(Usuario us, String dni, String newDni, String nombre, String apellido, String passwd1, String email, String tarjeta, YearMonth fechaCaducidad);
 	
 	public void registrarUsuario(String dni, String nombre, String apellido, String passwd1, String email);
 	
@@ -48,8 +46,6 @@ public interface IController {
 	public ArrayList<Sala> getSalasM(); 
 	
 	public void registrarSala(String id, int aforo);
-
-	public Sesion modificarSesion(Sesion sesion, String newId, double precio, LocalDateTime fecha, String idSala, String idPeli, String id);
 
 	public String getUltimoIdSala();
 
@@ -79,14 +75,8 @@ public interface IController {
 
 	public ArrayList<String> getSesionId();
 	
-	public boolean borrarSalas(ArrayList<Sala> salas);
-	
-	public boolean borrarPeliculas(ArrayList<Pelicula> peliculas);
-	
-	public boolean borrarSesion(ArrayList<Sesion> sesiones);
-	
-	public boolean borrarUsuarios(ArrayList<String> Usuarios);
-	
 	public Sesion actualizarEntradas(Sesion sesion,int entradas);
+
+	boolean borrarElementos(ArrayList<?> elementos, String tipo);
 	
 }

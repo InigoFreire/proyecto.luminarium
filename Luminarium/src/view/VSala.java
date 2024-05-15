@@ -168,7 +168,7 @@ public class VSala extends JFrame implements ActionListener {
 					Sala sala = controlador.getSalaPorId(id);
 					salasABorrar.add(sala);
 				}
-				correcto = controlador.borrarSalas(salasABorrar);
+				correcto = controlador.borrarElementos(salasABorrar, "sala");
 				
 				if(correcto) {
 					JOptionPane.showMessageDialog(this,(String)"Eliminado correctamente","",JOptionPane.INFORMATION_MESSAGE,null);

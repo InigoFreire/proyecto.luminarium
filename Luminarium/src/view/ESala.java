@@ -124,7 +124,7 @@ public class ESala extends JFrame implements ActionListener{
 		
 		if (o==btnVolver) {
 
-			MenuAdmin menuA = new MenuAdmin(controlador, user); 
+			VSala menuA = new VSala(controlador, user); 
 			menuA.setVisible(true);
 			dispose();
 		}

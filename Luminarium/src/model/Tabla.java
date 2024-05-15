@@ -8,40 +8,43 @@ import javax.swing.table.AbstractTableModel;
  * requeridos para definir un modelo de tabla.
  */
 public class Tabla extends AbstractTableModel {
-	private static final long serialVersionUID = 1L;
-	private String[][] data;
-	private String[] columnas;
+    private static final long serialVersionUID = 1L;
+    private String[][] data;
+    private String[] columnas;
 
-	public Tabla(String[][] peliculas, String[] columna) {
-		this.data = peliculas;
-		this.columnas = columna;
-	}
+    /**
+     * Crea una nueva instancia de Tabla con los datos y columnas proporcionados.
+     * 
+     * @param peliculas Los datos de la tabla.
+     * @param columnas  Los nombres de las columnas de la tabla.
+     */
+    public Tabla(String[][] peliculas, String[] columna) {
+        this.data = peliculas;
+        this.columnas = columna;
+    }
 
-	@Override
-	public int getRowCount() {
+    @Override
+    public int getRowCount() {
+        return data.length;
+    }
 
-		return data.length;
-	}
+    @Override
+    public int getColumnCount() {
+        return columnas.length;
+    }
 
-	@Override
-	public int getColumnCount() {
+    @Override
+    public Object getValueAt(int rowIndex, int columnIndex) {
+        return data[rowIndex][columnIndex];
+    }
 
-		return columnas.length;
-	}
+    @Override
+    public boolean isCellEditable(int rowIndex, int columnIndex) {
+        return false;
+    }
 
-	@Override
-	public Object getValueAt(int rowIndex, int columnIndex) {
-
-		return data[rowIndex][columnIndex];
-	}
-
-	@Override
-	public boolean isCellEditable(int rowIndex, int columnIndex) {
-		return false;
-	}
-
-	@Override
-	public String getColumnName(int column) {
-		return columnas[column]; // Set column names
-	}
+    @Override
+    public String getColumnName(int column) {
+        return columnas[column]; // Set column names
+    }
 }
