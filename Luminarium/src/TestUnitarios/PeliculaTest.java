@@ -48,5 +48,3 @@ public class PeliculaTest {
         assertEquals("Dos amigos viven una noche épica antes de ir a la universidad", pelicula.getSinopsis());
     }
 }
-
-

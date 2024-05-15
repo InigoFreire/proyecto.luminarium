@@ -2,6 +2,9 @@ package model;
 
 import java.time.LocalDate;
 
+/**
+ * La clase Compra representa una transacción de compra de tickets para una película en una sala de cine en una fecha específica.
+ */
 public class Compra {
 	private int idTicket;
 	private String dniUsuario;
