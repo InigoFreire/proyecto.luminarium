@@ -5,18 +5,35 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import controller.Controller;
+import model.Genero;
+import model.Pelicula;
+import model.Sala;
+import model.Sesion;
 import model.Usuario;
 
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import javax.swing.JPasswordField;
 import javax.swing.JButton;
 import java.awt.Color;
+import javax.swing.JToggleButton;
+import javax.swing.ImageIcon;
 
+/**
+ * La clase LogIn representa una ventana de inicio de sesión (login) en una interfaz
+ * gráfica (GUI), donde los usuarios pueden ingresar su DNI y contraseña para acceder
+ * al sistema. Esta clase extiende JFrame e implementa ActionListener para manejar
+ * las interacciones del usuario con los componentes de la interfaz.
+ */
 public class LogIn extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
@@ -30,7 +47,7 @@ public class LogIn extends JFrame implements ActionListener {
 	private JLabel lblError;
 	private Controller c;
 	private JButton btnRegistrar;
-	private String[][] peliculas;
+	private JToggleButton tglbtnVer;
 
 	public LogIn(Controller cont) {
 		this.c=cont;
@@ -76,7 +93,7 @@ public class LogIn extends JFrame implements ActionListener {
 		lblError = new JLabel("");
 		lblError.setForeground(new Color(255, 0, 0));
 		lblError.setFont(new Font("Tahoma", Font.PLAIN, 25));
-		lblError.setBounds(182, 529, 664, 75);
+		lblError.setBounds(182, 534, 664, 75);
 		contentPane.add(lblError);
 		
 		btnRegistrar = new JButton("Registrarse");
@@ -84,26 +101,41 @@ public class LogIn extends JFrame implements ActionListener {
 		btnRegistrar.setBounds(903, 26, 154, 40);
 		contentPane.add(btnRegistrar);
 		
+		tglbtnVer = new JToggleButton("Ver");
+		tglbtnVer.setFont(new Font("Tahoma", Font.PLAIN, 45));
+		tglbtnVer.setBounds(871, 277, 111, 59);
+		contentPane.add(tglbtnVer);
+		char c = passwordField.getEchoChar();
+		
 		btnEntrar.addActionListener(this);
 		btnInvitado.addActionListener(this);
 		btnRegistrar.addActionListener(this);
+		tglbtnVer.addMouseListener(new MouseAdapter() {
+		    @Override
+		    public void mouseClicked(MouseEvent e) {
+		    	if (tglbtnVer.isSelected()) {
+		            passwordField.setEchoChar((char) 0);
+		        } else {
+		            passwordField.setEchoChar(c);
+		        }
+		    }
+		});
 		
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		if (e.getSource()==btnEntrar) {
+		Object o=e.getSource();	
+		
+		if (o==btnEntrar) {
 			Usuario user = c.logIn(textField.getText(), new String(passwordField.getPassword()));
 			if (user != null) {
 				if(user.isAdminCheck()) {
 					MenuAdmin menuAdmin= new MenuAdmin(c, user);
 					menuAdmin.setVisible(true);
 					this.dispose();
-				}
-				else {
-				peliculas = c.getPelis();
-				VPeli frame = new VPeli(c, user, peliculas);
+				} else {
+				VPelicula frame = new VPelicula(c, user);
 				frame.setVisible(true);
 				this.dispose();
 				}
@@ -111,15 +143,16 @@ public class LogIn extends JFrame implements ActionListener {
 				lblError.setText("Usuario no encontrado.");
 			}
 		} else if (e.getSource()==btnInvitado) {
-			Usuario user = null;
-			peliculas = c.getPelis();
-			VPeli frame = new VPeli(c, user, peliculas);
+			Usuario user = new Usuario();
+			VPelicula frame = new VPelicula(c, user);
 			frame.setVisible(true);
 			this.dispose();
 		} else if (e.getSource()==btnRegistrar) {
-			Registrar frame = new Registrar(c);
+			AUsuario frame = new AUsuario(c, new Usuario());
 			frame.setVisible(true);
 			this.dispose();
 		}
+		
+		
 	}
 }
