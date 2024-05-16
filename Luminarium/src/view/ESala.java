@@ -149,22 +149,27 @@ public class ESala extends JFrame implements ActionListener{
 		
 		boolean correcto=true;
 		//Controlar que no mete mas de 3 cifras
-		if(textSalaAforo.getText().length()>3) {
-			lblAforoError.setText("No se admiten mas de 3 cifras");
-			correcto=false;
+		if (!textSalaAforo.equals("")) {
+			if(textSalaAforo.getText().length()>3) {
+				lblAforoError.setText("No se admiten mas de 3 cifras");
+				correcto=false;
+			}
+		} else {
+			if (textSalaAforo.getText().matches(".*[a-zA-Z]+.*")) {
+	            System.out.println("No letras");
+	            correcto=false;
+	        } else {
+	        	lblAforoError.setText("Introduce aforo");
+	        	correcto=false;
+	        }
 		}
 		if(correcto) {
-			if (!textSalaAforo.equals("")) {
 				try {
-					controlador.modificarSala(sala, textSalaId.getText(),Integer.parseInt(textSalaAforo.getText()),sala.getId());
-					JOptionPane.showMessageDialog(this,(String)"Sala modificada correctamente","",JOptionPane.INFORMATION_MESSAGE,null);
+					controlador.registrarSala(textSalaId.getText(), Integer.parseInt(textSalaAforo.getText()));
+					JOptionPane.showMessageDialog(this,(String)"Sala añadida correctamente","",JOptionPane.INFORMATION_MESSAGE,null);
 				} catch (NumberFormatException error) {
 					lblAforoError.setText("Introduce numeros");
 				}
-			} else if (textSalaAforo.equals("")) {
-				lblAforoError.setText("Introduce aforo");
-			}
-				
 		}
 	}
 }

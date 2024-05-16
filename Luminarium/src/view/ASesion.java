@@ -233,6 +233,7 @@ public class ASesion extends JFrame implements ActionListener{
 				lblPrecioError.setText("Introduce numeros");
 			}
 		}
+		
 		if (textFecha.equals("")) {
 			lblFechaError.setText("Introduce fecha");
 			correcto = false;
@@ -244,10 +245,12 @@ public class ASesion extends JFrame implements ActionListener{
 				lblFechaError.setText("Formato: yyyy-MM-dd HH:mm");
 			}
 		}
+		
 		if (comboBoxSala.getSelectedItem()==null) {
 			lblSalaError.setText("Selelcciona sala");
 			correcto = false;
 		} 
+		
 		if (comboBoxPelicula.getSelectedItem()==null) {
 			lblPeliError.setText("Selecciona pelicula");
 			correcto = false;

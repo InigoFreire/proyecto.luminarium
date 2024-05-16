@@ -173,9 +173,8 @@ public class VSala extends JFrame implements ActionListener {
 				if(correcto) {
 					JOptionPane.showMessageDialog(this,(String)"Eliminado correctamente","",JOptionPane.INFORMATION_MESSAGE,null);
 					VSala vsala = new VSala(controlador, user);
-					this.dispose();
 					vsala.setVisible(true);
-					
+					this.dispose();
 				}
 			}
 		}

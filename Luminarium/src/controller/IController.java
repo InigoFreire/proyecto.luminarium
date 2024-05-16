@@ -77,6 +77,8 @@ public interface IController {
 	
 	public Sesion actualizarEntradas(Sesion sesion,int entradas);
 
-	boolean borrarElementos(ArrayList<?> elementos, String tipo);
+	public boolean borrarElementos(ArrayList<?> elementos, String tipo);
+
+	public void guardarTarjeta(String tarjeta, YearMonth fecha, Usuario user);
 	
 }

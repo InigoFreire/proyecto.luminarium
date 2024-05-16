@@ -50,7 +50,8 @@ public class VPelicula extends JFrame implements ActionListener {
 	public VPelicula(Controller c, Usuario u) {
 		this.controlador = c;
 		this.user = u;
-		peliculas = controlador.getPelis();
+		this.peliculas = controlador.getPelis();
+		this.mntmModificar = new JMenuItem();
 		String[] columna = { "TITULO", "PEGI" };
 		Tabla model = new Tabla(peliculas, columna);
 
@@ -77,13 +78,19 @@ public class VPelicula extends JFrame implements ActionListener {
 		menuBar.setBounds(882, 10, 177, 36);
 		contentPane.add(menuBar);
 
-		mnUsuario = new JMenu(user.getNombre());
+		if (user.getNombre().isBlank()) {
+			mnUsuario = new JMenu("Invitado");
+		} else {
+			mnUsuario = new JMenu(user.getNombre());
+		}
 		menuBar.add(mnUsuario);
 		mnUsuario.setFont(new Font("Segoe UI", Font.PLAIN, 15));
-
-		mntmModificar = new JMenuItem("Modificar");
-		mnUsuario.add(mntmModificar);
-		mntmModificar.addActionListener(this);
+		
+		if (!user.getNombre().isBlank()) {
+			mntmModificar = new JMenuItem("Modificar");
+			mnUsuario.add(mntmModificar);
+			mntmModificar.addActionListener(this);
+		}
 
 		mntmExit = new JMenuItem("Cerrar Sesión");
 		mnUsuario.add(mntmExit);
@@ -199,9 +206,8 @@ public class VPelicula extends JFrame implements ActionListener {
 				if(correcto) {
 					JOptionPane.showMessageDialog(this,(String)"Eliminado correctamente","",JOptionPane.INFORMATION_MESSAGE,null);
 					VPelicula pelicula = new VPelicula(controlador, user);
-					this.dispose();
 					pelicula.setVisible(true);
-					
+					this.dispose();
 				}
 			}
 		}

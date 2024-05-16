@@ -138,7 +138,11 @@ public class AUsuario extends JFrame implements ActionListener {
 		lblCabecera.setFont(new Font("Tahoma", Font.BOLD, 18));
 		contentPane.add(lblCabecera);
 		
-		btnRegistrarse = new JButton("REGISTRARSE");
+		if (user.isAdminCheck()) {
+			btnRegistrarse = new JButton("AÑADIR");
+		} else {
+			btnRegistrarse = new JButton("REGISTRARSE");
+		}
 		btnRegistrarse.setBounds(387, 510, 264, 56);
 		btnRegistrarse.setFont(new Font("Tahoma", Font.BOLD, 19));
 		contentPane.add(btnRegistrarse);

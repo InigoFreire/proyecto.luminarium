@@ -21,6 +21,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import javax.swing.JComboBox;
+import javax.swing.SwingConstants;
+import javax.swing.JTextArea;
+import java.awt.Color;
 
 /**
  * La clase InfoPeli representa una ventana de interfaz gráfica (GUI) para
@@ -33,7 +36,7 @@ public class InfoPeli extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JLabel lblFoto, lblTitulo, lblGenero, lblPegi, lblDuracion, lblSinopsis;
+	private JLabel lblTitulo, lblGenero, lblPegi, lblDuracion;
 	private JButton btnComprar;
 	private JMenuBar menuBar;
 	private JMenu mnUsuario;
@@ -45,11 +48,19 @@ public class InfoPeli extends JFrame implements ActionListener {
 	private JComboBox<String> comboBoxSesion;
 	private ArrayList<Sesion> horas = new ArrayList<Sesion>();
 	private String hora,horaS;
+	private JLabel lblTItulo;
+	private JLabel lblGEnero;
+	private JLabel lblPEgi;
+	private JLabel lblDuracinmin;
+	private JLabel lblSinopsis_1;
+	private JLabel lblSesiones;
+	private JTextArea lblSinopsis;
 	
 	public InfoPeli(Controller c, Usuario u, Pelicula p) {
 		this.user = u;
 		this.controlador = c;
 		this.peli = p;
+		this.mntmModificar = new JMenuItem();
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1083, 698);
@@ -59,34 +70,29 @@ public class InfoPeli extends JFrame implements ActionListener {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
-		lblFoto = new JLabel("");
-		lblFoto.setBounds(59, 67, 258, 381);
-		contentPane.add(lblFoto);
-
 		lblTitulo = new JLabel("");
+		lblTitulo.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		lblTitulo.setBounds(391, 67, 520, 37);
 		contentPane.add(lblTitulo);
 		lblTitulo.setText(peli.getTitulo());
 
 		lblGenero = new JLabel("");
-		lblGenero.setBounds(391, 114, 88, 23);
+		lblGenero.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		lblGenero.setBounds(391, 114, 560, 37);
 		contentPane.add(lblGenero);
 		lblGenero.setText(peli.getGenero().name());
 
 		lblPegi = new JLabel("");
-		lblPegi.setBounds(391, 153, 88, 23);
+		lblPegi.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		lblPegi.setBounds(391, 164, 450, 37);
 		contentPane.add(lblPegi);
 		lblPegi.setText("+" + peli.getPegi());
 
 		lblDuracion = new JLabel("");
-		lblDuracion.setBounds(391, 186, 230, 37);
+		lblDuracion.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		lblDuracion.setBounds(391, 211, 560, 37);
 		contentPane.add(lblDuracion);
 		lblDuracion.setText(peli.getDuracion() + " min");
-
-		lblSinopsis = new JLabel("");
-		lblSinopsis.setBounds(391, 240, 560, 154);
-		contentPane.add(lblSinopsis);
-		lblSinopsis.setText(peli.getSinopsis());
 
 		btnComprar = new JButton("Comprar entradas");
 
@@ -99,18 +105,25 @@ public class InfoPeli extends JFrame implements ActionListener {
 		menuBar.setBounds(882, 10, 177, 36);
 		contentPane.add(menuBar);
 
-		mnUsuario = new JMenu(user.getNombre());
+		if (user.getNombre().isBlank()) {
+			mnUsuario = new JMenu("Invitado");
+		} else {
+			mnUsuario = new JMenu(user.getNombre());
+		}
 		menuBar.add(mnUsuario);
 		mnUsuario.setFont(new Font("Segoe UI", Font.PLAIN, 15));
-
-		mntmModificar = new JMenuItem("Modificar");
-		mnUsuario.add(mntmModificar);
+		
+		if (!user.getNombre().isBlank()) {
+			mntmModificar = new JMenuItem("Modificar");
+			mnUsuario.add(mntmModificar);
+			mntmModificar.addActionListener(this);
+		}
 
 		mntmExit = new JMenuItem("Cerrar Sesión");
 		mnUsuario.add(mntmExit);
 
 		btnAtras = new JButton("Volver");
-		btnAtras.setBounds(10, 626, 177, 23);
+		btnAtras.setBounds(10, 614, 177, 35);
 		btnAtras.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		contentPane.add(btnAtras);
 		
@@ -118,13 +131,55 @@ public class InfoPeli extends JFrame implements ActionListener {
 		comboBoxSesion = new JComboBox<String>();
 		comboBoxSesion.setBounds(391, 489, 293, 37);
 		contentPane.add(comboBoxSesion);
+		
+		lblTItulo = new JLabel("Título:");
+		lblTItulo.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		lblTItulo.setHorizontalAlignment(SwingConstants.CENTER);
+		lblTItulo.setBounds(172, 67, 177, 37);
+		contentPane.add(lblTItulo);
+		
+		lblGEnero = new JLabel("Género:");
+		lblGEnero.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		lblGEnero.setHorizontalAlignment(SwingConstants.CENTER);
+		lblGEnero.setBounds(172, 114, 177, 37);
+		contentPane.add(lblGEnero);
+		
+		lblPEgi = new JLabel("Edad:");
+		lblPEgi.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		lblPEgi.setHorizontalAlignment(SwingConstants.CENTER);
+		lblPEgi.setBounds(172, 164, 177, 37);
+		contentPane.add(lblPEgi);
+		
+		lblDuracinmin = new JLabel("Duración (min):");
+		lblDuracinmin.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		lblDuracinmin.setBounds(172, 211, 177, 37);
+		contentPane.add(lblDuracinmin);
+		
+		lblSinopsis_1 = new JLabel("Sinopsis:");
+		lblSinopsis_1.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		lblSinopsis_1.setBounds(172, 317, 177, 37);
+		contentPane.add(lblSinopsis_1);
+		
+		lblSesiones = new JLabel("Sesiones:");
+		lblSesiones.setHorizontalAlignment(SwingConstants.CENTER);
+		lblSesiones.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		lblSesiones.setBounds(172, 489, 177, 37);
+		contentPane.add(lblSesiones);
+		
+		lblSinopsis = new JTextArea();
+		lblSinopsis.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		lblSinopsis.setBackground(new Color(240, 240, 240));
+		lblSinopsis.setBounds(391, 265, 520, 182);
+		lblSinopsis.setEditable(false);
+		lblSinopsis.setText(p.getSinopsis());
+		lblSinopsis.setLineWrap(true);
+		lblSinopsis.setWrapStyleWord(true);
+		contentPane.add(lblSinopsis);
 
 
 		if(horas.isEmpty()) {
 			comboBoxSesion.addItem("No hay sesiones disponibles");
-
 			btnComprar.setEnabled(false);
-
 		} else {
 			for(Sesion sesion:horas) {
 				hora = sesion.getFecha().toString();

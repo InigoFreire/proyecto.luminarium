@@ -87,7 +87,7 @@ public class ASala extends JFrame implements ActionListener{
 		lblAforo.setBounds(558, 174, 325, 54);
 		contentPane.add(lblAforo);
 		
-		btnRegistrar = new JButton("Registrar");
+		btnRegistrar = new JButton("Añadir");
 		btnRegistrar.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		btnRegistrar.setBounds(440, 472, 166, 40);
 		contentPane.add(btnRegistrar);
@@ -127,17 +127,32 @@ public class ASala extends JFrame implements ActionListener{
 	 * @throws IllegalEntryData Si los datos ingresados por el usuario son incorrectos.
 	 */
 	public void verificarDatos() throws IllegalEntryData {
+		lblAforoError.setText("");
+		
+		boolean correcto=true;
+		//Controlar que no mete mas de 3 cifras
 		if (!textAforo.equals("")) {
-			try {
-				controlador.registrarSala(textId.getText(), Integer.parseInt(textAforo.getText()));
-				JOptionPane.showMessageDialog(this,(String)"Sala añadida correctamente","",JOptionPane.INFORMATION_MESSAGE,null);
-			} catch (NumberFormatException error) {
-				lblAforoError.setText("Introduce numeros");
+			if(textAforo.getText().length()>3) {
+				lblAforoError.setText("No se admiten mas de 3 cifras");
+				correcto=false;
 			}
-		} else if (textAforo.equals("")) {
-			lblAforoError.setText("Introduce aforo");
+		} else {
+			if (textAforo.getText().matches(".*[a-zA-Z]+.*")) {
+	            System.out.println("No letras");
+	            correcto=false;
+	        } else {
+	        	lblAforoError.setText("Introduce aforo");
+	        	correcto=false;
+	        }
 		}
-
+		if(correcto) {
+				try {
+					controlador.registrarSala(textId.getText(), Integer.parseInt(textAforo.getText()));
+					JOptionPane.showMessageDialog(this,(String)"Sala añadida correctamente","",JOptionPane.INFORMATION_MESSAGE,null);
+				} catch (NumberFormatException error) {
+					lblAforoError.setText("Introduce numeros");
+				}
+		}
 	}
 }
 

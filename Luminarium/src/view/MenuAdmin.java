@@ -89,6 +89,12 @@ public class MenuAdmin extends JFrame implements ActionListener {
 		
 		mntmExit = new JMenuItem("Cerrar Sesión");
 		mnUsuario.add(mntmExit);
+		
+		JLabel lblNewLabel = new JLabel("Bienvenid@ admin");
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 25));
+		lblNewLabel.setBounds(365, 29, 262, 36);
+		contentPane.add(lblNewLabel);
 		mntmExit.addActionListener(this);
 
 	}

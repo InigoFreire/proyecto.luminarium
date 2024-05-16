@@ -42,7 +42,6 @@ public class EPeli extends JFrame implements ActionListener{
 	private JLabel lblId;
 	private JTextField textId;
 	private JLabel lblGenero;
-	private JLabel lblGeneroError;
 	private JLabel lblTitulo;
 	private JTextField textTitulo;
 	private JLabel lblTituloError;
@@ -54,7 +53,6 @@ public class EPeli extends JFrame implements ActionListener{
 	private JLabel lblDuracionError;
 	private JLabel lblSinopsis;
 	private JLabel lblSinopsisError;
-	private JLabel lblIdError;
 	private JTextArea textAreaSinopsis;
 	private JComboBox<String> comboBoxGenero;
 
@@ -100,23 +98,11 @@ public class EPeli extends JFrame implements ActionListener{
 		contentPane.add(textId);
 		textId.setColumns(10);
 		
-		lblIdError = new JLabel("");
-		lblIdError.setForeground(new Color(255, 0, 0));
-		lblIdError.setFont(new Font("Tahoma", Font.BOLD, 20));
-		lblIdError.setBounds(593, 124, 241, 56);
-		contentPane.add(lblIdError);
-		
 		lblGenero = new JLabel("GENERO");
 		lblGenero.setHorizontalAlignment(SwingConstants.CENTER);
 		lblGenero.setFont(new Font("Tahoma", Font.BOLD, 20));
 		lblGenero.setBounds(56, 194, 241, 56);
 		contentPane.add(lblGenero);
-		
-		lblGeneroError = new JLabel("");
-		lblGeneroError.setForeground(Color.RED);
-		lblGeneroError.setFont(new Font("Tahoma", Font.BOLD, 20));
-		lblGeneroError.setBounds(593, 194, 241, 56);
-		contentPane.add(lblGeneroError);
 		
 		lblTitulo = new JLabel("TITULO");
 		lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
@@ -133,7 +119,7 @@ public class EPeli extends JFrame implements ActionListener{
 		lblTituloError = new JLabel("");
 		lblTituloError.setForeground(Color.RED);
 		lblTituloError.setFont(new Font("Tahoma", Font.BOLD, 20));
-		lblTituloError.setBounds(593, 264, 241, 56);
+		lblTituloError.setBounds(602, 264, 457, 56);
 		contentPane.add(lblTituloError);
 		
 		lblPegi = new JLabel("PEGI");
@@ -151,7 +137,7 @@ public class EPeli extends JFrame implements ActionListener{
 		lblPegiError = new JLabel("");
 		lblPegiError.setForeground(Color.RED);
 		lblPegiError.setFont(new Font("Tahoma", Font.BOLD, 20));
-		lblPegiError.setBounds(593, 334, 241, 56);
+		lblPegiError.setBounds(602, 334, 457, 56);
 		contentPane.add(lblPegiError);
 		
 		lblDuracion = new JLabel("DURACION");
@@ -169,7 +155,7 @@ public class EPeli extends JFrame implements ActionListener{
 		lblDuracionError = new JLabel("");
 		lblDuracionError.setForeground(Color.RED);
 		lblDuracionError.setFont(new Font("Tahoma", Font.BOLD, 20));
-		lblDuracionError.setBounds(593, 401, 241, 56);
+		lblDuracionError.setBounds(602, 401, 457, 56);
 		contentPane.add(lblDuracionError);
 		
 		lblSinopsis = new JLabel("SINOPSIS");
@@ -181,11 +167,11 @@ public class EPeli extends JFrame implements ActionListener{
 		lblSinopsisError = new JLabel("");
 		lblSinopsisError.setForeground(Color.RED);
 		lblSinopsisError.setFont(new Font("Tahoma", Font.BOLD, 20));
-		lblSinopsisError.setBounds(593, 471, 241, 56);
+		lblSinopsisError.setBounds(602, 471, 457, 56);
 		contentPane.add(lblSinopsisError);
 		
 		textAreaSinopsis = new JTextArea();
-		textAreaSinopsis.setFont(new Font("Monospaced", Font.BOLD, 17));
+		textAreaSinopsis.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		textAreaSinopsis.setBounds(318, 471, 274, 117);
 		contentPane.add(textAreaSinopsis);
 		textAreaSinopsis.setLineWrap(true);
@@ -239,7 +225,6 @@ public class EPeli extends JFrame implements ActionListener{
 	 * @throws IllegalEntryData Si los datos ingresados por el usuario son incorrectos.
 	 */
 public void verificarDatos() throws IllegalEntryData {
-		lblGeneroError.setText("");
 		lblTituloError.setText("");
 		lblPegiError.setText("");
 		lblDuracionError.setText("");
@@ -249,7 +234,7 @@ public void verificarDatos() throws IllegalEntryData {
 		
 		//Controlar longitud del titulo
 		if(textTitulo.getText().length()>60) {
-			lblTituloError.setText("El titulo tiene que contener menos de 60 caracteres");
+			lblTituloError.setText("Menos de 60 caracteres");
 			correcto=false;
 		}
 		
@@ -257,7 +242,7 @@ public void verificarDatos() throws IllegalEntryData {
 		try {
 			int pegi = Integer.parseInt(textPegi.getText());
 			if (pegi < 0 || pegi > 18) {
-				lblPegiError.setText("PEGI tiene que ser una edad entre \"0\" y \"18\"");
+				lblPegiError.setText("PEGI entre \"0\" y \"18\"");
 				correcto = false;
 			}
 		} catch (NumberFormatException error) {
@@ -266,23 +251,28 @@ public void verificarDatos() throws IllegalEntryData {
 			correcto = false;
 		}
 		
-		
 		//Controlar duracion de la peli
-		if(textDuracion.getText().length()>3) {
-			lblDuracionError.setText("El numero introducido no puede tener mas de 3 cifras");
-			correcto=false;
-		}
-		try {
-			Integer.parseInt(textDuracion.getText());
-		}catch (NumberFormatException error) {
-			System.out.println(error);
-			lblDuracionError.setText("La duracion no puede contener cifras");
-			correcto=false;
-		}
+		if (textDuracion.getText().matches(".*[a-zA-Z]+.*")) {
+            System.out.println("No letras");
+            correcto=false;
+        } else {
+			if(textDuracion.getText().length()>3) {
+				lblDuracionError.setText("No mas de 3 cifras");
+				correcto=false;
+			} else {
+				try {
+					Integer.parseInt(textDuracion.getText());
+				}catch (NumberFormatException error) {
+					System.out.println(error);
+					lblDuracionError.setText("La duracion debe ser digitos");
+					correcto=false;
+				}
+			}
+        }
 		
 		//Controlar longitud del String de sinopsis
 		if(textAreaSinopsis.getText().length()>150) {
-			lblSinopsisError.setText("La longitud de la sinopsis no puede ser mas de 150 caracteres");
+			lblSinopsisError.setText("No mas de 150 caracteres");
 			correcto=false;
 		}
 				

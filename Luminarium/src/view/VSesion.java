@@ -173,9 +173,8 @@ public class VSesion extends JFrame implements ActionListener {
 				if(correcto) {
 					JOptionPane.showMessageDialog(this,(String)"Eliminado correctamente","",JOptionPane.INFORMATION_MESSAGE,null);
 					VSesion vsesion = new VSesion(controlador, user);
-					this.dispose();
 					vsesion.setVisible(true);
-					
+					this.dispose();
 				}
 			}
 		}

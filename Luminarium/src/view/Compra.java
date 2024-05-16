@@ -7,6 +7,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.ParseException;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -41,7 +43,7 @@ public class Compra extends JFrame implements ActionListener {
 	private JMenuBar menuBar;
 	private JMenu mnUsuario;
 	private JMenuItem mntmModificar, mntmExit;
-	private JButton btnAtras, btnCompra, btnSumarEntrada, btnRestarEntrada, btnCheckout;
+	private JButton btnAtras, btnCompra, btnSumarEntrada, btnRestarEntrada, btnCheckout, btnSalir;
 	private JLabel lblTitulo, lblCantidad, lblCantidadEntradas, lblPrecioTotalEntradas, lblCheckout, lblTarjetaError,
 			lblFechaCaducidad, lblCvc, lblFechaError, lblCVCError;
 	private JFileChooser fileChooser ;
@@ -61,6 +63,7 @@ public class Compra extends JFrame implements ActionListener {
 		this.sesion = sesionInput;
 		this.numEntradas = 0;
 		this.fileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+		this.mntmModificar = new JMenuItem();
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1083, 698);
@@ -132,7 +135,7 @@ public class Compra extends JFrame implements ActionListener {
 
 		btnCheckout = new JButton("Realizar pago");
 		btnCheckout.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnCheckout.setBounds(180, 340, 175, 40);
+		btnCheckout.setBounds(302, 339, 175, 40);
 		checkoutFrame.getContentPane().add(btnCheckout);
 
 		checkboxSaveCard = new JCheckBox("Guardar este método de pago para futuras compras");
@@ -156,6 +159,11 @@ public class Compra extends JFrame implements ActionListener {
 		lblCVCError.setEnabled(false);
 		lblCVCError.setBounds(80, 289, 350, 30);
 		checkoutFrame.getContentPane().add(lblCVCError);
+		
+		btnSalir = new JButton("Salir");
+		btnSalir.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btnSalir.setBounds(80, 339, 175, 40);
+		checkoutFrame.getContentPane().add(btnSalir);
 		checkoutFrame.setVisible(false);
 
 		btnAtras = new JButton("Volver");
@@ -214,12 +222,19 @@ public class Compra extends JFrame implements ActionListener {
 		menuBar.setBounds(882, 10, 177, 36);
 		contentPane.add(menuBar);
 
-		mnUsuario = new JMenu(user.getNombre());
+		if (user.getNombre().isBlank()) {
+			mnUsuario = new JMenu("Invitado");
+		} else {
+			mnUsuario = new JMenu(user.getNombre());
+		}
 		menuBar.add(mnUsuario);
 		mnUsuario.setFont(new Font("Segoe UI", Font.PLAIN, 15));
-
-		mntmModificar = new JMenuItem("Modificar");
-		mnUsuario.add(mntmModificar);
+		
+		if (!user.getNombre().isBlank()) {
+			mntmModificar = new JMenuItem("Modificar");
+			mnUsuario.add(mntmModificar);
+			mntmModificar.addActionListener(this);
+		}
 
 		mntmExit = new JMenuItem("Cerrar Sesión");
 		mnUsuario.add(mntmExit);
@@ -232,12 +247,16 @@ public class Compra extends JFrame implements ActionListener {
 		});
 		btnAtras.addActionListener(this);
 		btnCheckout.addActionListener(this);
-
+		btnSalir.addActionListener(this);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		boolean correcto = true;
+		if (e.getSource() == btnSalir) {
+			checkoutFrame.dispose();
+		}
+		
 		if (e.getSource() == btnAtras) {
 			InfoPeli infopeli = new InfoPeli(controlador, user, pelicula);
 			infopeli.setVisible(true);
@@ -371,7 +390,7 @@ public class Compra extends JFrame implements ActionListener {
 			}
 			
 			if (checkboxSaveCard.isSelected()) {
-				//controlador.guardarTarjeta();
+				controlador.guardarTarjeta(cardNumField.getText(), YearMonth.parse(fechaCaducidadField.getText(), DateTimeFormatter.ofPattern("MM/yy")), user);
 			}
 			
 			// Configurar el filtro para archivos de texto

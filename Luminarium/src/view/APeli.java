@@ -68,7 +68,7 @@ public class APeli extends JFrame implements ActionListener{
 		btnVolver.setFont(new Font("Tahoma", Font.BOLD, 19));
 		contentPane.add(btnVolver);
 		
-		btnModificar = new JButton("Modificar");
+		btnModificar = new JButton("Añadir");
 		btnModificar.setBounds(795, 592, 264, 56);
 		btnModificar.setFont(new Font("Tahoma", Font.BOLD, 19));
 		contentPane.add(btnModificar);
@@ -165,7 +165,7 @@ public class APeli extends JFrame implements ActionListener{
 		contentPane.add(lblSinopsisError);
 		
 		textAreaSinopsis = new JTextArea();
-		textAreaSinopsis.setFont(new Font("Monospaced", Font.BOLD, 17));
+		textAreaSinopsis.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		textAreaSinopsis.setBounds(318, 471, 274, 117);
 		contentPane.add(textAreaSinopsis);
 		textAreaSinopsis.setLineWrap(true);
@@ -222,7 +222,7 @@ public class APeli extends JFrame implements ActionListener{
 		
 		//Controlar longitud del titulo
 		if(textTitulo.getText().length()>60) {
-			lblTituloError.setText("El titulo tiene que contener menos de 60 caracteres");
+			lblTituloError.setText("Menos de 60 caracteres");
 			correcto=false;
 		} else if (textTitulo.getText().equals("")) {
 			lblTituloError.setText("Introduce título");
@@ -242,22 +242,26 @@ public class APeli extends JFrame implements ActionListener{
 		}
 		
 		//Controlar duracion de la peli
-		if(textDuracion.getText().length()>3) {
-			lblDuracionError.setText("El numero introducido no puede tener mas de 3 cifras");
-			correcto=false;
-		} else {
-			try {
-				Integer.parseInt(textDuracion.getText());
-			}catch (NumberFormatException error) {
-				System.out.println(error);
-				lblDuracionError.setText("La duracion debe ser digitos");
+		if (textDuracion.getText().matches(".*[a-zA-Z]+.*")) {
+            System.out.println("No letras");
+        } else {
+			if(textDuracion.getText().length()>3) {
+				lblDuracionError.setText("No mas de 3 cifras");
 				correcto=false;
+			} else {
+				try {
+					Integer.parseInt(textDuracion.getText());
+				}catch (NumberFormatException error) {
+					System.out.println(error);
+					lblDuracionError.setText("La duracion debe ser digitos");
+					correcto=false;
+				}
 			}
-		}
+        }
 		
 		//Controlar longitud del String de sinopsis
 		if(textAreaSinopsis.getText().length()>150) {
-			lblSinopsisError.setText("La longitud de la sinopsis no puede ser mas de 150 caracteres");
+			lblSinopsisError.setText("No mas de 150 caracteres");
 			correcto=false;
 		}
 				

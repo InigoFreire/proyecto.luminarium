@@ -73,15 +73,15 @@ public class VUsuario extends JFrame implements ActionListener {
 		menuBar = new JMenuBar();
 		menuBar.setBounds(882, 10, 177, 36);
 		contentPane.add(menuBar);
-
+		
 		mnUsuario = new JMenu(user.getNombre());
 		menuBar.add(mnUsuario);
 		mnUsuario.setFont(new Font("Segoe UI", Font.PLAIN, 15));
-
+		
 		mntmModificar = new JMenuItem("Modificar");
 		mnUsuario.add(mntmModificar);
 		mntmModificar.addActionListener(this);
-
+		
 		mntmExit = new JMenuItem("Cerrar Sesión");
 		mnUsuario.add(mntmExit);
 		mntmExit.addActionListener(this);
@@ -170,9 +170,8 @@ public class VUsuario extends JFrame implements ActionListener {
 				if(correcto) {
 					JOptionPane.showMessageDialog(this,(String)"Eliminado correctamente","",JOptionPane.INFORMATION_MESSAGE,null);
 					VUsuario vusuario = new VUsuario(controlador, user);
-					this.dispose();
 					vusuario.setVisible(true);
-					
+					this.dispose();
 				}
 				
 			}

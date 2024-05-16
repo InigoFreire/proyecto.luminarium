@@ -253,16 +253,27 @@ public class ESesion extends JFrame implements ActionListener{
 		
 		
 		//Controlar que precio no sea negativo
-		if(Double.parseDouble(textPrecio.getText())<0) {
-			lblPrecioError.setText("El precio no puede ser negativo");
-			correcto=false;
+		if (textPrecio.equals("")) {
+			lblPrecioError.setText("Introduce precio");
+			correcto = false;
+		} else {
+			if (textPrecio.getText().matches(".*[a-zA-Z]+.*")) {
+				lblPrecioError.setText("No letras");
+	            correcto=false;
+	        } else {
+				if(Double.parseDouble(textPrecio.getText())<0) {
+					lblPrecioError.setText("El precio no puede ser negativo");
+					correcto=false;
+				}
+	        }
 		}
+		
 		//Comprobar LocalDateTime tiene formato correcto
 		try {
 		    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 		    LocalDateTime dateTime = LocalDateTime.parse(textFecha.getText(), formatter);
 		}catch (DateTimeParseException error) {
-			lblFechaError.setText("formato \"yyyy-MM-dd'T'HH:mm\" incorrecto o fecha incorrecta");
+			lblFechaError.setText("formato \"yyyy-MM-dd HH:mm\"");
 			correcto=false;
 		}
 		//Comprobar que el numero de tickets no supera el aforo de la sala en el combo box

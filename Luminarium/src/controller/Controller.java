@@ -68,6 +68,45 @@ public class Controller implements IController {
 	final String BorrarSesion ="DELETE FROM sesiones where id=?";
 	final String BorrarUsuario ="DELETE FROM usuarios where dni=?";
 	final String actulizarEntradas ="select CalcularEntradasRestantes(?,?)";
+	final String GUARDARTarjeta = "update usuarios set metodoPago=?, fechaCaducidadTarjeta=? where dni=?";
+	
+	/**
+	 * Guarda la información de una tarjeta de crédito para un usuario específico en la base de datos.
+	 *
+	 * @param tarjeta El número de la tarjeta de crédito a guardar.
+	 * @param fecha La fecha de expiración de la tarjeta en formato YearMonth.
+	 * @param user El usuario al que pertenece la tarjeta.
+	 * @throws SQLException Si ocurre un error al interactuar con la base de datos.
+	 */
+	@Override
+	public void guardarTarjeta(String tarjeta, YearMonth fecha, Usuario user) {
+		this.openConnection();
+
+		try {
+			stmt = con.prepareStatement(GUARDARTarjeta);
+
+			stmt.setString(1, tarjeta);
+			stmt.setString(2, String.format("%02d/%02d", fecha.getMonthValue(), fecha.getYear() % 100));
+			stmt.setString(3, user.getDni());
+			
+			if (stmt.executeUpdate()==1) {
+				user.setMetodoPago(tarjeta);
+				user.setFechaCaducidadTarjeta(fecha);		
+			}
+			
+		} catch (SQLException e) {
+			System.out.println("Error de SQL");
+			e.printStackTrace();
+		} finally {
+			
+			try {
+				this.closeConnection();
+			} catch (SQLException e) {
+				System.out.println("Error en el cierre de la BD");
+				e.printStackTrace();
+			}
+		}
+	}
 	
 	/**
 	 * Actualiza el número de entradas disponibles para una sesión específica.

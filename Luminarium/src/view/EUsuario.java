@@ -360,12 +360,17 @@ public class EUsuario extends JFrame implements ActionListener {
 		
 		//Comrprobar que mete un numero de tarjeta correcto
 		if(!textNTarjeta.getText().equals("")) {
-			Regex = "\\d{16}";
-	        pattern = Pattern.compile(Regex);
-	        matcher = pattern.matcher(textNTarjeta.getText());
-	        if(!matcher.matches()) {
-	        	lblTarjetaError.setText("Tienen que ser 16 numeros");
-	        	correcto=false;
+			if (textNTarjeta.getText().matches(".*[a-zA-Z]+.*")) {
+				lblTarjetaError.setText("No letras");
+	            correcto=false;
+	        } else {
+				Regex = "\\d{16}";
+		        pattern = Pattern.compile(Regex);
+		        matcher = pattern.matcher(textNTarjeta.getText());
+		        if(!matcher.matches()) {
+		        	lblTarjetaError.setText("Tienen que ser 16 numeros");
+		        	correcto=false;
+		        }
 	        }
 		}
 		
